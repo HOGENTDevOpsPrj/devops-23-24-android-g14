@@ -1,4 +1,4 @@
-package com.example.templateapplication
+package com.hogent.svkapp
 
 import org.junit.Test
 

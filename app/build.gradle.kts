@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.templateapplication"
+    namespace = "com.hogent.svkapp"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.example.templateapplication"
+        applicationId = "com.hogent.svkapp"
         minSdk = 31
         targetSdk = 33
         versionCode = 1
