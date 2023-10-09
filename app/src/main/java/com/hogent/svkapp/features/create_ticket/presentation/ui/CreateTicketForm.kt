@@ -12,8 +12,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
-import com.hogent.svkapp.presentation.ui.theme.spacing
+import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
+import com.hogent.svkapp.main.presentation.ui.theme.spacing
 
 @Composable
 fun CreateTicketForm() {

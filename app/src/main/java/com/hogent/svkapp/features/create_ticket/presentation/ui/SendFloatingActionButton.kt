@@ -6,7 +6,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
+import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
 @Composable
 fun SendFloatingActionButton() {

@@ -1,4 +1,4 @@
-package com.hogent.svkapp.presentation.ui.theme
+package com.hogent.svkapp.main.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

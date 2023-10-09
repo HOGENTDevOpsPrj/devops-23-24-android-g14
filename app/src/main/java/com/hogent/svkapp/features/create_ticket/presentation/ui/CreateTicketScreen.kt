@@ -11,8 +11,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
-import com.hogent.svkapp.presentation.ui.theme.spacing
+import com.hogent.svkapp.main.presentation.ui.SVKLogo
+import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
+import com.hogent.svkapp.main.presentation.ui.theme.spacing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

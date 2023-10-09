@@ -1,4 +1,4 @@
-package com.hogent.svkapp.features.create_ticket.presentation.ui
+package com.hogent.svkapp.main.presentation.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
@@ -10,7 +10,7 @@ import com.hogent.svkapp.R
 @Composable
 fun SVKLogo() {
     Image(
-        painter = painterResource(id = R.drawable._15_svk_logo_met_slogan_black_01),
+        painter = painterResource(id = R.drawable.svk_logo_met_slogan_black),
         contentDescription = "SVK Logo"
     )
 }

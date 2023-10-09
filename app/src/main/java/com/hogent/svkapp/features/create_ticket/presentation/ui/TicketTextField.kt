@@ -7,7 +7,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
+import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

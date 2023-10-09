@@ -1,4 +1,4 @@
-package com.hogent.svkapp.presentation.ui.theme
+package com.hogent.svkapp.main.presentation.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
