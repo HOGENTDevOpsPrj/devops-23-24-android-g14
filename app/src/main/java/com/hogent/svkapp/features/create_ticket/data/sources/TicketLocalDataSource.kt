@@ -11,4 +11,8 @@ class TicketLocalDataSource {
         // log ticket
         println("Ticket added: $ticket")
     }
+
+    fun getTickets(): List<Ticket> {
+        return tickets
+    }
 }
