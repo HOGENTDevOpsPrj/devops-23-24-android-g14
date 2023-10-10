@@ -7,23 +7,27 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.main.presentation.ui.theme.spacing
 
 @Composable
-fun CreateTicketForm() {
-    val text by rememberSaveable { mutableStateOf("") }
-
+fun CreateTicketForm(
+    routeNumber: String,
+    licensePlate: String,
+    onRouteNumberChange: (String) -> Unit,
+    onLicensePlateChange: (String) -> Unit
+) {
     Column(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium)
     ) {
-        TicketTextField(value = text, label = "Routenummer")
-        TicketTextField(value = text, label = "Nummerplaat")
+        TicketTextField(
+            value = routeNumber, label = "Routenummer", onValueChange = onRouteNumberChange
+        )
+        TicketTextField(
+            value = licensePlate, label = "Nummerplaat", onValueChange = onLicensePlateChange
+        )
         Button(onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth()) {
             Text("Voeg foto toe")
         }
@@ -34,6 +38,9 @@ fun CreateTicketForm() {
 @Composable
 fun CreateTicketFormPreview() {
     TemplateApplicationTheme(useDarkTheme = false) {
-        CreateTicketForm()
+        CreateTicketForm(routeNumber = "123",
+            licensePlate = "1-ABC-123",
+            onRouteNumberChange = {},
+            onLicensePlateChange = {})
     }
 }

@@ -9,8 +9,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
 @Composable
-fun SendFloatingActionButton() {
-    LargeFloatingActionButton(onClick = { }) {
+fun SendFloatingActionButton(onSend: () -> Unit) {
+    LargeFloatingActionButton(onClick = onSend) {
         Icon(Icons.Default.Send, "Large floating action button")
     }
 }
@@ -19,6 +19,6 @@ fun SendFloatingActionButton() {
 @Composable
 fun SendFloatingActionButtonPreview() {
     TemplateApplicationTheme(useDarkTheme = false) {
-        SendFloatingActionButton()
+        SendFloatingActionButton {}
     }
 }

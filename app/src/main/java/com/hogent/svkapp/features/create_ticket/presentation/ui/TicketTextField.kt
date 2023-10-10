@@ -11,10 +11,10 @@ import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TicketTextField(value: String, label: String) {
+fun TicketTextField(value: String, label: String, onValueChange: (String) -> Unit) {
     TextField(
         value = value,
-        onValueChange = { /*TODO*/ },
+        onValueChange = onValueChange,
         label = { Text(label) },
         placeholder = { Text(label) },
         modifier = Modifier.fillMaxWidth()
@@ -25,6 +25,6 @@ fun TicketTextField(value: String, label: String) {
 @Composable
 fun TicketTextFieldPreview() {
     TemplateApplicationTheme(useDarkTheme = false) {
-        TicketTextField("Sample", "Label")
+        TicketTextField("Sample", "Label") {}
     }
 }
