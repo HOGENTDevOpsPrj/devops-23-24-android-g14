@@ -15,10 +15,18 @@ fun SendFloatingActionButton(onSend: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun SendFloatingActionButtonPreview() {
-    TemplateApplicationTheme(useDarkTheme = false) {
+    TemplateApplicationTheme {
+        SendFloatingActionButton {}
+    }
+}
+
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun SendFloatingActionButtonPreviewDark() {
+    TemplateApplicationTheme {
         SendFloatingActionButton {}
     }
 }

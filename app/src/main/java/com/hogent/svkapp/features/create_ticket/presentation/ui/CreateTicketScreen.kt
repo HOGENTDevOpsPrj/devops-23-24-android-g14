@@ -11,8 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.hogent.svkapp.features.create_ticket.data.repositories.MockTicketRepository
-import com.hogent.svkapp.features.create_ticket.domain.usecases.CreateTicketUseCase
+import com.hogent.svkapp.features.create_ticket.MockCreateTicketModule
 import com.hogent.svkapp.features.create_ticket.presentation.viewmodels.CreateTicketViewModel
 import com.hogent.svkapp.main.presentation.ui.SVKLogo
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
@@ -33,21 +32,34 @@ fun CreateTicketScreen(viewModel: CreateTicketViewModel) {
             verticalArrangement = Arrangement.spacedBy(space = MaterialTheme.spacing.large)
         ) {
             SVKLogo()
-            CreateTicketForm(routeNumber = viewModel.routeNumber.value,
+            CreateTicketForm(
+                routeNumber = viewModel.routeNumber.value,
                 licensePlate = viewModel.licensePlate.value,
                 onRouteNumberChange = { viewModel.routeNumber.value = it },
-                onLicensePlateChange = { viewModel.licensePlate.value = it })
+                onLicensePlateChange = { viewModel.licensePlate.value = it },
+                routeNumberError = viewModel.routeNumberError.value,
+                licensePlateError = viewModel.licensePlateError.value,
+            )
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun CreateTicketScreenPreview() {
-    val mockCreateTicketUseCase = CreateTicketUseCase(ticketRepository = MockTicketRepository())
-    val viewModel = CreateTicketViewModel(mockCreateTicketUseCase)
+    val mockCreateTicketModule = MockCreateTicketModule()
 
-    TemplateApplicationTheme(useDarkTheme = false) {
-        CreateTicketScreen(viewModel = viewModel)
+    TemplateApplicationTheme {
+        CreateTicketScreen(viewModel = mockCreateTicketModule.getViewModel())
+    }
+}
+
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun CreateTicketScreenPreviewDark() {
+    val mockCreateTicketModule = MockCreateTicketModule()
+
+    TemplateApplicationTheme {
+        CreateTicketScreen(viewModel = mockCreateTicketModule.getViewModel())
     }
 }

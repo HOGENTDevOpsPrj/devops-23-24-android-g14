@@ -6,6 +6,6 @@ class TicketLocalDataSource {
     private val tickets = mutableListOf<Ticket>()
 
     fun addTicket(ticket: Ticket) {
-        tickets.add(ticket)
+        tickets.add(element = ticket)
     }
 }
