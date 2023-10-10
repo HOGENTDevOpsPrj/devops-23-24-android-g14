@@ -31,7 +31,8 @@ fun TicketTextField(
             }
         },
         isError = error != null,
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        singleLine = true
     )
 }
 

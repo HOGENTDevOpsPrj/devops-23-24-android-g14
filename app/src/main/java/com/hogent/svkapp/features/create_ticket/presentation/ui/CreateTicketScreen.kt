@@ -21,7 +21,7 @@ import com.hogent.svkapp.main.presentation.ui.theme.spacing
 @Composable
 fun CreateTicketScreen(viewModel: CreateTicketViewModel) {
     Scaffold(floatingActionButton = {
-        SendFloatingActionButton(onSend = { viewModel.createTicket() })
+        SendFloatingActionButton(onSend = viewModel::onSend)
     }) { innerPadding ->
         Column(
             modifier = Modifier
@@ -35,8 +35,8 @@ fun CreateTicketScreen(viewModel: CreateTicketViewModel) {
             CreateTicketForm(
                 routeNumber = viewModel.routeNumber.value,
                 licensePlate = viewModel.licensePlate.value,
-                onRouteNumberChange = { viewModel.routeNumber.value = it },
-                onLicensePlateChange = { viewModel.licensePlate.value = it },
+                onRouteNumberChange = viewModel::onRouteNumberChange,
+                onLicensePlateChange = viewModel::onLicensePlateChange,
                 routeNumberError = viewModel.routeNumberError.value,
                 licensePlateError = viewModel.licensePlateError.value,
             )

@@ -2,46 +2,62 @@ package com.hogent.svkapp.features.create_ticket.presentation.viewmodels
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.hogent.svkapp.features.create_ticket.data.repositories.TicketRepository
+import com.hogent.svkapp.features.create_ticket.domain.TicketCreator
 import com.hogent.svkapp.features.create_ticket.domain.Validator
-import com.hogent.svkapp.features.create_ticket.domain.entities.Ticket
 import com.hogent.svkapp.features.create_ticket.domain.entities.ValidationResult
 
 class CreateTicketViewModel(
-    private val validator: Validator, private val ticketRepository: TicketRepository
+    private val validator: Validator, private val ticketCreator: TicketCreator,
 ) : ViewModel() {
     val routeNumber = mutableStateOf("")
     val licensePlate = mutableStateOf("")
     val routeNumberError = mutableStateOf<String?>(null)
     val licensePlateError = mutableStateOf<String?>(null)
 
-    fun createTicket() {
-        val routeNumber = routeNumber.value
-        val licensePlate = licensePlate.value
-        var hasError = false
+    fun onSend() {
+        validateRouteNumber()
+        validateLicensePlate()
 
-        val routeNumberValidationResult = validator.validateRouteNumber(routeNumber = routeNumber)
+        if (routeNumberError.value == null && licensePlateError.value == null) {
+            ticketCreator.createTicket(
+                routeNumber = validator.sanitizeRouteNumber(routeNumber.value),
+                licensePlate = validator.sanitizeLicensePlate(licensePlate.value),
+            )
 
-        if (routeNumberValidationResult is ValidationResult.Invalid) {
-            routeNumberError.value = routeNumberValidationResult.message
-            hasError = true
-        } else {
-            routeNumberError.value = null
+            resetForm()
         }
+    }
 
-        val licensePlateValidationResult =
-            validator.validateLicensePlate(licensePlate = licensePlate)
+    fun onRouteNumberChange(routeNumber: String) {
+        this.routeNumber.value = routeNumber
+        validateRouteNumber()
+    }
 
-        if (licensePlateValidationResult is ValidationResult.Invalid) {
-            licensePlateError.value = licensePlateValidationResult.message
-            hasError = true
-        } else {
-            licensePlateError.value = null
+    fun onLicensePlateChange(licensePlate: String) {
+        this.licensePlate.value = licensePlate
+        validateLicensePlate()
+    }
+
+    private fun validateRouteNumber() {
+        val validationResult = validator.validateRouteNumber(routeNumber.value)
+        routeNumberError.value = when (validationResult) {
+            is ValidationResult.Valid -> null
+            is ValidationResult.Invalid -> validationResult.message
         }
+    }
 
-        if (!hasError) {
-            val ticket = Ticket(routeNumber = routeNumber, licensePlate = licensePlate)
-            ticketRepository.addTicket(ticket = ticket)
+    private fun validateLicensePlate() {
+        val validationResult = validator.validateLicensePlate(licensePlate.value)
+        licensePlateError.value = when (validationResult) {
+            is ValidationResult.Valid -> null
+            is ValidationResult.Invalid -> validationResult.message
         }
+    }
+
+    private fun resetForm() {
+        routeNumber.value = ""
+        licensePlate.value = ""
+        routeNumberError.value = null
+        licensePlateError.value = null
     }
 }

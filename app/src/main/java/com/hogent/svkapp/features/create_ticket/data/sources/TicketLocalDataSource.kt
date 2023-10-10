@@ -7,5 +7,8 @@ class TicketLocalDataSource {
 
     fun addTicket(ticket: Ticket) {
         tickets.add(element = ticket)
+
+        // log ticket
+        println("Ticket added: $ticket")
     }
 }
