@@ -51,6 +51,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.navigation:navigation-runtime-ktx:2.7.4")
     val coreVersion = "1.12.0"
     val lifecycleVersion = "2.6.2"
     val activityVersion = "1.8.0"
@@ -67,6 +68,13 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiVersion")
     implementation("androidx.compose.material3:material3:$composeMaterial3Version")
     implementation("androidx.compose.material3:material3-window-size-class:$composeMaterial3Version")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.7.4")
+    implementation("androidx.activity:activity-compose:1.4.0-beta01")
+    implementation(platform("androidx.compose:compose-bom:1.1.0-alpha03"))
+    implementation("androidx.compose.ui:ui:1.1.0-alpha03")
+    implementation("androidx.compose.ui:ui-graphics:1.1.0-alpha03")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.1.0-alpha03")
+    implementation("androidx.navigation:navigation-compose:2.5.3")
 
     val testJunitVersion = "1.1.5"
     val espressoVersion = "3.5.1"

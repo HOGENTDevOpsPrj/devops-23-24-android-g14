@@ -1,25 +1,18 @@
+// MainActivity.kt
 package com.hogent.svkapp.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.hogent.svkapp.features.create_ticket.CreateTicketModuleImpl
-import com.hogent.svkapp.features.create_ticket.presentation.ui.CreateTicketScreen
-import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import com.hogent.svkapp.main.presentation.navigation.MainNavigator
 
 class MainActivity : ComponentActivity() {
-
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val createTicketModule = CreateTicketModuleImpl()
-
         setContent {
-            TemplateApplicationTheme {
-                CreateTicketScreen(
-                    createTicketScreenViewModel = createTicketModule.getViewModel()
-                )
-            }
+            MainNavigator().MainNavHost()
         }
     }
 }
