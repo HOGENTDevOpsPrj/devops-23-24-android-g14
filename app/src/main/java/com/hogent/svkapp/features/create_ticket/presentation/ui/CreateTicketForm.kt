@@ -3,16 +3,11 @@ package com.hogent.svkapp.features.create_ticket.presentation.ui
 import MockImageSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.features.upload_photo.domain.ImageResource
-import com.hogent.svkapp.features.upload_photo.presentation.ui.UploadPhotoButton
 import com.hogent.svkapp.features.upload_photo.presentation.ui.UploadPhotoForm
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.main.presentation.ui.theme.spacing
