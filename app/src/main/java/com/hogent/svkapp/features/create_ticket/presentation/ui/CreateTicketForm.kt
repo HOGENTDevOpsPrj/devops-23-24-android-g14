@@ -1,5 +1,6 @@
 package com.hogent.svkapp.features.create_ticket.presentation.ui
 
+import MockImageSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,6 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import com.hogent.svkapp.features.upload_photo.domain.ImageResource
+import com.hogent.svkapp.features.upload_photo.presentation.ui.UploadPhotoButton
+import com.hogent.svkapp.features.upload_photo.presentation.ui.UploadPhotoForm
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.main.presentation.ui.theme.spacing
 
@@ -20,7 +24,8 @@ fun CreateTicketForm(
     onRouteNumberChange: (String) -> Unit,
     onLicensePlateChange: (String) -> Unit,
     routeNumberError: String?,
-    licensePlateError: String?
+    licensePlateError: String?,
+    images: List<ImageResource>
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = MaterialTheme.spacing.medium)
@@ -39,9 +44,7 @@ fun CreateTicketForm(
             error = licensePlateError,
             keyboardType = KeyboardType.Text
         )
-        Button(onClick = { /*TODO*/ }, modifier = Modifier.fillMaxWidth()) {
-            Text("Voeg foto toe")
-        }
+        UploadPhotoForm(images)
     }
 }
 
@@ -56,6 +59,7 @@ fun CreateTicketFormPreview() {
             onLicensePlateChange = {},
             routeNumberError = null,
             licensePlateError = null,
+            images = MockImageSource().loadImages(),
         )
     }
 }
@@ -71,6 +75,7 @@ fun CreateTicketFormPreviewError() {
             onLicensePlateChange = {},
             routeNumberError = "Routenummer is ongeldig.",
             licensePlateError = "Gelieve een nummerplaat in te geven.",
+            images = MockImageSource().loadImages(),
         )
     }
 }
@@ -86,6 +91,7 @@ fun CreateTicketFormPreviewErrorRouteNumber() {
             onLicensePlateChange = {},
             routeNumberError = "Routenummer is ongeldig.",
             licensePlateError = null,
+            images = MockImageSource().loadImages(),
         )
     }
 }
@@ -101,6 +107,7 @@ fun CreateTicketFormPreviewDark() {
             onLicensePlateChange = {},
             routeNumberError = null,
             licensePlateError = null,
+            images = MockImageSource().loadImages(),
         )
     }
 }
@@ -116,6 +123,7 @@ fun CreateTicketFormPreviewErrorDark() {
             onLicensePlateChange = {},
             routeNumberError = "Routenummer is ongeldig.",
             licensePlateError = "Gelieve een nummerplaat in te geven.",
+            images = MockImageSource().loadImages(),
         )
     }
 }
@@ -131,6 +139,7 @@ fun CreateTicketFormPreviewErrorRouteNumberDark() {
             onLicensePlateChange = {},
             routeNumberError = "Routenummer is ongeldig.",
             licensePlateError = null,
+            images = MockImageSource().loadImages(),
         )
     }
 }

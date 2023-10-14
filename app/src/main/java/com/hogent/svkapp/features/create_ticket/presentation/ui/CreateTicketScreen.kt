@@ -1,5 +1,6 @@
 package com.hogent.svkapp.features.create_ticket.presentation.ui
 
+import MockImageSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -39,6 +40,7 @@ fun CreateTicketScreen(viewModel: CreateTicketViewModel) {
                 onLicensePlateChange = viewModel::onLicensePlateChange,
                 routeNumberError = viewModel.routeNumberError.value,
                 licensePlateError = viewModel.licensePlateError.value,
+                images = MockImageSource().loadImages(),
             )
         }
     }
