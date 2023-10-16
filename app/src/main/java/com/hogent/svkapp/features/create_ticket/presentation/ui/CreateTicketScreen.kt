@@ -5,23 +5,29 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.features.create_ticket.MockCreateTicketModule
-import com.hogent.svkapp.features.create_ticket.presentation.viewmodels.CreateTicketViewModel
+import com.hogent.svkapp.features.create_ticket.presentation.viewmodels.CreateTicketScreenViewModel
 import com.hogent.svkapp.main.presentation.ui.SVKLogo
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.main.presentation.ui.theme.spacing
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateTicketScreen(viewModel: CreateTicketViewModel) {
+fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel) {
+    val routeNumber by createTicketScreenViewModel.routeNumber
+    val licensePlate by createTicketScreenViewModel.licensePlate
+    val routeNumberError by createTicketScreenViewModel.routeNumberError
+    val licensePlateError by createTicketScreenViewModel.licensePlateError
+    val images = remember { createTicketScreenViewModel.images }
+
     Scaffold(floatingActionButton = {
-        SendFloatingActionButton(onSend = viewModel::onSend)
+        SendFloatingActionButton(onSend = createTicketScreenViewModel::onSend)
     }) { innerPadding ->
         Column(
             modifier = Modifier
@@ -33,12 +39,14 @@ fun CreateTicketScreen(viewModel: CreateTicketViewModel) {
         ) {
             SVKLogo()
             CreateTicketForm(
-                routeNumber = viewModel.routeNumber.value,
-                licensePlate = viewModel.licensePlate.value,
-                onRouteNumberChange = viewModel::onRouteNumberChange,
-                onLicensePlateChange = viewModel::onLicensePlateChange,
-                routeNumberError = viewModel.routeNumberError.value,
-                licensePlateError = viewModel.licensePlateError.value,
+                routeNumber = routeNumber,
+                licensePlate = licensePlate,
+                onRouteNumberChange = createTicketScreenViewModel::onRouteNumberChange,
+                onLicensePlateChange = createTicketScreenViewModel::onLicensePlateChange,
+                routeNumberError = routeNumberError,
+                licensePlateError = licensePlateError,
+                images = images,
+                onAddImage = createTicketScreenViewModel::addImage
             )
         }
     }
@@ -50,7 +58,9 @@ fun CreateTicketScreenPreview() {
     val mockCreateTicketModule = MockCreateTicketModule()
 
     TemplateApplicationTheme {
-        CreateTicketScreen(viewModel = mockCreateTicketModule.getViewModel())
+        CreateTicketScreen(
+            createTicketScreenViewModel = mockCreateTicketModule.getViewModel()
+        )
     }
 }
 
@@ -60,6 +70,8 @@ fun CreateTicketScreenPreviewDark() {
     val mockCreateTicketModule = MockCreateTicketModule()
 
     TemplateApplicationTheme {
-        CreateTicketScreen(viewModel = mockCreateTicketModule.getViewModel())
+        CreateTicketScreen(
+            createTicketScreenViewModel = mockCreateTicketModule.getViewModel()
+        )
     }
 }
