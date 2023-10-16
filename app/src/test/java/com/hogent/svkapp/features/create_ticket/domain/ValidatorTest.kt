@@ -17,23 +17,23 @@ class ValidatorTest {
     fun `validateLicensePlate for empty license plate`() {
         assertEquals(
             ValidationResult.Invalid(message = "Vul een nummerplaat in."),
-            validator.validateLicensePlate("   ")
+            validator.validateLicensePlate(licensePlate = "   ")
         )
     }
 
     @Test
     fun `validateLicensePlate for long license plate`() {
-        val longLicensePlate = "A".repeat(41)
+        val longLicensePlate = "A".repeat(n = 41)
         assertEquals(
             ValidationResult.Invalid(message = "Nummerplaat is te lang."),
-            validator.validateLicensePlate(longLicensePlate)
+            validator.validateLicensePlate(licensePlate = longLicensePlate)
         )
     }
 
     @Test
     fun `validateLicensePlate for valid license plate`() {
         assertEquals(
-            ValidationResult.Valid, validator.validateLicensePlate("AB-1234")
+            ValidationResult.Valid, validator.validateLicensePlate(licensePlate = "AB-1234")
         )
     }
 
@@ -41,7 +41,7 @@ class ValidatorTest {
     fun `validateRouteNumber for empty route number`() {
         assertEquals(
             ValidationResult.Invalid(message = "Vul een routenummer in."),
-            validator.validateRouteNumber("   ")
+            validator.validateRouteNumber(routeNumber = "   ")
         )
     }
 
@@ -49,7 +49,7 @@ class ValidatorTest {
     fun `validateRouteNumber for non-integer route number`() {
         assertEquals(
             ValidationResult.Invalid(message = "Routenummer is ongeldig."),
-            validator.validateRouteNumber("ABCD")
+            validator.validateRouteNumber(routeNumber = "ABCD")
         )
     }
 
@@ -57,7 +57,7 @@ class ValidatorTest {
     fun `validateRouteNumber for zero route number`() {
         assertEquals(
             ValidationResult.Invalid(message = "Routenummer is ongeldig."),
-            validator.validateRouteNumber("0")
+            validator.validateRouteNumber(routeNumber = "0")
         )
     }
 
@@ -65,28 +65,28 @@ class ValidatorTest {
     fun `validateRouteNumber for negative route number`() {
         assertEquals(
             ValidationResult.Invalid(message = "Routenummer is ongeldig."),
-            validator.validateRouteNumber("-5")
+            validator.validateRouteNumber(routeNumber = "-5")
         )
     }
 
     @Test
     fun `validateRouteNumber for valid route number`() {
         assertEquals(
-            ValidationResult.Valid, validator.validateRouteNumber("5")
+            ValidationResult.Valid, validator.validateRouteNumber(routeNumber = "5")
         )
     }
 
     @Test
     fun `sanitizeLicensePlate trims and uppercases`() {
         assertEquals(
-            "ABC-1234", validator.sanitizeLicensePlate(" abc-1234  ")
+            "ABC-1234", validator.sanitizeLicensePlate(licensePlate = " abc-1234  ")
         )
     }
 
     @Test
     fun `sanitizeRouteNumber trims and converts`() {
         assertEquals(
-            5, validator.sanitizeRouteNumber(" 5 ")
+            5, validator.sanitizeRouteNumber(routeNumber = " 5 ")
         )
     }
 }

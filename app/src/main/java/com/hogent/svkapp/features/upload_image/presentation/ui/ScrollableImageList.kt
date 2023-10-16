@@ -8,38 +8,49 @@ import com.hogent.svkapp.features.upload_image.domain.Image
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
 @Composable
-fun ScrollableImageList(imageList: List<Image>, onDeleteImage: (Image) -> Unit) {
-
+fun ScrollableImageList(imageList: List<Image>) {
     LazyRow {
-        items(imageList) { imageRes ->
-
-
-            ImageCard(image = imageRes, onDelete = {
-                onDeleteImage(imageRes)
-            })
+        items(items = imageList) { imageRes ->
+            ImageCard(image = imageRes)
         }
     }
 }
 
+val previewImagesList = listOf(
+    Image(resourceId = com.hogent.svkapp.R.drawable.resource_default),
+    Image(resourceId = com.hogent.svkapp.R.drawable.resource_default),
+    Image(resourceId = com.hogent.svkapp.R.drawable.resource_default),
+    Image(resourceId = com.hogent.svkapp.R.drawable.resource_default),
+    Image(resourceId = com.hogent.svkapp.R.drawable.resource_default)
+)
+
+@Composable
+fun ScrollableImageListPreviewBase(imageList: List<Image>) {
+    TemplateApplicationTheme {
+        ScrollableImageList(imageList = imageList)
+    }
+}
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun ScrollableImageListPreview() {
-    TemplateApplicationTheme {
-        ScrollableImageList(
-            imageList = mutableListOf(),
-            onDeleteImage = {},
-            )
-    }
+fun ScrollableImageListFullPreview() {
+    ScrollableImageListPreviewBase(imageList = previewImagesList)
 }
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ScrollableImageListPreviewDark() {
-    TemplateApplicationTheme {
-        ScrollableImageList(imageList = mutableListOf(),
-            onDeleteImage = {},
-            )
-    }
+fun ScrollableImageListFullPreviewDark() {
+    ScrollableImageListPreviewBase(imageList = previewImagesList)
 }
 
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun ScrollableImageListEmptyPreview() {
+    ScrollableImageListPreviewBase(imageList = emptyList())
+}
+
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ScrollableImageListEmptyPreviewDark() {
+    ScrollableImageListPreviewBase(imageList = emptyList())
+}

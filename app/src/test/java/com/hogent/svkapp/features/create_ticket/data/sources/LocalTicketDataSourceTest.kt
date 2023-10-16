@@ -5,23 +5,23 @@ import com.hogent.svkapp.main.util.NoOpLogger
 import org.junit.Before
 import org.junit.Test
 
-class TicketLocalDataSourceTest {
+class LocalTicketDataSourceTest {
 
-    private lateinit var ticketLocalDataSource: TicketLocalDataSource
+    private lateinit var localTicketDataSource: LocalTicketDataSource
 
     @Before
     fun setup() {
         val logger = NoOpLogger()
-        ticketLocalDataSource = TicketLocalDataSource(logger)
+        localTicketDataSource = LocalTicketDataSource(logger = logger)
     }
 
     @Test
     fun `when addTicket is called, ticket should be added`() {
         val ticket = Ticket(routeNumber = 1, licensePlate = "1-ABC-123", images = emptyList())
 
-        ticketLocalDataSource.addTicket(ticket)
+        localTicketDataSource.addTicket(ticket = ticket)
 
-        assert(ticketLocalDataSource.getTickets().contains(ticket))
+        assert(localTicketDataSource.getTickets().contains(element = ticket))
     }
 
     @Test
@@ -29,11 +29,11 @@ class TicketLocalDataSourceTest {
         val ticket1 = Ticket(routeNumber = 1, licensePlate = "1-ABC-123", images = emptyList())
         val ticket2 = Ticket(routeNumber = 2, licensePlate = "2-ABC-123", images = emptyList())
         val ticket3 = Ticket(routeNumber = 3, licensePlate = "3-ABC-123", images = emptyList())
-        ticketLocalDataSource.addTicket(ticket1)
-        ticketLocalDataSource.addTicket(ticket2)
-        ticketLocalDataSource.addTicket(ticket3)
+        localTicketDataSource.addTicket(ticket = ticket1)
+        localTicketDataSource.addTicket(ticket = ticket2)
+        localTicketDataSource.addTicket(ticket = ticket3)
 
-        val tickets = ticketLocalDataSource.getTickets()
+        val tickets = localTicketDataSource.getTickets()
 
         assert(tickets.contains(ticket1))
         assert(tickets.contains(ticket2))

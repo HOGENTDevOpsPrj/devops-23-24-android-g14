@@ -2,7 +2,6 @@ package com.hogent.svkapp.features.create_ticket.presentation.ui
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -11,7 +10,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketTextField(
     value: String,
@@ -23,7 +21,7 @@ fun TicketTextField(
     TextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label) },
+        label = { Text(text = label) },
         modifier = Modifier.fillMaxWidth(),
         supportingText = {
             if (error != null) {
@@ -36,58 +34,49 @@ fun TicketTextField(
     )
 }
 
-@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun ValidTicketTextFieldPreview() {
+fun TicketTextFieldPreviewBase(
+    value: String, label: String, error: String? = null
+) {
     TemplateApplicationTheme {
         TicketTextField(
-            value = "1-ABC-123",
-            label = "Nummerplaat",
+            value = value,
+            label = label,
             onValueChange = {},
-            error = null,
+            error = error,
             keyboardType = KeyboardType.Text
         )
     }
 }
 
-@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun ValidTicketTextFieldPreview() {
+    TicketTextFieldPreviewBase(
+        value = "1-ABC-123", label = "Nummerplaat", error = null
+    )
+}
+
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun InvalidTicketTextFieldPreview() {
-    TemplateApplicationTheme {
-        TicketTextField(
-            value = "",
-            label = "Nummerplaat",
-            onValueChange = {},
-            error = "Gelieve een nummerplaat in te geven.",
-            keyboardType = KeyboardType.Text
-        )
-    }
+    TicketTextFieldPreviewBase(
+        value = "", label = "Nummerplaat", error = "Gelieve een nummerplaat in te geven."
+    )
 }
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ValidTicketTextFieldPreviewDark() {
-    TemplateApplicationTheme {
-        TicketTextField(
-            value = "1-ABC-123",
-            label = "Nummerplaat",
-            onValueChange = {},
-            error = null,
-            keyboardType = KeyboardType.Text
-        )
-    }
+    TicketTextFieldPreviewBase(
+        value = "1-ABC-123", label = "Nummerplaat", error = null
+    )
 }
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun InvalidTicketTextFieldPreviewDark() {
-    TemplateApplicationTheme {
-        TicketTextField(
-            value = "",
-            label = "Nummerplaat",
-            onValueChange = {},
-            error = "Gelieve een nummerplaat in te geven.",
-            keyboardType = KeyboardType.Text
-        )
-    }
+    TicketTextFieldPreviewBase(
+        value = "", label = "Nummerplaat", error = "Gelieve een nummerplaat in te geven."
+    )
 }

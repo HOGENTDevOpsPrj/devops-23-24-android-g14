@@ -89,7 +89,9 @@ fun TemplateApplicationTheme(
     val colorScheme = when {
         useDynamicColors -> {
             val context = LocalContext.current
-            if (useDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (useDarkTheme) dynamicDarkColorScheme(context = context) else dynamicLightColorScheme(
+                context = context
+            )
         }
 
         useDarkTheme -> darkColors
