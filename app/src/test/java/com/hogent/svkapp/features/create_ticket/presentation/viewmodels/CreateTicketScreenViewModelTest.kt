@@ -3,18 +3,20 @@ package com.hogent.svkapp.features.create_ticket.presentation.viewmodels
 import com.hogent.svkapp.features.create_ticket.domain.TicketCreator
 import com.hogent.svkapp.features.create_ticket.domain.Validator
 import com.hogent.svkapp.features.create_ticket.domain.entities.ValidationResult
+import com.hogent.svkapp.features.upload_image.domain.Image
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.anyString
+import org.mockito.Mockito.anyList
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 
-class CreateTicketViewModelTest {
-    private lateinit var viewModel: CreateTicketViewModel
+class CreateTicketScreenViewModelTest {
+    private lateinit var viewModel: CreateTicketScreenViewModel
     private lateinit var mockValidator: Validator
     private lateinit var mockTicketCreator: TicketCreator
 
@@ -22,7 +24,7 @@ class CreateTicketViewModelTest {
     fun setUp() {
         mockValidator = mock()
         mockTicketCreator = mock()
-        viewModel = CreateTicketViewModel(mockValidator, mockTicketCreator)
+        viewModel = CreateTicketScreenViewModel(mockValidator, mockTicketCreator)
     }
 
     @Test
@@ -34,7 +36,7 @@ class CreateTicketViewModelTest {
 
         viewModel.onSend()
 
-        verify(mockTicketCreator).createTicket(anyInt(), anyString())
+        verify(mockTicketCreator).createTicket(anyInt(), anyString(), anyList())
     }
 
     @Test
@@ -48,7 +50,7 @@ class CreateTicketViewModelTest {
 
         viewModel.onSend()
 
-        verify(mockTicketCreator, never()).createTicket(anyInt(), anyString())
+        verify(mockTicketCreator, never()).createTicket(anyInt(), anyString(), anyList())
     }
 
     @Test
@@ -66,6 +68,7 @@ class CreateTicketViewModelTest {
         assertEquals("", viewModel.licensePlate.value)
         assertEquals(null, viewModel.routeNumberError.value)
         assertEquals(null, viewModel.licensePlateError.value)
+        assertEquals(0, viewModel.images.size)
     }
 
     @Test
@@ -122,5 +125,14 @@ class CreateTicketViewModelTest {
         viewModel.onLicensePlateChange("1-ABC-123")
 
         assertEquals("Nummerplaat is ongeldig.", viewModel.licensePlateError.value)
+    }
+
+    @Test
+    fun `addImage adds image to images`() {
+        val image = mock(Image::class.java)
+        viewModel.addImage(image)
+
+        assertEquals(1, viewModel.images.size)
+        assertEquals(image, viewModel.images[0])
     }
 }

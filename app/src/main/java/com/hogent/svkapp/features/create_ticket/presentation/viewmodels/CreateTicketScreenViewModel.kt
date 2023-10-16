@@ -1,18 +1,26 @@
 package com.hogent.svkapp.features.create_ticket.presentation.viewmodels
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.hogent.svkapp.features.create_ticket.domain.TicketCreator
 import com.hogent.svkapp.features.create_ticket.domain.Validator
 import com.hogent.svkapp.features.create_ticket.domain.entities.ValidationResult
+import com.hogent.svkapp.features.upload_image.domain.Image
 
-class CreateTicketViewModel(
+class CreateTicketScreenViewModel(
     private val validator: Validator, private val ticketCreator: TicketCreator,
 ) : ViewModel() {
     val routeNumber = mutableStateOf("")
     val licensePlate = mutableStateOf("")
     val routeNumberError = mutableStateOf<String?>(null)
     val licensePlateError = mutableStateOf<String?>(null)
+    private val _images = mutableStateListOf<Image>()
+    val images: List<Image> = _images
+
+    fun addImage(image: Image) {
+        _images.add(image)
+    }
 
     fun onSend() {
         validateRouteNumber()
@@ -22,6 +30,7 @@ class CreateTicketViewModel(
             ticketCreator.createTicket(
                 routeNumber = validator.sanitizeRouteNumber(routeNumber.value),
                 licensePlate = validator.sanitizeLicensePlate(licensePlate.value),
+                images = images
             )
 
             resetForm()
@@ -59,5 +68,6 @@ class CreateTicketViewModel(
         licensePlate.value = ""
         routeNumberError.value = null
         licensePlateError.value = null
+        _images.clear()
     }
 }

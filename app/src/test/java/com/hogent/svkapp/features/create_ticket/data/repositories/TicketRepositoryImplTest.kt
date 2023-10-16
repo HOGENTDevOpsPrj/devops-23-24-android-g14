@@ -19,7 +19,7 @@ class TicketRepositoryImplTest {
 
     @Test
     fun `addTicket should call addTicket on localDataSource`() {
-        val ticket = Ticket(routeNumber = 1, licensePlate = "1-ABC-123")
+        val ticket = Ticket(routeNumber = 1, licensePlate = "1-ABC-123", images = emptyList())
 
         repository.addTicket(ticket)
 

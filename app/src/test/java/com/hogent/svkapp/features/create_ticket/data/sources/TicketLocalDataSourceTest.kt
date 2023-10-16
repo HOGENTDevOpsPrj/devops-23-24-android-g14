@@ -15,7 +15,7 @@ class TicketLocalDataSourceTest {
 
     @Test
     fun `when addTicket is called, ticket should be added`() {
-        val ticket = Ticket(routeNumber = 1, licensePlate = "1-ABC-123")
+        val ticket = Ticket(routeNumber = 1, licensePlate = "1-ABC-123", images = emptyList())
 
         ticketLocalDataSource.addTicket(ticket)
 
@@ -24,9 +24,9 @@ class TicketLocalDataSourceTest {
 
     @Test
     fun `when getTickets is called, all tickets should be returned`() {
-        val ticket1 = Ticket(routeNumber = 1, licensePlate = "1-ABC-123")
-        val ticket2 = Ticket(routeNumber = 2, licensePlate = "2-ABC-123")
-        val ticket3 = Ticket(routeNumber = 3, licensePlate = "3-ABC-123")
+        val ticket1 = Ticket(routeNumber = 1, licensePlate = "1-ABC-123", images = emptyList())
+        val ticket2 = Ticket(routeNumber = 2, licensePlate = "2-ABC-123", images = emptyList())
+        val ticket3 = Ticket(routeNumber = 3, licensePlate = "3-ABC-123", images = emptyList())
         ticketLocalDataSource.addTicket(ticket1)
         ticketLocalDataSource.addTicket(ticket2)
         ticketLocalDataSource.addTicket(ticket3)
