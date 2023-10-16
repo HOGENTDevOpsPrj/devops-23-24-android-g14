@@ -58,6 +58,7 @@ dependencies {
     val composeBomVersion = "2023.10.00"
     val composeUiVersion = "1.5.3"
     val composeMaterial3Version = "1.1.2"
+    val composeNavigationVersion = "2.7.4"
 
     implementation("androidx.core:core-ktx:$coreVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
@@ -68,13 +69,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:$composeUiVersion")
     implementation("androidx.compose.material3:material3:$composeMaterial3Version")
     implementation("androidx.compose.material3:material3-window-size-class:$composeMaterial3Version")
-    implementation("androidx.navigation:navigation-runtime-ktx:2.7.4")
-    implementation("androidx.activity:activity-compose:1.4.0-beta01")
-    implementation(platform("androidx.compose:compose-bom:1.1.0-alpha03"))
-    implementation("androidx.compose.ui:ui:1.1.0-alpha03")
-    implementation("androidx.compose.ui:ui-graphics:1.1.0-alpha03")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.1.0-alpha03")
-    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.navigation:navigation-runtime-ktx:$composeNavigationVersion")
+    implementation("androidx.navigation:navigation-compose:$composeNavigationVersion")
 
     val testJunitVersion = "1.1.5"
     val espressoVersion = "3.5.1"
