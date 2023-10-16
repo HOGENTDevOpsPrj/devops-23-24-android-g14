@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,6 +20,10 @@ import com.hogent.svkapp.main.presentation.ui.theme.spacing
 
 @Composable
 fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel) {
+    val routeNumber by createTicketScreenViewModel.routeNumber
+    val licensePlate by createTicketScreenViewModel.licensePlate
+    val routeNumberError by createTicketScreenViewModel.routeNumberError
+    val licensePlateError by createTicketScreenViewModel.licensePlateError
     val images = remember { createTicketScreenViewModel.images }
 
     Scaffold(floatingActionButton = {
@@ -34,12 +39,12 @@ fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel)
         ) {
             SVKLogo()
             CreateTicketForm(
-                routeNumber = createTicketScreenViewModel.routeNumber.value,
-                licensePlate = createTicketScreenViewModel.licensePlate.value,
+                routeNumber = routeNumber,
+                licensePlate = licensePlate,
                 onRouteNumberChange = createTicketScreenViewModel::onRouteNumberChange,
                 onLicensePlateChange = createTicketScreenViewModel::onLicensePlateChange,
-                routeNumberError = createTicketScreenViewModel.routeNumberError.value,
-                licensePlateError = createTicketScreenViewModel.licensePlateError.value,
+                routeNumberError = routeNumberError,
+                licensePlateError = licensePlateError,
                 images = images,
                 onAddImage = createTicketScreenViewModel::addImage
             )

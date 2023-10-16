@@ -64,10 +64,10 @@ class CreateTicketScreenViewModelTest {
         viewModel.onLicensePlateChange("1-ABC-123")
         viewModel.onSend()
 
-        assertEquals("", viewModel.routeNumber.value)
-        assertEquals("", viewModel.licensePlate.value)
-        assertEquals(null, viewModel.routeNumberError.value)
-        assertEquals(null, viewModel.licensePlateError.value)
+        assertEquals("", viewModel.routeNumber)
+        assertEquals("", viewModel.licensePlate)
+        assertEquals(null, viewModel.routeNumberError)
+        assertEquals(null, viewModel.licensePlateError)
         assertEquals(0, viewModel.images.size)
     }
 
@@ -76,7 +76,7 @@ class CreateTicketScreenViewModelTest {
         `when`(mockValidator.validateRouteNumber(anyString())).thenReturn(ValidationResult.Valid)
         viewModel.onRouteNumberChange("123")
 
-        assertEquals("123", viewModel.routeNumber.value)
+        assertEquals("123", viewModel.routeNumber)
     }
 
     @Test
@@ -84,7 +84,7 @@ class CreateTicketScreenViewModelTest {
         `when`(mockValidator.validateLicensePlate(anyString())).thenReturn(ValidationResult.Valid)
         viewModel.onLicensePlateChange("1-ABC-123")
 
-        assertEquals("1-ABC-123", viewModel.licensePlate.value)
+        assertEquals("1-ABC-123", viewModel.licensePlate)
     }
 
     @Test
@@ -93,7 +93,7 @@ class CreateTicketScreenViewModelTest {
 
         viewModel.onRouteNumberChange("123")
 
-        assertEquals(null, viewModel.routeNumberError.value)
+        assertEquals(null, viewModel.routeNumberError)
     }
 
     @Test
@@ -102,7 +102,7 @@ class CreateTicketScreenViewModelTest {
 
         viewModel.onRouteNumberChange("123")
 
-        assertEquals("Routenummer is ongeldig.", viewModel.routeNumberError.value)
+        assertEquals("Routenummer is ongeldig.", viewModel.routeNumberError)
     }
 
     @Test
@@ -111,7 +111,7 @@ class CreateTicketScreenViewModelTest {
 
         viewModel.onLicensePlateChange("1-ABC-123")
 
-        assertEquals(null, viewModel.licensePlateError.value)
+        assertEquals(null, viewModel.licensePlateError)
     }
 
     @Test
@@ -124,7 +124,7 @@ class CreateTicketScreenViewModelTest {
 
         viewModel.onLicensePlateChange("1-ABC-123")
 
-        assertEquals("Nummerplaat is ongeldig.", viewModel.licensePlateError.value)
+        assertEquals("Nummerplaat is ongeldig.", viewModel.licensePlateError)
     }
 
     @Test
