@@ -8,6 +8,7 @@ import com.hogent.svkapp.features.create_ticket.domain.TicketCreator
 import com.hogent.svkapp.features.create_ticket.domain.Validator
 import com.hogent.svkapp.features.create_ticket.domain.entities.ValidationResult
 import com.hogent.svkapp.features.upload_image.domain.Image
+import java.util.Locale
 
 class CreateTicketScreenViewModel(
     private val validator: Validator, private val ticketCreator: TicketCreator,
@@ -53,12 +54,12 @@ class CreateTicketScreenViewModel(
     }
 
     fun onLicensePlateChange(licensePlate: String) {
-        _licensePlate.value = licensePlate
+        _licensePlate.value = licensePlate.uppercase(Locale.ROOT)
         validateLicensePlate()
     }
 
     private fun validateRouteNumber() {
-        val validationResult = validator.validateRouteNumber(routeNumber.value)
+        val validationResult = validator.validateRouteNumber(routeNumber = routeNumber.value)
         _routeNumberError.value = when (validationResult) {
             is ValidationResult.Valid -> null
             is ValidationResult.Invalid -> validationResult.message
@@ -66,7 +67,7 @@ class CreateTicketScreenViewModel(
     }
 
     private fun validateLicensePlate() {
-        val validationResult = validator.validateLicensePlate(licensePlate.value)
+        val validationResult = validator.validateLicensePlate(licensePlate = licensePlate.value)
         _licensePlateError.value = when (validationResult) {
             is ValidationResult.Valid -> null
             is ValidationResult.Invalid -> validationResult.message
