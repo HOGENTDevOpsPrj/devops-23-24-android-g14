@@ -33,6 +33,7 @@ class CreateTicketScreenViewModelTest {
         `when`(mockValidator.validateLicensePlate(anyString())).thenReturn(ValidationResult.Valid)
         `when`(mockValidator.sanitizeRouteNumber(anyString())).thenReturn(123)
         `when`(mockValidator.sanitizeLicensePlate(anyString())).thenReturn("1-ABC-123")
+        `when`(mockValidator.validateImages(anyList())).thenReturn(ValidationResult.Valid)
 
         viewModel.onSend()
 
@@ -47,6 +48,7 @@ class CreateTicketScreenViewModelTest {
                 "Nummerplaat is ongeldig."
             )
         )
+        `when`(mockValidator.validateImages(anyList())).thenReturn(ValidationResult.Invalid("Voeg minstens één foto toe."))
 
         viewModel.onSend()
 
@@ -59,9 +61,11 @@ class CreateTicketScreenViewModelTest {
         `when`(mockValidator.validateLicensePlate(anyString())).thenReturn(ValidationResult.Valid)
         `when`(mockValidator.sanitizeRouteNumber(anyString())).thenReturn(123)
         `when`(mockValidator.sanitizeLicensePlate(anyString())).thenReturn("1-ABC-123")
+        `when`(mockValidator.validateImages(anyList())).thenReturn(ValidationResult.Valid)
 
         viewModel.onRouteNumberChange("123")
         viewModel.onLicensePlateChange("1-ABC-123")
+        viewModel.addImage(mock(Image::class.java))
         viewModel.onSend()
 
         assertEquals("", viewModel.routeNumber.value)
@@ -138,9 +142,37 @@ class CreateTicketScreenViewModelTest {
     @Test
     fun `addImage adds image to images`() {
         val image = mock(Image::class.java)
+        `when`(mockValidator.validateImages(anyList())).thenReturn(ValidationResult.Valid)
         viewModel.addImage(image)
 
         assertEquals(1, viewModel.images.size)
         assertEquals(image, viewModel.images[0])
+    }
+
+    @Test
+    fun `addImage validates images`() {
+        val image = mock(Image::class.java)
+        `when`(mockValidator.validateImages(anyList())).thenReturn(ValidationResult.Valid)
+        viewModel.addImage(image)
+
+        verify(mockValidator).validateImages(anyList())
+    }
+
+    @Test
+    fun `addImage with valid images sets no error`() {
+        val image = mock(Image::class.java)
+        `when`(mockValidator.validateImages(anyList())).thenReturn(ValidationResult.Valid)
+        viewModel.addImage(image)
+
+        assertEquals(null, viewModel.imagesError.value)
+    }
+
+    @Test
+    fun `addImage with invalid images sets error`() {
+        val image = mock(Image::class.java)
+        `when`(mockValidator.validateImages(anyList())).thenReturn(ValidationResult.Invalid("Voeg minstens één foto toe."))
+        viewModel.addImage(image)
+
+        assertEquals("Voeg minstens één foto toe.", viewModel.imagesError.value)
     }
 }

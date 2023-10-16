@@ -1,6 +1,7 @@
 package com.hogent.svkapp.features.create_ticket.data.sources
 
 import com.hogent.svkapp.features.create_ticket.domain.entities.Ticket
+import com.hogent.svkapp.main.util.NoOpLogger
 import org.junit.Before
 import org.junit.Test
 
@@ -10,7 +11,8 @@ class TicketLocalDataSourceTest {
 
     @Before
     fun setup() {
-        ticketLocalDataSource = TicketLocalDataSource()
+        val logger = NoOpLogger()
+        ticketLocalDataSource = TicketLocalDataSource(logger)
     }
 
     @Test

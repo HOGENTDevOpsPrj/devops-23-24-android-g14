@@ -7,13 +7,15 @@ import com.hogent.svkapp.features.create_ticket.data.sources.TicketLocalDataSour
 import com.hogent.svkapp.features.create_ticket.domain.TicketCreator
 import com.hogent.svkapp.features.create_ticket.domain.Validator
 import com.hogent.svkapp.features.create_ticket.presentation.viewmodels.CreateTicketScreenViewModel
+import com.hogent.svkapp.main.util.AndroidLogger
 
 interface CreateTicketModule {
     fun getViewModel(): CreateTicketScreenViewModel
 }
 
 class CreateTicketModuleImpl : CreateTicketModule {
-    private val ticketLocalDataSource = TicketLocalDataSource()
+    private val logger = AndroidLogger()
+    private val ticketLocalDataSource = TicketLocalDataSource(logger = logger)
     private val ticketRepository: TicketRepository =
         TicketRepositoryImpl(localDataSource = ticketLocalDataSource)
     private val ticketCreator = TicketCreator(ticketRepository = ticketRepository)
