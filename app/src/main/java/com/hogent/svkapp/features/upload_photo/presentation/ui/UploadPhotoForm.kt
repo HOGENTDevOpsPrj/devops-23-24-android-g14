@@ -1,18 +1,32 @@
 package com.hogent.svkapp.features.upload_photo.presentation.ui
 
-import MockImageSource
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.hogent.svkapp.features.upload_photo.domain.ImageResource
+import com.hogent.svkapp.features.upload_photo.MockUploadPhotoModule
+import com.hogent.svkapp.features.upload_photo.domain.Photo
+import com.hogent.svkapp.features.upload_photo.presentation.viewmodel.UploadPhotoViewModel
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
 @Composable
-fun UploadPhotoForm(imageList: List<ImageResource>, modifier: Modifier = Modifier) {
+fun UploadPhotoForm(viewModel: UploadPhotoViewModel, modifier: Modifier = Modifier) {
+    val takePictureLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap ->
+        bitmap?.let {
+            viewModel.addPhoto(Photo(bitmap = it))
+        }
+    }
+
+    val photos = remember { viewModel.photos }
+
     Column(modifier = modifier) {
-        ScrollableImageList(imageList = imageList)
-        UploadPhotoButton()
+        ScrollableImageList(imageList = photos)
+        UploadPhotoButton(onClick = { takePictureLauncher.launch(null) })
     }
 }
 
@@ -20,7 +34,8 @@ fun UploadPhotoForm(imageList: List<ImageResource>, modifier: Modifier = Modifie
 @Composable
 fun UploadPhotoFormPreviewEmpty() {
     TemplateApplicationTheme {
-        UploadPhotoForm(imageList = emptyList())
+        val mockUploadPhotoModule = MockUploadPhotoModule()
+        UploadPhotoForm(mockUploadPhotoModule.getViewModel())
     }
 }
 
@@ -28,7 +43,8 @@ fun UploadPhotoFormPreviewEmpty() {
 @Composable
 fun UploadPhotoFormPreviewEmptyDark() {
     TemplateApplicationTheme {
-        UploadPhotoForm(imageList = emptyList())
+        val mockUploadPhotoModule = MockUploadPhotoModule()
+        UploadPhotoForm(mockUploadPhotoModule.getViewModel())
     }
 }
 
@@ -36,7 +52,8 @@ fun UploadPhotoFormPreviewEmptyDark() {
 @Composable
 fun UploadPhotoFormPreview() {
     TemplateApplicationTheme {
-        UploadPhotoForm(imageList = MockImageSource().loadImages())
+        val mockUploadPhotoModule = MockUploadPhotoModule()
+        UploadPhotoForm(mockUploadPhotoModule.getViewModel())
     }
 }
 
@@ -44,6 +61,7 @@ fun UploadPhotoFormPreview() {
 @Composable
 fun UploadPhotoFormPreviewDark() {
     TemplateApplicationTheme {
-        UploadPhotoForm(imageList = MockImageSource().loadImages())
+        val mockUploadPhotoModule = MockUploadPhotoModule()
+        UploadPhotoForm(mockUploadPhotoModule.getViewModel())
     }
 }
