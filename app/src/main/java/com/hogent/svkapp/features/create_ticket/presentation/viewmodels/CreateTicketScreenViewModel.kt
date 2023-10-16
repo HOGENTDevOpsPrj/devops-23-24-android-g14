@@ -13,13 +13,13 @@ import java.util.Locale
 class CreateTicketScreenViewModel(
     private val validator: Validator, private val ticketCreator: TicketCreator,
 ) : ViewModel() {
-    private var _routeNumber = mutableStateOf("")
-    private var _licensePlate = mutableStateOf("")
+    private var _routeNumber = mutableStateOf(value = "")
+    private var _licensePlate = mutableStateOf(value = "")
     private val _images = mutableStateListOf<Image>()
 
-    private var _routeNumberError = mutableStateOf<String?>(null)
-    private var _licensePlateError = mutableStateOf<String?>(null)
-    private var _imagesError = mutableStateOf<String?>(null)
+    private var _routeNumberError = mutableStateOf<String?>(value = null)
+    private var _licensePlateError = mutableStateOf<String?>(value = null)
+    private var _imagesError = mutableStateOf<String?>(value = null)
 
     val routeNumber: State<String> get() = _routeNumber
     val licensePlate: State<String> get() = _licensePlate
@@ -30,7 +30,7 @@ class CreateTicketScreenViewModel(
     val imagesError: State<String?> get() = _imagesError
 
     fun addImage(image: Image) {
-        _images.add(image)
+        _images.add(element = image)
         validateImages()
     }
 
@@ -41,8 +41,8 @@ class CreateTicketScreenViewModel(
 
         if (routeNumberError.value == null && licensePlateError.value == null && _imagesError.value == null) {
             ticketCreator.createTicket(
-                routeNumber = validator.sanitizeRouteNumber(routeNumber.value),
-                licensePlate = validator.sanitizeLicensePlate(licensePlate.value),
+                routeNumber = validator.sanitizeRouteNumber(routeNumber = routeNumber.value),
+                licensePlate = validator.sanitizeLicensePlate(licensePlate = licensePlate.value),
                 images = images
             )
 
@@ -56,7 +56,7 @@ class CreateTicketScreenViewModel(
     }
 
     fun onLicensePlateChange(licensePlate: String) {
-        _licensePlate.value = licensePlate.uppercase(Locale.ROOT)
+        _licensePlate.value = licensePlate.uppercase(locale = Locale.ROOT)
         validateLicensePlate()
     }
 
@@ -77,7 +77,7 @@ class CreateTicketScreenViewModel(
     }
 
     private fun validateImages() {
-        val validationResult = validator.validateImages(photos = images)
+        val validationResult = validator.validateImages(images = images)
         _imagesError.value = when (validationResult) {
             is ValidationResult.Valid -> null
             is ValidationResult.Invalid -> validationResult.message

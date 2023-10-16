@@ -30,8 +30,8 @@ class Validator {
         }
     }
 
-    fun validateImages(photos: List<Image>): ValidationResult {
-        return if (photos.isEmpty()) {
+    fun validateImages(images: List<Image>): ValidationResult {
+        return if (images.isEmpty()) {
             ValidationResult.Invalid(message = "Voeg minstens één foto toe.")
         } else {
             ValidationResult.Valid

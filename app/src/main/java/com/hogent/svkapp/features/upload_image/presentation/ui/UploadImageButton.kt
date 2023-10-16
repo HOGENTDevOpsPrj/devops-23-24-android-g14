@@ -11,22 +11,25 @@ import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 @Composable
 fun UploadImageButton(onClick: () -> Unit = {}) {
     Button(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
-        Text("Voeg foto toe")
+        Text(text = "Voeg foto toe")
+    }
+}
+
+@Composable
+fun UploadImageButtonPreviewBase() {
+    TemplateApplicationTheme {
+        UploadImageButton()
     }
 }
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun UploadImageButtonPreview() {
-    TemplateApplicationTheme {
-        UploadImageButton()
-    }
+    UploadImageButtonPreviewBase()
 }
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun UploadImageButtonPreviewDark() {
-    TemplateApplicationTheme {
-        UploadImageButton()
-    }
+    UploadImageButtonPreviewBase()
 }

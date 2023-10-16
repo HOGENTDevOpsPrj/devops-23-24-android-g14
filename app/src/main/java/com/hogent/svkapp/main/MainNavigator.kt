@@ -27,7 +27,6 @@ import com.hogent.svkapp.features.login.presentation.ui.LoginScreen
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
 class MainNavigator {
-
     private enum class Screen {
         LOGIN, CREATE_TICKET
     }
@@ -44,15 +43,17 @@ class MainNavigator {
 
         Scaffold(topBar = {
             if (currentScreen != Screen.LOGIN) {
-                TopAppBar(title = { Text("SVK") }, actions = {
+                TopAppBar(title = { Text(text = "SVK") }, actions = {
                     IconButton(onClick = {
-                        navController.navigate("login") {
-                            popUpTo("login") {
+                        navController.navigate(route = "login") {
+                            popUpTo(route = "login") {
                                 inclusive = true
                             }
                         }
                     }) {
-                        Icon(Icons.Default.ExitToApp, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.Default.ExitToApp, contentDescription = "Uitloggen"
+                        )
                     }
                 })
             }
@@ -63,15 +64,15 @@ class MainNavigator {
                 NavHost(
                     navController = navController,
                     startDestination = "login",
-                    modifier = Modifier.padding(innerPadding)
+                    modifier = Modifier.padding(paddingValues = innerPadding)
                 ) {
-                    composable("login") {
+                    composable(route = "login") {
                         currentScreen = Screen.LOGIN
                         TemplateApplicationTheme {
                             LoginScreen(navController = navController)
                         }
                     }
-                    composable("createTicket") {
+                    composable(route = "createTicket") {
                         currentScreen = Screen.CREATE_TICKET
                         TemplateApplicationTheme {
                             CreateTicketScreen(createTicketScreenViewModel = createTicketModule.getViewModel())

@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.hogent.svkapp.main.presentation.ui.SVKLogo
 import com.hogent.svkapp.main.presentation.ui.theme.spacing
-import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun LoginScreen(navController: NavController) {
@@ -25,8 +24,11 @@ fun LoginScreen(navController: NavController) {
         verticalArrangement = Arrangement.spacedBy(space = MaterialTheme.spacing.large)
     ) {
         SVKLogo()
-        Button(onClick = { navController.navigate("createTicket") }) {
-            Text("Login")
+        Button(
+            onClick = { navController.navigate(route = "createTicket") },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Login")
         }
     }
 }

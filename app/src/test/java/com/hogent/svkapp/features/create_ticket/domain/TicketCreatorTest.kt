@@ -16,7 +16,7 @@ class TicketCreatorTest {
     @Before
     fun setUp() {
         ticketRepository = mock()
-        ticketCreator = TicketCreator(ticketRepository)
+        ticketCreator = TicketCreator(ticketRepository = ticketRepository)
     }
 
     @Test
@@ -25,7 +25,9 @@ class TicketCreatorTest {
         val licensePlate = "1-ABC-123"
         val images = emptyList<Image>()
 
-        ticketCreator.createTicket(routeNumber, licensePlate, images)
+        ticketCreator.createTicket(
+            routeNumber = routeNumber, licensePlate = licensePlate, images = images
+        )
 
         val expectedTicket =
             Ticket(routeNumber = routeNumber, licensePlate = licensePlate, images = images)

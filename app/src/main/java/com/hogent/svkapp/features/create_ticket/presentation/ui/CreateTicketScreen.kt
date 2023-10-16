@@ -54,9 +54,8 @@ fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel)
     }
 }
 
-@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun CreateTicketScreenPreview() {
+fun CreateTicketScreenPreviewBase() {
     val mockCreateTicketModule = MockCreateTicketModule()
 
     TemplateApplicationTheme {
@@ -66,14 +65,14 @@ fun CreateTicketScreenPreview() {
     }
 }
 
-@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun CreateTicketScreenPreview() {
+    CreateTicketScreenPreviewBase()
+}
+
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CreateTicketScreenPreviewDark() {
-    val mockCreateTicketModule = MockCreateTicketModule()
-
-    TemplateApplicationTheme {
-        CreateTicketScreen(
-            createTicketScreenViewModel = mockCreateTicketModule.getViewModel()
-        )
-    }
+    CreateTicketScreenPreviewBase()
 }
