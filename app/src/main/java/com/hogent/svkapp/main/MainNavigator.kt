@@ -1,4 +1,4 @@
-package com.hogent.svkapp.main.presentation.navigation
+package com.hogent.svkapp.main
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,10 +21,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.hogent.svkapp.features.create_ticket.presentation.ui.CreateTicketScreen
 import com.hogent.svkapp.features.create_ticket.CreateTicketModuleImpl
-import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
+import com.hogent.svkapp.features.create_ticket.presentation.ui.CreateTicketScreen
 import com.hogent.svkapp.features.login.presentation.ui.LoginScreen
+import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
 class MainNavigator {
 
@@ -42,26 +42,21 @@ class MainNavigator {
         // Track the current screen
         var currentScreen by remember { mutableStateOf(Screen.LOGIN) }
 
-        Scaffold(
-            topBar = {
-                if (currentScreen != Screen.LOGIN) {
-                    TopAppBar(
-                        title = { Text("SVK") },
-                        actions = {
-                            IconButton(onClick = {
-                                navController.navigate("login") {
-                                    popUpTo("login") {
-                                        inclusive = true
-                                    }
-                                }
-                            }) {
-                                Icon(Icons.Default.ExitToApp, contentDescription = null)
+        Scaffold(topBar = {
+            if (currentScreen != Screen.LOGIN) {
+                TopAppBar(title = { Text("SVK") }, actions = {
+                    IconButton(onClick = {
+                        navController.navigate("login") {
+                            popUpTo("login") {
+                                inclusive = true
                             }
                         }
-                    )
-                }
+                    }) {
+                        Icon(Icons.Default.ExitToApp, contentDescription = null)
+                    }
+                })
             }
-        ) { innerPadding ->
+        }) { innerPadding ->
             Surface(
                 modifier = Modifier.fillMaxSize()
             ) {
@@ -79,7 +74,7 @@ class MainNavigator {
                     composable("createTicket") {
                         currentScreen = Screen.CREATE_TICKET
                         TemplateApplicationTheme {
-                            CreateTicketScreen(viewModel = createTicketModule.getViewModel())
+                            CreateTicketScreen(createTicketScreenViewModel = createTicketModule.getViewModel())
                         }
                     }
                 }
