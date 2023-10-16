@@ -22,12 +22,10 @@ import com.hogent.svkapp.main.presentation.ui.theme.spacing
 fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel) {
     val routeNumber by createTicketScreenViewModel.routeNumber
     val licensePlate by createTicketScreenViewModel.licensePlate
+    val images = remember { createTicketScreenViewModel.images }
     val routeNumberError by createTicketScreenViewModel.routeNumberError
     val licensePlateError by createTicketScreenViewModel.licensePlateError
-    val images = remember { createTicketScreenViewModel.images }
-
-
-
+    val imagesError by createTicketScreenViewModel.imagesError
 
     Scaffold(floatingActionButton = {
         SendFloatingActionButton(onSend = createTicketScreenViewModel::onSend)
@@ -44,13 +42,13 @@ fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel)
             CreateTicketForm(
                 routeNumber = routeNumber,
                 licensePlate = licensePlate,
+                images = images,
                 onRouteNumberChange = createTicketScreenViewModel::onRouteNumberChange,
                 onLicensePlateChange = createTicketScreenViewModel::onLicensePlateChange,
+                onAddImage = createTicketScreenViewModel::addImage,
                 routeNumberError = routeNumberError,
                 licensePlateError = licensePlateError,
-                images = images,
-                onAddImage = createTicketScreenViewModel::addImage,
-                onDeleteImage = createTicketScreenViewModel::deleteImage,
+                imagesError = imagesError
             )
         }
     }

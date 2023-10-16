@@ -15,18 +15,23 @@ class CreateTicketScreenViewModel(
 ) : ViewModel() {
     private var _routeNumber = mutableStateOf("")
     private var _licensePlate = mutableStateOf("")
+    private val _images = mutableStateListOf<Image>()
+
     private var _routeNumberError = mutableStateOf<String?>(null)
     private var _licensePlateError = mutableStateOf<String?>(null)
-    private val _images = mutableStateListOf<Image>()
+    private var _imagesError = mutableStateOf<String?>(null)
 
     val routeNumber: State<String> get() = _routeNumber
     val licensePlate: State<String> get() = _licensePlate
+    val images get() = _images
+
     val routeNumberError: State<String?> get() = _routeNumberError
     val licensePlateError: State<String?> get() = _licensePlateError
-    val images get() = _images
+    val imagesError: State<String?> get() = _imagesError
 
     fun addImage(image: Image) {
         _images.add(image)
+        validateImages()
     }
 
     fun deleteImage(image: Image) {
@@ -36,8 +41,9 @@ class CreateTicketScreenViewModel(
     fun onSend() {
         validateRouteNumber()
         validateLicensePlate()
+        validateImages()
 
-        if (routeNumberError.value == null && licensePlateError.value == null) {
+        if (routeNumberError.value == null && licensePlateError.value == null && _imagesError.value == null) {
             ticketCreator.createTicket(
                 routeNumber = validator.sanitizeRouteNumber(routeNumber.value),
                 licensePlate = validator.sanitizeLicensePlate(licensePlate.value),
@@ -74,11 +80,21 @@ class CreateTicketScreenViewModel(
         }
     }
 
+    private fun validateImages() {
+        val validationResult = validator.validateImages(photos = images)
+        _imagesError.value = when (validationResult) {
+            is ValidationResult.Valid -> null
+            is ValidationResult.Invalid -> validationResult.message
+        }
+    }
+
     private fun resetForm() {
         _routeNumber.value = ""
         _licensePlate.value = ""
+        _images.clear()
+
         _routeNumberError.value = null
         _licensePlateError.value = null
-        _images.clear()
+        _imagesError.value = null
     }
 }
