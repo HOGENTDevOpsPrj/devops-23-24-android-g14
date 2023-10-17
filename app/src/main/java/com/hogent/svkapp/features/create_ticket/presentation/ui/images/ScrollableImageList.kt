@@ -18,11 +18,11 @@ fun ScrollableImageList(imageList: List<Image>) {
 }
 
 val previewImagesList = listOf(
-    Image(resourceId = R.drawable.resource_default),
-    Image(resourceId = R.drawable.resource_default),
-    Image(resourceId = R.drawable.resource_default),
-    Image(resourceId = R.drawable.resource_default),
-    Image(resourceId = R.drawable.resource_default)
+    Image.ResourceImage(resourceId = R.drawable.resource_default),
+    Image.ResourceImage(resourceId = R.drawable.resource_default),
+    Image.ResourceImage(resourceId = R.drawable.resource_default),
+    Image.ResourceImage(resourceId = R.drawable.resource_default),
+    Image.ResourceImage(resourceId = R.drawable.resource_default),
 )
 
 @Composable

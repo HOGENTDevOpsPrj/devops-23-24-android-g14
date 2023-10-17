@@ -22,10 +22,9 @@ import com.hogent.svkapp.main.presentation.ui.theme.spacing
 
 @Composable
 fun ImageCard(image: Image) {
-    val painter = when {
-        image.bitmap != null -> BitmapPainter(image = image.bitmap.asImageBitmap())
-        image.resourceId != null -> painterResource(id = image.resourceId)
-        else -> throw IllegalArgumentException("ImageResource must have either a bitmap or a resourceId")
+    val painter = when (image) {
+        is Image.BitmapImage -> BitmapPainter(image.bitmap.asImageBitmap())
+        is Image.ResourceImage -> painterResource(id = image.resourceId)
     }
 
     Image(
@@ -43,7 +42,7 @@ fun ImageCard(image: Image) {
 @Composable
 fun ImageCardPreviewBase() {
     TemplateApplicationTheme {
-        ImageCard(image = Image(resourceId = R.drawable.resource_default))
+        ImageCard(image = Image.ResourceImage(resourceId = R.drawable.resource_default))
     }
 }
 

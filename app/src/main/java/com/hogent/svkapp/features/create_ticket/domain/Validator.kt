@@ -1,48 +1,30 @@
 package com.hogent.svkapp.features.create_ticket.domain
 
-import com.hogent.svkapp.features.create_ticket.domain.entities.ValidationResult
+import com.hogent.svkapp.features.create_ticket.domain.entities.ErrorType
 import com.hogent.svkapp.features.create_ticket.domain.entities.Image
 
-private const val MAX_LICENSE_PLATE_LENGTH = 40
+const val MAX_LICENSE_PLATE_LENGTH = 40
 
 class Validator {
-    fun validateLicensePlate(licensePlate: String): ValidationResult {
-        val cleanLicensePlate = licensePlate.trim().uppercase()
+    fun validateRouteNumber(routeNumber: String): ErrorType? {
+        val cleanRouteNumber = routeNumber.trim().filter { !it.isWhitespace() }
 
-        return if (cleanLicensePlate == "") {
-            ValidationResult.Invalid(message = "Vul een nummerplaat in.")
-        } else if (cleanLicensePlate.length > MAX_LICENSE_PLATE_LENGTH) {
-            ValidationResult.Invalid(message = "Nummerplaat is te lang.")
-        } else {
-            ValidationResult.Valid
-        }
+        if (cleanRouteNumber.isEmpty()) return ErrorType.EMPTY_ROUTE
+        if (cleanRouteNumber.toIntOrNull() == null) return ErrorType.INVALID_ROUTE_NUMBER
+        if (cleanRouteNumber.toInt() <= 0) return ErrorType.INVALID_ROUTE_NUMBER
+        return null
     }
 
-    fun validateRouteNumber(routeNumber: String): ValidationResult {
-        val cleanRouteNumber = routeNumber.trim()
+    fun validateLicensePlate(licensePlate: String): ErrorType? {
+        val cleanLicensePlate = licensePlate.trim().uppercase().filter { !it.isWhitespace() }
 
-        return if (cleanRouteNumber == "") {
-            ValidationResult.Invalid(message = "Vul een routenummer in.")
-        } else if (cleanRouteNumber.toIntOrNull() == null || cleanRouteNumber.toInt() <= 0) {
-            ValidationResult.Invalid(message = "Routenummer is ongeldig.")
-        } else {
-            ValidationResult.Valid
-        }
+        if (cleanLicensePlate.isEmpty()) return ErrorType.EMPTY_LICENSE_PLATE
+        if (cleanLicensePlate.length > MAX_LICENSE_PLATE_LENGTH) return ErrorType.LONG_LICENSE_PLATE
+        return null
     }
 
-    fun validateImages(images: List<Image>): ValidationResult {
-        return if (images.isEmpty()) {
-            ValidationResult.Invalid(message = "Voeg minstens één foto toe.")
-        } else {
-            ValidationResult.Valid
-        }
-    }
-
-    fun sanitizeLicensePlate(licensePlate: String): String {
-        return licensePlate.trim().uppercase()
-    }
-
-    fun sanitizeRouteNumber(routeNumber: String): Int {
-        return routeNumber.trim().toInt()
+    fun validateImages(images: List<Image>): ErrorType? {
+        if (images.isEmpty()) return ErrorType.EMPTY_IMAGES
+        return null
     }
 }

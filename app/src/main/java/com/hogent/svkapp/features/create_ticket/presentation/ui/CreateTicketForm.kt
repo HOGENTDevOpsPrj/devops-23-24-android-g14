@@ -33,7 +33,7 @@ fun CreateTicketForm(
         contract = ActivityResultContracts.TakePicturePreview()
     ) { bitmap ->
         bitmap?.let {
-            onAddImage(Image(bitmap))
+            onAddImage(Image.BitmapImage(bitmap))
         }
     }
 
