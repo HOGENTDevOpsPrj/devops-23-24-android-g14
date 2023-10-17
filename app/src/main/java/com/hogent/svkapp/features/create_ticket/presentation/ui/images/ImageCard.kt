@@ -1,4 +1,4 @@
-package com.hogent.svkapp.features.upload_image.presentation.ui
+package com.hogent.svkapp.features.create_ticket.presentation.ui.images
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hogent.svkapp.R
-import com.hogent.svkapp.features.upload_image.domain.Image
+import com.hogent.svkapp.features.create_ticket.domain.entities.Image
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.main.presentation.ui.theme.spacing
 

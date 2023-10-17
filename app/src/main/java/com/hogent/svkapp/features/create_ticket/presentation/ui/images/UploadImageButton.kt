@@ -1,4 +1,4 @@
-package com.hogent.svkapp.features.upload_image.presentation.ui
+package com.hogent.svkapp.features.create_ticket.presentation.ui.images
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button

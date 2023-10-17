@@ -1,7 +1,7 @@
 package com.hogent.svkapp.features.create_ticket.domain
 
 import com.hogent.svkapp.features.create_ticket.domain.entities.ValidationResult
-import com.hogent.svkapp.features.upload_image.domain.Image
+import com.hogent.svkapp.features.create_ticket.domain.entities.Image
 
 private const val MAX_LICENSE_PLATE_LENGTH = 40
 

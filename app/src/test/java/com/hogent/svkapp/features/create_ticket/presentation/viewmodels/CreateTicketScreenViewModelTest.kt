@@ -3,7 +3,7 @@ package com.hogent.svkapp.features.create_ticket.presentation.viewmodels
 import com.hogent.svkapp.features.create_ticket.domain.TicketCreator
 import com.hogent.svkapp.features.create_ticket.domain.Validator
 import com.hogent.svkapp.features.create_ticket.domain.entities.ValidationResult
-import com.hogent.svkapp.features.upload_image.domain.Image
+import com.hogent.svkapp.features.create_ticket.domain.entities.Image
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test

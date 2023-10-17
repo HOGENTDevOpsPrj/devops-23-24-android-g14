@@ -11,9 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.hogent.svkapp.features.upload_image.domain.Image
-import com.hogent.svkapp.features.upload_image.presentation.ui.ScrollableImageList
-import com.hogent.svkapp.features.upload_image.presentation.ui.UploadImageButton
+import com.hogent.svkapp.features.create_ticket.domain.entities.Image
+import com.hogent.svkapp.features.create_ticket.presentation.ui.images.ScrollableImageList
+import com.hogent.svkapp.features.create_ticket.presentation.ui.images.UploadImageButton
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.main.presentation.ui.theme.spacing
 

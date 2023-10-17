@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.hogent.svkapp.features.create_ticket.domain.TicketCreator
 import com.hogent.svkapp.features.create_ticket.domain.Validator
 import com.hogent.svkapp.features.create_ticket.domain.entities.ValidationResult
-import com.hogent.svkapp.features.upload_image.domain.Image
+import com.hogent.svkapp.features.create_ticket.domain.entities.Image
 import java.util.Locale
 
 class CreateTicketScreenViewModel(
