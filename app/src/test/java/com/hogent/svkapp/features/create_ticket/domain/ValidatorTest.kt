@@ -1,92 +1,81 @@
 package com.hogent.svkapp.features.create_ticket.domain
 
-import com.hogent.svkapp.features.create_ticket.domain.entities.ValidationResult
+import com.hogent.svkapp.features.create_ticket.domain.entities.ErrorType
+import com.hogent.svkapp.features.create_ticket.domain.entities.Image
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
+import org.mockito.MockitoAnnotations
 
 class ValidatorTest {
+
     private lateinit var validator: Validator
+
+    @Mock
+    private lateinit var mockImage: Image
 
     @Before
     fun setUp() {
+        MockitoAnnotations.openMocks(this)
         validator = Validator()
     }
 
     @Test
-    fun `validateLicensePlate for empty license plate`() {
-        assertEquals(
-            ValidationResult.Invalid(message = "Vul een nummerplaat in."),
-            validator.validateLicensePlate(licensePlate = "   ")
-        )
+    fun `routeNumber empty validation`() {
+        val error = validator.validateRouteNumber("   ")
+        assertEquals(ErrorType.EMPTY_ROUTE, error)
     }
 
     @Test
-    fun `validateLicensePlate for long license plate`() {
-        val longLicensePlate = "A".repeat(n = 41)
-        assertEquals(
-            ValidationResult.Invalid(message = "Nummerplaat is te lang."),
-            validator.validateLicensePlate(licensePlate = longLicensePlate)
-        )
+    fun `routeNumber invalid format validation`() {
+        val error = validator.validateRouteNumber("ABC")
+        assertEquals(ErrorType.INVALID_ROUTE_NUMBER, error)
     }
 
     @Test
-    fun `validateLicensePlate for valid license plate`() {
-        assertEquals(
-            ValidationResult.Valid, validator.validateLicensePlate(licensePlate = "AB-1234")
-        )
+    fun `routeNumber less than or equal to zero validation`() {
+        val error = validator.validateRouteNumber("0")
+        assertEquals(ErrorType.INVALID_ROUTE_NUMBER, error)
     }
 
     @Test
-    fun `validateRouteNumber for empty route number`() {
-        assertEquals(
-            ValidationResult.Invalid(message = "Vul een routenummer in."),
-            validator.validateRouteNumber(routeNumber = "   ")
-        )
+    fun `routeNumber valid format`() {
+        val error = validator.validateRouteNumber("123")
+        assertNull(error)
     }
 
     @Test
-    fun `validateRouteNumber for non-integer route number`() {
-        assertEquals(
-            ValidationResult.Invalid(message = "Routenummer is ongeldig."),
-            validator.validateRouteNumber(routeNumber = "ABCD")
-        )
+    fun `licensePlate empty validation`() {
+        val error = validator.validateLicensePlate("  ")
+        assertEquals(ErrorType.EMPTY_LICENSE_PLATE, error)
     }
 
     @Test
-    fun `validateRouteNumber for zero route number`() {
-        assertEquals(
-            ValidationResult.Invalid(message = "Routenummer is ongeldig."),
-            validator.validateRouteNumber(routeNumber = "0")
-        )
+    fun `licensePlate long length validation`() {
+        val longLicensePlate = "A".repeat(MAX_LICENSE_PLATE_LENGTH + 1)
+        val error = validator.validateLicensePlate(longLicensePlate)
+        assertEquals(ErrorType.LONG_LICENSE_PLATE, error)
     }
 
     @Test
-    fun `validateRouteNumber for negative route number`() {
-        assertEquals(
-            ValidationResult.Invalid(message = "Routenummer is ongeldig."),
-            validator.validateRouteNumber(routeNumber = "-5")
-        )
+    fun `licensePlate valid format`() {
+        val licensePlate = "AB-123-CD"
+        val error = validator.validateLicensePlate(licensePlate)
+        assertNull(error)
     }
 
     @Test
-    fun `validateRouteNumber for valid route number`() {
-        assertEquals(
-            ValidationResult.Valid, validator.validateRouteNumber(routeNumber = "5")
-        )
+    fun `images empty validation`() {
+        val error = validator.validateImages(emptyList())
+        assertEquals(ErrorType.EMPTY_IMAGES, error)
     }
 
     @Test
-    fun `sanitizeLicensePlate trims and uppercases`() {
-        assertEquals(
-            "ABC-1234", validator.sanitizeLicensePlate(licensePlate = " abc-1234  ")
-        )
-    }
-
-    @Test
-    fun `sanitizeRouteNumber trims and converts`() {
-        assertEquals(
-            5, validator.sanitizeRouteNumber(routeNumber = " 5 ")
-        )
+    fun `images valid list`() {
+        val images = listOf(mockImage, mockImage)
+        val error = validator.validateImages(images)
+        assertNull(error)
     }
 }

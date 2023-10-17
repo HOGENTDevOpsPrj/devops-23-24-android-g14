@@ -4,14 +4,16 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.hogent.svkapp.features.create_ticket.domain.TicketCreator
+import com.hogent.svkapp.features.create_ticket.data.repositories.TicketRepository
 import com.hogent.svkapp.features.create_ticket.domain.Validator
+import com.hogent.svkapp.features.create_ticket.domain.entities.CreationResult
+import com.hogent.svkapp.features.create_ticket.domain.entities.ErrorType
 import com.hogent.svkapp.features.create_ticket.domain.entities.Image
-import com.hogent.svkapp.features.create_ticket.domain.entities.ValidationResult
+import com.hogent.svkapp.features.create_ticket.domain.entities.Ticket
 import java.util.Locale
 
 class CreateTicketScreenViewModel(
-    private val validator: Validator, private val ticketCreator: TicketCreator,
+    private val validator: Validator, private val ticketRepository: TicketRepository,
 ) : ViewModel() {
     private var _routeNumber = mutableStateOf(value = "")
     val routeNumber: State<String> get() = _routeNumber
@@ -33,7 +35,6 @@ class CreateTicketScreenViewModel(
 
     fun addImage(image: Image) {
         _images.add(element = image)
-        validate(ValidationType.IMAGES)
     }
 
     fun deleteImage(image: Image) {
@@ -41,17 +42,29 @@ class CreateTicketScreenViewModel(
     }
 
     fun onSend() {
-        validate(ValidationType.ROUTE_NUMBER)
-        validate(ValidationType.LICENSE_PLATE)
-        validate(ValidationType.IMAGES)
+        val creationResult =
+            Ticket.create(validator, _routeNumber.value, _licensePlate.value, _images)
 
-        if (_routeNumberError.value == null && _licensePlateError.value == null && _imagesError.value == null) {
-            ticketCreator.createTicket(
-                routeNumber = validator.sanitizeRouteNumber(routeNumber = routeNumber.value),
-                licensePlate = validator.sanitizeLicensePlate(licensePlate = licensePlate.value),
-                images = images
-            )
-            resetForm()
+        when (creationResult) {
+            is CreationResult.Success -> {
+                ticketRepository.addTicket(creationResult.ticket)
+                resetForm()
+            }
+
+            is CreationResult.Failure -> {
+                _routeNumberError.value = creationResult.errors.find {
+                    it in listOf(
+                        ErrorType.EMPTY_ROUTE, ErrorType.INVALID_ROUTE_NUMBER
+                    )
+                }?.message
+                _licensePlateError.value = creationResult.errors.find {
+                    it in listOf(
+                        ErrorType.EMPTY_LICENSE_PLATE, ErrorType.LONG_LICENSE_PLATE
+                    )
+                }?.message
+                _imagesError.value =
+                    creationResult.errors.find { it == ErrorType.EMPTY_IMAGES }?.message
+            }
         }
     }
 
@@ -73,14 +86,9 @@ class CreateTicketScreenViewModel(
         }
 
         when (type) {
-            ValidationType.ROUTE_NUMBER -> _routeNumberError.value =
-                (result as? ValidationResult.Invalid)?.message
-
-            ValidationType.LICENSE_PLATE -> _licensePlateError.value =
-                (result as? ValidationResult.Invalid)?.message
-
-            ValidationType.IMAGES -> _imagesError.value =
-                (result as? ValidationResult.Invalid)?.message
+            ValidationType.ROUTE_NUMBER -> _routeNumberError.value = result?.message
+            ValidationType.LICENSE_PLATE -> _licensePlateError.value = result?.message
+            ValidationType.IMAGES -> _imagesError.value = result?.message
         }
     }
 

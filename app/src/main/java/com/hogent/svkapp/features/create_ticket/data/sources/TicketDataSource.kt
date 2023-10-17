@@ -14,10 +14,10 @@ class LocalTicketDataSource(private val logger: Logger) : TicketDataSource {
     override fun addTicket(ticket: Ticket) {
         tickets.add(element = ticket)
 
-        logger.debug(tag = "Mock Database", message = "Added ticket: $ticket")
+        logger.debug(tag = "Local Database", message = "Added ticket: $ticket")
     }
 
     override fun getTickets(): List<Ticket> {
-        return tickets
+        return tickets.toList()
     }
 }

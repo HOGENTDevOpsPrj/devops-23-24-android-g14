@@ -4,7 +4,6 @@ import com.hogent.svkapp.features.create_ticket.data.repositories.MockTicketRepo
 import com.hogent.svkapp.features.create_ticket.data.repositories.TicketRepository
 import com.hogent.svkapp.features.create_ticket.data.repositories.TicketRepositoryImpl
 import com.hogent.svkapp.features.create_ticket.data.sources.LocalTicketDataSource
-import com.hogent.svkapp.features.create_ticket.domain.TicketCreator
 import com.hogent.svkapp.features.create_ticket.domain.Validator
 import com.hogent.svkapp.features.create_ticket.presentation.viewmodels.CreateTicketScreenViewModel
 import com.hogent.svkapp.main.util.AndroidLogger
@@ -18,10 +17,9 @@ class CreateTicketModuleImpl : CreateTicketModule {
     private val ticketDataSource = LocalTicketDataSource(logger = logger)
     private val ticketRepository: TicketRepository =
         TicketRepositoryImpl(ticketDataSource = ticketDataSource)
-    private val ticketCreator = TicketCreator(ticketRepository = ticketRepository)
     private val validator = Validator()
     private val viewModel = CreateTicketScreenViewModel(
-        validator = validator, ticketCreator = ticketCreator
+        validator = validator, ticketRepository = ticketRepository
     )
 
     override fun getViewModel(): CreateTicketScreenViewModel {
@@ -31,10 +29,9 @@ class CreateTicketModuleImpl : CreateTicketModule {
 
 class MockCreateTicketModule : CreateTicketModule {
     private val ticketRepository: TicketRepository = MockTicketRepository()
-    private val ticketCreator = TicketCreator(ticketRepository = ticketRepository)
     private val validator = Validator()
     private val viewModel = CreateTicketScreenViewModel(
-        validator = validator, ticketCreator = ticketCreator
+        validator = validator, ticketRepository = ticketRepository
     )
 
     override fun getViewModel(): CreateTicketScreenViewModel {
