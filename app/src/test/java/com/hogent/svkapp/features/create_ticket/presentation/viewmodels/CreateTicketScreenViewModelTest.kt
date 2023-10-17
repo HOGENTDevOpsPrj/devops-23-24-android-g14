@@ -2,8 +2,8 @@ package com.hogent.svkapp.features.create_ticket.presentation.viewmodels
 
 import com.hogent.svkapp.features.create_ticket.domain.TicketCreator
 import com.hogent.svkapp.features.create_ticket.domain.Validator
-import com.hogent.svkapp.features.create_ticket.domain.entities.ValidationResult
 import com.hogent.svkapp.features.create_ticket.domain.entities.Image
+import com.hogent.svkapp.features.create_ticket.domain.entities.ValidationResult
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -15,6 +15,10 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 
+const val ROUTE_NUMBER_ERROR = "Routenummer is ongeldig."
+const val LICENSE_PLATE_ERROR = "Nummerplaat is ongeldig."
+const val IMAGES_ERROR = "Voeg minstens één foto toe."
+
 class CreateTicketScreenViewModelTest {
     private lateinit var viewModel: CreateTicketScreenViewModel
     private lateinit var mockValidator: Validator
@@ -22,20 +26,47 @@ class CreateTicketScreenViewModelTest {
 
     @Before
     fun setUp() {
-        mockValidator = mock()
-        mockTicketCreator = mock()
+        mockValidator = mock(Validator::class.java)
+        mockTicketCreator = mock(TicketCreator::class.java)
         viewModel = CreateTicketScreenViewModel(
             validator = mockValidator, ticketCreator = mockTicketCreator
         )
     }
 
-    @Test
-    fun `onSend with valid data submits form`() {
+    private fun setupValidValidation() {
         `when`(mockValidator.validateRouteNumber(anyString())).thenReturn(ValidationResult.Valid)
         `when`(mockValidator.validateLicensePlate(anyString())).thenReturn(ValidationResult.Valid)
-        `when`(mockValidator.sanitizeRouteNumber(anyString())).thenReturn(123)
-        `when`(mockValidator.sanitizeLicensePlate(anyString())).thenReturn("1-ABC-123")
         `when`(mockValidator.validateImages(anyList())).thenReturn(ValidationResult.Valid)
+    }
+
+    private fun setupInvalidValidation() {
+        `when`(mockValidator.validateRouteNumber(anyString())).thenReturn(
+            ValidationResult.Invalid(
+                ROUTE_NUMBER_ERROR
+            )
+        )
+        `when`(mockValidator.validateLicensePlate(anyString())).thenReturn(
+            ValidationResult.Invalid(
+                LICENSE_PLATE_ERROR
+            )
+        )
+        `when`(mockValidator.validateImages(anyList())).thenReturn(
+            ValidationResult.Invalid(
+                IMAGES_ERROR
+            )
+        )
+    }
+
+    @Test
+    fun `onSend with valid data submits form`() {
+        setupValidValidation()
+
+        `when`(mockValidator.sanitizeRouteNumber(anyString())).thenReturn(
+            123
+        )
+        `when`(mockValidator.sanitizeLicensePlate(anyString())).thenReturn(
+            "1-ABC-123"
+        )
 
         viewModel.onSend()
 
@@ -44,13 +75,7 @@ class CreateTicketScreenViewModelTest {
 
     @Test
     fun `onSend with invalid data does not submit form`() {
-        `when`(mockValidator.validateRouteNumber(anyString())).thenReturn(ValidationResult.Invalid("Routenummer is ongeldig."))
-        `when`(mockValidator.validateLicensePlate(anyString())).thenReturn(
-            ValidationResult.Invalid(
-                message = "Nummerplaat is ongeldig."
-            )
-        )
-        `when`(mockValidator.validateImages(anyList())).thenReturn(ValidationResult.Invalid(message = "Voeg minstens één foto toe."))
+        setupInvalidValidation()
 
         viewModel.onSend()
 
@@ -59,14 +84,10 @@ class CreateTicketScreenViewModelTest {
 
     @Test
     fun `onSend with valid data resets form and errors`() {
-        `when`(mockValidator.validateRouteNumber(anyString())).thenReturn(ValidationResult.Valid)
-        `when`(mockValidator.validateLicensePlate(anyString())).thenReturn(ValidationResult.Valid)
-        `when`(mockValidator.sanitizeRouteNumber(anyString())).thenReturn(123)
-        `when`(mockValidator.sanitizeLicensePlate(anyString())).thenReturn("1-ABC-123")
-        `when`(mockValidator.validateImages(anyList())).thenReturn(ValidationResult.Valid)
+        setupValidValidation()
 
-        viewModel.onRouteNumberChange(routeNumber = "123")
-        viewModel.onLicensePlateChange(licensePlate = "1-ABC-123")
+        viewModel.onRouteNumberChange(routeNumber = "routeNumberTest")
+        viewModel.onLicensePlateChange(licensePlate = "licensePlateTest")
         viewModel.addImage(image = mock(Image::class.java))
         viewModel.onSend()
 
@@ -78,85 +99,88 @@ class CreateTicketScreenViewModelTest {
     }
 
     @Test
-    fun `onRouteNumberChange updates routeNumber`() {
-        `when`(mockValidator.validateRouteNumber(routeNumber = anyString())).thenReturn(
-            ValidationResult.Valid
-        )
-        viewModel.onRouteNumberChange(routeNumber = "123")
+    fun `onSend with invalid data does not reset form and errors`() {
+        setupInvalidValidation()
 
+        viewModel.onRouteNumberChange(routeNumber = "routeNumberTest")
+        viewModel.onLicensePlateChange(licensePlate = "licensePlateTest")
+        viewModel.addImage(image = mock(Image::class.java))
+        viewModel.onSend()
+
+        assertEquals("routeNumberTest", viewModel.routeNumber.value)
+        assertEquals("LICENSEPLATETEST", viewModel.licensePlate.value)
+        assertEquals(ROUTE_NUMBER_ERROR, viewModel.routeNumberError.value)
+        assertEquals(LICENSE_PLATE_ERROR, viewModel.licensePlateError.value)
+        assertEquals(1, viewModel.images.size)
+    }
+
+    @Test
+    fun `onRouteNumberChange updates routeNumber`() {
+        viewModel.onRouteNumberChange(routeNumber = "123")
         assertEquals("123", viewModel.routeNumber.value)
+
+        viewModel.onRouteNumberChange(routeNumber = "")
+        assertEquals("", viewModel.routeNumber.value)
+
+        viewModel.onRouteNumberChange(routeNumber = "invalid")
+        assertEquals("invalid", viewModel.routeNumber.value)
     }
 
     @Test
     fun `onLicensePlateChange updates licensePlate`() {
-        `when`(mockValidator.validateLicensePlate(licensePlate = anyString())).thenReturn(
-            ValidationResult.Valid
-        )
         viewModel.onLicensePlateChange(licensePlate = "1-ABC-123")
-
         assertEquals("1-ABC-123", viewModel.licensePlate.value)
+
+        viewModel.onLicensePlateChange(licensePlate = "")
+        assertEquals("", viewModel.licensePlate.value)
+
+        val tooLong = "12345".repeat(10)
+        viewModel.onLicensePlateChange(licensePlate = tooLong)
+        assertEquals(tooLong, viewModel.licensePlate.value)
     }
 
     @Test
     fun `onLicensePlateChange will capitalize licensePlate`() {
-        `when`(mockValidator.validateLicensePlate(licensePlate = anyString())).thenReturn(
-            ValidationResult.Valid
-        )
-        viewModel.onLicensePlateChange(licensePlate = "1-abc-123")
+        viewModel.onLicensePlateChange(licensePlate = "test test")
 
-        assertEquals("1-ABC-123", viewModel.licensePlate.value)
+        assertEquals("TEST TEST", viewModel.licensePlate.value)
     }
 
     @Test
     fun `validateRouteNumber with valid route number sets no error`() {
-        `when`(mockValidator.validateRouteNumber(routeNumber = anyString())).thenReturn(
-            ValidationResult.Valid
-        )
-
-        viewModel.onRouteNumberChange(routeNumber = "123")
+        setupValidValidation()
+        viewModel.onRouteNumberChange(routeNumber = "")
 
         assertEquals(null, viewModel.routeNumberError.value)
     }
 
     @Test
     fun `validateRouteNumber with invalid route number sets error`() {
-        `when`(mockValidator.validateRouteNumber(routeNumber = anyString())).thenReturn(
-            ValidationResult.Invalid("Routenummer is ongeldig.")
-        )
+        setupInvalidValidation()
+        viewModel.onRouteNumberChange(routeNumber = "")
 
-        viewModel.onRouteNumberChange(routeNumber = "123")
-
-        assertEquals("Routenummer is ongeldig.", viewModel.routeNumberError.value)
+        assertEquals(ROUTE_NUMBER_ERROR, viewModel.routeNumberError.value)
     }
 
     @Test
     fun `validateLicensePlate with valid license plate sets no error`() {
-        `when`(mockValidator.validateLicensePlate(licensePlate = anyString())).thenReturn(
-            ValidationResult.Valid
-        )
-
-        viewModel.onLicensePlateChange(licensePlate = "1-ABC-123")
+        setupValidValidation()
+        viewModel.onLicensePlateChange(licensePlate = "")
 
         assertEquals(null, viewModel.licensePlateError.value)
     }
 
     @Test
     fun `validateLicensePlate with invalid license plate sets error`() {
-        `when`(mockValidator.validateLicensePlate(licensePlate = anyString())).thenReturn(
-            ValidationResult.Invalid(
-                message = "Nummerplaat is ongeldig."
-            )
-        )
+        setupInvalidValidation()
+        viewModel.onLicensePlateChange(licensePlate = "")
 
-        viewModel.onLicensePlateChange(licensePlate = "1-ABC-123")
-
-        assertEquals("Nummerplaat is ongeldig.", viewModel.licensePlateError.value)
+        assertEquals(LICENSE_PLATE_ERROR, viewModel.licensePlateError.value)
     }
 
     @Test
     fun `addImage adds image to images`() {
         val image = mock(Image::class.java)
-        `when`(mockValidator.validateImages(images = anyList())).thenReturn(ValidationResult.Valid)
         viewModel.addImage(image = image)
 
         assertEquals(1, viewModel.images.size)
@@ -164,18 +188,9 @@ class CreateTicketScreenViewModelTest {
     }
 
     @Test
-    fun `addImage validates images`() {
-        val image = mock(Image::class.java)
-        `when`(mockValidator.validateImages(images = anyList())).thenReturn(ValidationResult.Valid)
-        viewModel.addImage(image)
-
-        verify(mockValidator).validateImages(images = anyList())
-    }
-
-    @Test
     fun `addImage with valid images sets no error`() {
+        setupValidValidation()
         val image = mock(Image::class.java)
-        `when`(mockValidator.validateImages(images = anyList())).thenReturn(ValidationResult.Valid)
         viewModel.addImage(image = image)
 
         assertEquals(null, viewModel.imagesError.value)
@@ -183,14 +198,10 @@ class CreateTicketScreenViewModelTest {
 
     @Test
     fun `addImage with invalid images sets error`() {
+        setupInvalidValidation()
         val image = mock(Image::class.java)
-        `when`(mockValidator.validateImages(images = anyList())).thenReturn(
-            ValidationResult.Invalid(
-                "Voeg minstens één foto toe."
-            )
-        )
         viewModel.addImage(image = image)
 
-        assertEquals("Voeg minstens één foto toe.", viewModel.imagesError.value)
+        assertEquals(IMAGES_ERROR, viewModel.imagesError.value)
     }
 }
