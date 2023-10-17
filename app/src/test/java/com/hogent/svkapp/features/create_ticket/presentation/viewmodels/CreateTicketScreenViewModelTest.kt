@@ -7,6 +7,7 @@ import com.hogent.svkapp.features.create_ticket.domain.entities.ValidationResult
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.anyList
 import org.mockito.Mockito.anyString
@@ -14,20 +15,24 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
+import org.mockito.MockitoAnnotations
 
 const val ROUTE_NUMBER_ERROR = "Routenummer is ongeldig."
 const val LICENSE_PLATE_ERROR = "Nummerplaat is ongeldig."
 const val IMAGES_ERROR = "Voeg minstens één foto toe."
 
 class CreateTicketScreenViewModelTest {
-    private lateinit var viewModel: CreateTicketScreenViewModel
+    @Mock
     private lateinit var mockValidator: Validator
+
+    @Mock
     private lateinit var mockTicketCreator: TicketCreator
+
+    private lateinit var viewModel: CreateTicketScreenViewModel
 
     @Before
     fun setUp() {
-        mockValidator = mock(Validator::class.java)
-        mockTicketCreator = mock(TicketCreator::class.java)
+        MockitoAnnotations.openMocks(this)
         viewModel = CreateTicketScreenViewModel(
             validator = mockValidator, ticketCreator = mockTicketCreator
         )
