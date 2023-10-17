@@ -8,19 +8,22 @@ import com.hogent.svkapp.features.upload_image.domain.Image
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
 @Composable
-fun ScrollableImageList(imageList: List<Image>) {
+fun ScrollableImageList(imageList: MutableList<Image>) {
     LazyRow {
         items(imageList) { imageRes ->
-            ImageCard(image = imageRes)
+            ImageCard(image = imageRes, onDelete = {
+                imageList.remove(imageRes)
+            })
         }
     }
 }
+
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun ScrollableImageListPreview() {
     TemplateApplicationTheme {
-        ScrollableImageList(imageList = emptyList())
+        ScrollableImageList(imageList = mutableListOf())
     }
 }
 
@@ -28,6 +31,7 @@ fun ScrollableImageListPreview() {
 @Composable
 fun ScrollableImageListPreviewDark() {
     TemplateApplicationTheme {
-        ScrollableImageList(imageList = emptyList())
+        ScrollableImageList(imageList = mutableListOf())
     }
 }
+

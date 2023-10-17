@@ -4,12 +4,14 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.features.upload_image.domain.Image
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
 @Composable
-fun UploadImageForm(images: List<Image>, onAddImage: (Image) -> Unit) {
+fun UploadImageForm(images: MutableList<Image>, onAddImage: (Image) -> Unit) {
 
     val takePictureLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
@@ -29,7 +31,7 @@ fun UploadImageForm(images: List<Image>, onAddImage: (Image) -> Unit) {
 @Composable
 fun UploadPhotoFormPreviewEmpty() {
     TemplateApplicationTheme {
-        UploadImageForm(images = listOf(), onAddImage = {})
+        UploadImageForm(images = mutableListOf(), onAddImage = {})
     }
 }
 
@@ -37,7 +39,7 @@ fun UploadPhotoFormPreviewEmpty() {
 @Composable
 fun UploadPhotoFormPreviewEmptyDark() {
     TemplateApplicationTheme {
-        UploadImageForm(images = listOf(), onAddImage = {})
+        UploadImageForm(images = mutableListOf(), onAddImage = {})
     }
 }
 
@@ -45,7 +47,7 @@ fun UploadPhotoFormPreviewEmptyDark() {
 @Composable
 fun UploadPhotoFormPreview() {
     TemplateApplicationTheme {
-        UploadImageForm(images = listOf(), onAddImage = {})
+        UploadImageForm(images = mutableListOf(), onAddImage = {})
     }
 }
 
@@ -53,6 +55,6 @@ fun UploadPhotoFormPreview() {
 @Composable
 fun UploadPhotoFormPreviewDark() {
     TemplateApplicationTheme {
-        UploadImageForm(images = listOf(), onAddImage = {})
+        UploadImageForm(images = mutableListOf(), onAddImage = {})
     }
 }

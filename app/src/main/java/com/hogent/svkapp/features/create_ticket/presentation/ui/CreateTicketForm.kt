@@ -19,12 +19,13 @@ fun CreateTicketForm(
     onLicensePlateChange: (String) -> Unit,
     routeNumberError: String?,
     licensePlateError: String?,
-    images: List<Image>,
+    images: MutableList<Image>,
     onAddImage: (Image) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = MaterialTheme.spacing.medium)
     ) {
+
         TicketTextField(
             value = routeNumber,
             label = "Routenummer",
@@ -54,7 +55,7 @@ fun CreateTicketFormPreview() {
             onLicensePlateChange = {},
             routeNumberError = null,
             licensePlateError = null,
-            images = listOf(),
+            images = mutableListOf(),
             onAddImage = {},
         )
     }
@@ -71,7 +72,7 @@ fun CreateTicketFormPreviewError() {
             onLicensePlateChange = {},
             routeNumberError = "Routenummer is ongeldig.",
             licensePlateError = "Gelieve een nummerplaat in te geven.",
-            images = listOf(),
+            images = mutableListOf(),
             onAddImage = {},
         )
     }
@@ -88,7 +89,7 @@ fun CreateTicketFormPreviewErrorRouteNumber() {
             onLicensePlateChange = {},
             routeNumberError = "Routenummer is ongeldig.",
             licensePlateError = null,
-            images = listOf(),
+            images = mutableListOf(),
             onAddImage = {},
         )
     }
@@ -105,7 +106,7 @@ fun CreateTicketFormPreviewDark() {
             onLicensePlateChange = {},
             routeNumberError = null,
             licensePlateError = null,
-            images = listOf(),
+            images = mutableListOf(),
             onAddImage = {},
         )
     }
@@ -122,7 +123,7 @@ fun CreateTicketFormPreviewErrorDark() {
             onLicensePlateChange = {},
             routeNumberError = "Routenummer is ongeldig.",
             licensePlateError = "Gelieve een nummerplaat in te geven.",
-            images = listOf(),
+            images = mutableListOf(),
             onAddImage = {},
         )
     }
@@ -139,7 +140,7 @@ fun CreateTicketFormPreviewErrorRouteNumberDark() {
             onLicensePlateChange = {},
             routeNumberError = "Routenummer is ongeldig.",
             licensePlateError = null,
-            images = listOf(),
+            images = mutableListOf(),
             onAddImage = {},
         )
     }
