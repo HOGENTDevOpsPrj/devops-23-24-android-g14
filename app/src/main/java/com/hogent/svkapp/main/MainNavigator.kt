@@ -23,7 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hogent.svkapp.features.create_ticket.CreateTicketModuleImpl
 import com.hogent.svkapp.features.create_ticket.presentation.ui.CreateTicketScreen
-import com.hogent.svkapp.features.login.presentation.ui.LoginScreen
+import com.hogent.svkapp.features.authentication.presentation.ui.LoginScreen
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
 class MainNavigator {

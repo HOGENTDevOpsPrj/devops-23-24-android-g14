@@ -1,10 +1,11 @@
-package com.hogent.svkapp.features.upload_image.presentation.ui
+package com.hogent.svkapp.features.create_ticket.presentation.ui.images
 
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.hogent.svkapp.features.upload_image.domain.Image
+import com.hogent.svkapp.R
+import com.hogent.svkapp.features.create_ticket.domain.entities.Image
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
 @Composable
@@ -17,11 +18,11 @@ fun ScrollableImageList(imageList: List<Image>) {
 }
 
 val previewImagesList = listOf(
-    Image(resourceId = com.hogent.svkapp.R.drawable.resource_default),
-    Image(resourceId = com.hogent.svkapp.R.drawable.resource_default),
-    Image(resourceId = com.hogent.svkapp.R.drawable.resource_default),
-    Image(resourceId = com.hogent.svkapp.R.drawable.resource_default),
-    Image(resourceId = com.hogent.svkapp.R.drawable.resource_default)
+    Image(resourceId = R.drawable.resource_default),
+    Image(resourceId = R.drawable.resource_default),
+    Image(resourceId = R.drawable.resource_default),
+    Image(resourceId = R.drawable.resource_default),
+    Image(resourceId = R.drawable.resource_default)
 )
 
 @Composable

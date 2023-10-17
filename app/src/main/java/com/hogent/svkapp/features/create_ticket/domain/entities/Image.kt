@@ -1,4 +1,4 @@
-package com.hogent.svkapp.features.upload_image.domain
+package com.hogent.svkapp.features.create_ticket.domain.entities
 
 import android.graphics.Bitmap
 import androidx.annotation.DrawableRes

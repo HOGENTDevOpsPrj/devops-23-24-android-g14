@@ -1,4 +1,4 @@
-package com.hogent.svkapp.features.login.presentation.ui
+package com.hogent.svkapp.features.authentication.presentation.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
