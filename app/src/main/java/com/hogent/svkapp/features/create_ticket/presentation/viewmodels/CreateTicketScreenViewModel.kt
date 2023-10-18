@@ -28,6 +28,10 @@ class CreateTicketScreenViewModel(
         _images.add(image)
     }
 
+    fun deleteImage(image: Image) {
+        _images.remove(image)
+    }
+
     fun onSend() {
         validateRouteNumber()
         validateLicensePlate()

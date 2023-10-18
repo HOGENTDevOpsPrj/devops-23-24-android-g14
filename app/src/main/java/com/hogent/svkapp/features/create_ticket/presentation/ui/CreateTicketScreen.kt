@@ -9,11 +9,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.features.create_ticket.MockCreateTicketModule
 import com.hogent.svkapp.features.create_ticket.presentation.viewmodels.CreateTicketScreenViewModel
+import com.hogent.svkapp.features.upload_image.presentation.ui.DeletePhotoDialog
 import com.hogent.svkapp.main.presentation.ui.SVKLogo
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.main.presentation.ui.theme.spacing
@@ -25,6 +27,9 @@ fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel)
     val routeNumberError by createTicketScreenViewModel.routeNumberError
     val licensePlateError by createTicketScreenViewModel.licensePlateError
     val images = remember { createTicketScreenViewModel.images }
+
+
+
 
     Scaffold(floatingActionButton = {
         SendFloatingActionButton(onSend = createTicketScreenViewModel::onSend)
@@ -46,7 +51,8 @@ fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel)
                 routeNumberError = routeNumberError,
                 licensePlateError = licensePlateError,
                 images = images,
-                onAddImage = createTicketScreenViewModel::addImage
+                onAddImage = createTicketScreenViewModel::addImage,
+                onDeleteImage = createTicketScreenViewModel::deleteImage,
             )
         }
     }

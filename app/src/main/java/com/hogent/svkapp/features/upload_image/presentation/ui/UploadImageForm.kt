@@ -11,7 +11,10 @@ import com.hogent.svkapp.features.upload_image.domain.Image
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
 @Composable
-fun UploadImageForm(images: MutableList<Image>, onAddImage: (Image) -> Unit) {
+fun UploadImageForm(
+    images: List<Image>,
+    onAddImage: (Image) -> Unit,
+    onDeleteImage: (Image) -> Unit) {
 
     val takePictureLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
@@ -22,7 +25,7 @@ fun UploadImageForm(images: MutableList<Image>, onAddImage: (Image) -> Unit) {
     }
 
     Column {
-        ScrollableImageList(imageList = images)
+        ScrollableImageList(imageList = images, onDeleteImage = onDeleteImage)
         UploadImageButton(onClick = { takePictureLauncher.launch(null) })
     }
 }
@@ -31,7 +34,11 @@ fun UploadImageForm(images: MutableList<Image>, onAddImage: (Image) -> Unit) {
 @Composable
 fun UploadPhotoFormPreviewEmpty() {
     TemplateApplicationTheme {
-        UploadImageForm(images = mutableListOf(), onAddImage = {})
+        UploadImageForm(
+            images = mutableListOf(),
+            onAddImage = {},
+            onDeleteImage = {},
+            )
     }
 }
 
@@ -39,7 +46,11 @@ fun UploadPhotoFormPreviewEmpty() {
 @Composable
 fun UploadPhotoFormPreviewEmptyDark() {
     TemplateApplicationTheme {
-        UploadImageForm(images = mutableListOf(), onAddImage = {})
+        UploadImageForm(
+            images = mutableListOf(),
+            onAddImage = {},
+            onDeleteImage = {},
+        )
     }
 }
 
@@ -47,7 +58,11 @@ fun UploadPhotoFormPreviewEmptyDark() {
 @Composable
 fun UploadPhotoFormPreview() {
     TemplateApplicationTheme {
-        UploadImageForm(images = mutableListOf(), onAddImage = {})
+        UploadImageForm(
+            images = mutableListOf(),
+            onAddImage = {},
+            onDeleteImage = {},
+        )
     }
 }
 
@@ -55,6 +70,10 @@ fun UploadPhotoFormPreview() {
 @Composable
 fun UploadPhotoFormPreviewDark() {
     TemplateApplicationTheme {
-        UploadImageForm(images = mutableListOf(), onAddImage = {})
+        UploadImageForm(
+            images = mutableListOf(),
+            onAddImage = {},
+            onDeleteImage = {},
+        )
     }
 }

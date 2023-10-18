@@ -14,6 +14,8 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
@@ -34,9 +36,23 @@ fun ImageCard(image: Image, onDelete: () -> Unit) {
         image.resourceId != null -> painterResource(id = image.resourceId)
         else -> throw IllegalArgumentException("ImageResource must have either a bitmap or a resourceId")
     }
+
+    val openAlertDialog = remember { mutableStateOf(false) }
+
     Box {
+        when {
+            openAlertDialog.value -> {
+                DeletePhotoDialog(
+                    onDismissRequest = { openAlertDialog.value = false },
+                    onConfirmation = {
+                        onDelete()
+                        openAlertDialog.value = false
+                    })
+            }
+        }
+
         Button(
-            onClick = {onDelete()},
+            onClick = {openAlertDialog.value = true},
             shape = CircleShape,
             modifier = Modifier
                 .height(20.dp)

@@ -19,8 +19,9 @@ fun CreateTicketForm(
     onLicensePlateChange: (String) -> Unit,
     routeNumberError: String?,
     licensePlateError: String?,
-    images: MutableList<Image>,
-    onAddImage: (Image) -> Unit
+    images: List<Image>,
+    onAddImage: (Image) -> Unit,
+    onDeleteImage: (Image) -> Unit,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = MaterialTheme.spacing.medium)
@@ -40,7 +41,7 @@ fun CreateTicketForm(
             error = licensePlateError,
             keyboardType = KeyboardType.Text
         )
-        UploadImageForm(images = images, onAddImage = onAddImage)
+        UploadImageForm(images = images, onAddImage = onAddImage, onDeleteImage = onDeleteImage)
     }
 }
 
@@ -57,6 +58,7 @@ fun CreateTicketFormPreview() {
             licensePlateError = null,
             images = mutableListOf(),
             onAddImage = {},
+            onDeleteImage = {},
         )
     }
 }
@@ -74,7 +76,9 @@ fun CreateTicketFormPreviewError() {
             licensePlateError = "Gelieve een nummerplaat in te geven.",
             images = mutableListOf(),
             onAddImage = {},
-        )
+            onDeleteImage = {},
+
+            )
     }
 }
 
@@ -91,7 +95,9 @@ fun CreateTicketFormPreviewErrorRouteNumber() {
             licensePlateError = null,
             images = mutableListOf(),
             onAddImage = {},
-        )
+            onDeleteImage = {},
+
+            )
     }
 }
 
@@ -108,7 +114,9 @@ fun CreateTicketFormPreviewDark() {
             licensePlateError = null,
             images = mutableListOf(),
             onAddImage = {},
-        )
+            onDeleteImage = {},
+
+            )
     }
 }
 
@@ -125,7 +133,9 @@ fun CreateTicketFormPreviewErrorDark() {
             licensePlateError = "Gelieve een nummerplaat in te geven.",
             images = mutableListOf(),
             onAddImage = {},
-        )
+            onDeleteImage = {},
+
+            )
     }
 }
 
@@ -142,6 +152,8 @@ fun CreateTicketFormPreviewErrorRouteNumberDark() {
             licensePlateError = null,
             images = mutableListOf(),
             onAddImage = {},
-        )
+            onDeleteImage = {},
+
+            )
     }
 }
