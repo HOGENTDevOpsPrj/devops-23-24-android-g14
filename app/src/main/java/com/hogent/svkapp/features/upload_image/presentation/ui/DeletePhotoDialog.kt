@@ -11,7 +11,7 @@ fun DeletePhotoDialog(
     onConfirmation: () -> Unit,) {
     AlertDialog(
         title = {
-            Text(text = "Wilt u zeker deze foto verwijderen?")
+            Text(text = "Foto verwijderen?")
         },
         onDismissRequest = {
             onDismissRequest()
