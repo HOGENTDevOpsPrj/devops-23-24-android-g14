@@ -38,7 +38,7 @@ fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel)
                 .padding(all = MaterialTheme.spacing.large),
             verticalArrangement = Arrangement.spacedBy(space = MaterialTheme.spacing.large)
         ) {
-            SVKLogo()
+//            SVKLogo()
             CreateTicketForm(
                 routeNumber = routeNumber,
                 licensePlate = licensePlate,
