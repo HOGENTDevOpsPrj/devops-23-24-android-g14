@@ -1,3 +1,4 @@
+// MainActivity.kt
 package com.hogent.svkapp.main
 
 import android.os.Bundle
