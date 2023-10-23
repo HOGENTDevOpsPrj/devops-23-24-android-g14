@@ -9,10 +9,12 @@ import com.hogent.svkapp.features.create_ticket.domain.entities.Image
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 
 @Composable
-fun ScrollableImageList(imageList: List<Image>) {
+fun ScrollableImageList(imageList: List<Image>, onDeleteImage: (Image) -> Unit) {
     LazyRow {
-        items(items = imageList) { imageRes ->
-            ImageCard(image = imageRes)
+        items(imageList) { imageRes ->
+            ImageCard(image = imageRes, onDelete = {
+                onDeleteImage(imageRes)
+            })
         }
     }
 }
@@ -28,7 +30,7 @@ val previewImagesList = listOf(
 @Composable
 fun ScrollableImageListPreviewBase(imageList: List<Image>) {
     TemplateApplicationTheme {
-        ScrollableImageList(imageList = imageList)
+        ScrollableImageList(imageList = imageList, onDeleteImage = {})
     }
 }
 
