@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.features.create_ticket.MockCreateTicketModule
 import com.hogent.svkapp.features.create_ticket.presentation.viewmodels.CreateTicketScreenViewModel
-import com.hogent.svkapp.main.presentation.ui.SVKLogo
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.main.presentation.ui.theme.spacing
 
@@ -39,17 +38,16 @@ fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel)
                 .padding(all = MaterialTheme.spacing.large),
             verticalArrangement = Arrangement.spacedBy(space = MaterialTheme.spacing.large)
         ) {
-            SVKLogo()
             CreateTicketForm(
                 routeNumber = routeNumber,
-                licensePlate = licensePlate,
-                images = images,
                 onRouteNumberChange = createTicketScreenViewModel::onRouteNumberChange,
-                onLicensePlateChange = createTicketScreenViewModel::onLicensePlateChange,
-                onAddImage = createTicketScreenViewModel::addImage,
                 routeNumberError = routeNumberError,
+                licensePlate = licensePlate,
+                onLicensePlateChange = createTicketScreenViewModel::onLicensePlateChange,
                 licensePlateError = licensePlateError,
-                imagesError = imagesError
+                images = images,
+                onAddImage = createTicketScreenViewModel::addImage,
+                onDeleteImage = createTicketScreenViewModel::deleteImage
             )
             if (showDialog) {
                 ConfirmationPopUp(onDismissRequest = {createTicketScreenViewModel.toggleDialog()})

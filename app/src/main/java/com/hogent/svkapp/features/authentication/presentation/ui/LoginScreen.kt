@@ -23,7 +23,7 @@ fun LoginScreen(navController: NavController) {
             .padding(all = MaterialTheme.spacing.large),
         verticalArrangement = Arrangement.spacedBy(space = MaterialTheme.spacing.large)
     ) {
-        SVKLogo()
+        SVKLogo(Modifier)
         Button(
             onClick = { navController.navigate(route = "createTicket") },
             modifier = Modifier.fillMaxWidth()

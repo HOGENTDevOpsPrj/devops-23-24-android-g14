@@ -13,8 +13,8 @@ data class Ticket private constructor(
             val licenseError = validator.validateLicensePlate(licensePlate)
             val imageError = validator.validateImages(images)
 
-            return if (routeError == null && licenseError == null && imageError == null) {
-                CreationResult.Success(
+            if (routeError == null && licenseError == null && imageError == null) {
+                return CreationResult.Success(
                     Ticket(
                         routeNumber = routeNumber.toInt(),
                         licensePlate = licensePlate.trim().uppercase(),
@@ -26,7 +26,7 @@ data class Ticket private constructor(
                 if (routeError != null) errors.add(routeError)
                 if (licenseError != null) errors.add(licenseError)
                 if (imageError != null) errors.add(imageError)
-                CreationResult.Failure(errors = errors)
+                return CreationResult.Failure(errors = errors)
             }
         }
     }
