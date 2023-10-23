@@ -1,4 +1,4 @@
-package com.hogent.svkapp.features.create_ticket.presentation.ui
+package com.hogent.svkapp.presentation.ui
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
