@@ -13,13 +13,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.MockCreateTicketModule
+import com.hogent.svkapp.features.create_ticket.presentation.ui.ConfirmationPopUp
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
 import com.hogent.svkapp.presentation.viewmodels.CreateTicketScreenViewModel
-import com.hogent.svkapp.features.create_ticket.MockCreateTicketModule
-import com.hogent.svkapp.features.create_ticket.presentation.viewmodels.CreateTicketScreenViewModel
-import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
-import com.hogent.svkapp.main.presentation.ui.theme.spacing
 
 @Composable
 fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel) {
@@ -28,7 +25,6 @@ fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel)
     val images = remember { createTicketScreenViewModel.images }
     val routeNumberError by createTicketScreenViewModel.routeNumberError
     val licensePlateError by createTicketScreenViewModel.licensePlateError
-    val imagesError by createTicketScreenViewModel.imagesError
     val showDialog by createTicketScreenViewModel.showDialog
 
     Scaffold(floatingActionButton = {
