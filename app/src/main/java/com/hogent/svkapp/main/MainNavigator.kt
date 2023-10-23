@@ -1,15 +1,15 @@
 package com.hogent.svkapp.main
 
+import android.content.res.Resources.Theme
+import android.view.Menu
 import android.widget.PopupMenu
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.MoreVert
@@ -19,10 +19,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -92,13 +94,11 @@ class MainNavigator {
     @Composable
     private fun SVKTopAppBar(navController: NavHostController) {
         TopAppBar(
+//            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+            modifier = Modifier.padding(start = 0.dp),
+            windowInsets = WindowInsets(0),
             title = {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    SVKLogo(Modifier.size(128.dp))
-                }
+                SVKLogo(Modifier.height(64.dp))
             },
             actions = {
                 var expanded by remember {
@@ -110,26 +110,24 @@ class MainNavigator {
                 }
 
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                    DropdownMenuItem(text = { "Log Uit" }, onClick = {
-                        navController.navigate(route = "login") {
-                            popUpTo(route = "login") {
-                                inclusive = true
+                    
+                    DropdownMenuItem(
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.ExitToApp,
+                                contentDescription = "Uitloggen"
+                            )
+                        },
+                        text = {
+                            Text(text = "Log Uit")
+                        },
+                        onClick = {
+                            navController.navigate(route = "login") {
+                                popUpTo(route = "login") {
+                                    inclusive = true
+                                }
                             }
-                        }
-                    })
-                }
-
-                IconButton(onClick = {
-                    navController.navigate(route = "login") {
-                        popUpTo(route = "login") {
-                            inclusive = true
-                        }
-                    }
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.ExitToApp,
-                        contentDescription = "Uitloggen"
-                    )
+                        })
                 }
             },
         )
