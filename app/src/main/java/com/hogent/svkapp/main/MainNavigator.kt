@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
@@ -110,7 +111,9 @@ class MainNavigator {
                 }
 
                 DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                    
+
+                    DropdownMenuItem(leadingIcon = { Icon(imageVector = Icons.Default.AccountBox, contentDescription = "Gebruikersnaam")}, text = { Text(text = "Gebruiker")}, onClick = { /*Nothing*/ })
+
                     DropdownMenuItem(
                         leadingIcon = {
                             Icon(
