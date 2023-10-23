@@ -1,6 +1,9 @@
 package com.hogent.svkapp.features.create_ticket.domain.entities
 
-import com.hogent.svkapp.features.create_ticket.domain.Validator
+import com.hogent.svkapp.domain.Validator
+import com.hogent.svkapp.domain.entities.CreationResult
+import com.hogent.svkapp.domain.entities.ErrorType
+import com.hogent.svkapp.domain.entities.Ticket
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import org.junit.Before

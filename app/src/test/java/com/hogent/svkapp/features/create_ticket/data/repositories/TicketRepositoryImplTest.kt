@@ -1,7 +1,8 @@
 package com.hogent.svkapp.features.create_ticket.data.repositories
 
-import com.hogent.svkapp.features.create_ticket.data.sources.TicketDataSource
-import com.hogent.svkapp.features.create_ticket.domain.entities.Ticket
+import com.hogent.svkapp.data.repositories.TicketRepositoryImpl
+import com.hogent.svkapp.data.sources.TicketDataSource
+import com.hogent.svkapp.domain.entities.Ticket
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock

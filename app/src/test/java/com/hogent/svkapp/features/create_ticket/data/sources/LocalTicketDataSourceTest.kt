@@ -1,7 +1,8 @@
 package com.hogent.svkapp.features.create_ticket.data.sources
 
-import com.hogent.svkapp.features.create_ticket.domain.entities.Ticket
-import com.hogent.svkapp.main.util.NoOpLogger
+import com.hogent.svkapp.data.sources.LocalTicketDataSource
+import com.hogent.svkapp.domain.entities.Ticket
+import com.hogent.svkapp.util.NoOpLogger
 import junit.framework.TestCase.assertTrue
 import org.junit.Before
 import org.junit.Test

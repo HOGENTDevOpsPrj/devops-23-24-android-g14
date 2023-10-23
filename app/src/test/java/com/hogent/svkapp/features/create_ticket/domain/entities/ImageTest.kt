@@ -1,6 +1,7 @@
 package com.hogent.svkapp.features.create_ticket.domain.entities
 
 import android.graphics.Bitmap
+import com.hogent.svkapp.domain.entities.Image
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test

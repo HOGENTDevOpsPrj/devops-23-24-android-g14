@@ -1,7 +1,9 @@
 package com.hogent.svkapp.features.create_ticket.domain
 
-import com.hogent.svkapp.features.create_ticket.domain.entities.ErrorType
-import com.hogent.svkapp.features.create_ticket.domain.entities.Image
+import com.hogent.svkapp.domain.MAX_LICENSE_PLATE_LENGTH
+import com.hogent.svkapp.domain.Validator
+import com.hogent.svkapp.domain.entities.ErrorType
+import com.hogent.svkapp.domain.entities.Image
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
