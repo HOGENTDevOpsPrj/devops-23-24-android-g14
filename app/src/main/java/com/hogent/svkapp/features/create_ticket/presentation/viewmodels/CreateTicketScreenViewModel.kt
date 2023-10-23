@@ -37,6 +37,10 @@ class CreateTicketScreenViewModel(
         _images.add(element = image)
     }
 
+    fun deleteImage(image: Image) {
+        _images.remove(image)
+    }
+
     fun onSend() {
         val creationResult =
             Ticket.create(validator, _routeNumber.value, _licensePlate.value, _images)

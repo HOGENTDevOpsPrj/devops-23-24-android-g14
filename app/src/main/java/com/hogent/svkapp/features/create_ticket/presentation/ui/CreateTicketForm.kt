@@ -1,19 +1,13 @@
 package com.hogent.svkapp.features.create_ticket.presentation.ui
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.hogent.svkapp.features.create_ticket.domain.entities.Image
-import com.hogent.svkapp.features.create_ticket.presentation.ui.images.ScrollableImageList
-import com.hogent.svkapp.features.create_ticket.presentation.ui.images.UploadImageButton
+import com.hogent.svkapp.features.upload_image.domain.Image
+import com.hogent.svkapp.features.upload_image.presentation.ui.UploadImageForm
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.main.presentation.ui.theme.spacing
 
@@ -21,22 +15,13 @@ import com.hogent.svkapp.main.presentation.ui.theme.spacing
 fun CreateTicketForm(
     routeNumber: String,
     licensePlate: String,
-    images: List<Image>,
     onRouteNumberChange: (String) -> Unit,
     onLicensePlateChange: (String) -> Unit,
-    onAddImage: (Image) -> Unit,
     routeNumberError: String?,
     licensePlateError: String?,
-    imagesError: String?,
+    images: List<Image>,
+    onAddImage: (Image) -> Unit
 ) {
-    val takePictureLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicturePreview()
-    ) { bitmap ->
-        bitmap?.let {
-            onAddImage(Image.BitmapImage(bitmap))
-        }
-    }
-
     Column(
         verticalArrangement = Arrangement.spacedBy(space = MaterialTheme.spacing.medium)
     ) {
@@ -54,115 +39,108 @@ fun CreateTicketForm(
             error = licensePlateError,
             keyboardType = KeyboardType.Text
         )
-        ScrollableImageList(imageList = images)
-        if (imagesError != null) {
-            Text(
-                text = imagesError,
-                modifier = Modifier.padding(start = MaterialTheme.spacing.medium)
-            )
-        }
-        UploadImageButton(onClick = { takePictureLauncher.launch(null) })
+        UploadImageForm(images = images, onAddImage = onAddImage)
     }
 }
 
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun CreateTicketFormPreviewBase(
-    routeNumber: String,
-    licensePlate: String,
-    images: List<Image>,
-    routeNumberError: String?,
-    licensePlateError: String?,
-    imagesError: String?,
-) {
+fun CreateTicketFormPreview() {
     TemplateApplicationTheme {
         CreateTicketForm(
-            routeNumber = routeNumber,
-            licensePlate = licensePlate,
-            images = images,
+            routeNumber = "123",
+            licensePlate = "1-ABC-123",
             onRouteNumberChange = {},
             onLicensePlateChange = {},
+            routeNumberError = null,
+            licensePlateError = null,
+            images = listOf(),
             onAddImage = {},
-            routeNumberError = routeNumberError,
-            licensePlateError = licensePlateError,
-            imagesError = imagesError,
         )
     }
 }
 
-@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
-@Composable
-fun CreateTicketFormPreview() {
-    CreateTicketFormPreviewBase(
-        routeNumber = "123",
-        licensePlate = "1-ABC-123",
-        images = listOf(),
-        routeNumberError = null,
-        licensePlateError = null,
-        imagesError = null,
-    )
-}
-
-@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun CreateTicketFormPreviewError() {
-    CreateTicketFormPreviewBase(
-        routeNumber = "",
-        licensePlate = "",
-        images = listOf(),
-        routeNumberError = "Routenummer is ongeldig.",
-        licensePlateError = "Gelieve een nummerplaat in te geven.",
-        imagesError = "Gelieve minstens 1 foto toe te voegen.",
-    )
+    TemplateApplicationTheme {
+        CreateTicketForm(
+            routeNumber = "",
+            licensePlate = "",
+            onRouteNumberChange = {},
+            onLicensePlateChange = {},
+            routeNumberError = "Routenummer is ongeldig.",
+            licensePlateError = "Gelieve een nummerplaat in te geven.",
+            images = listOf(),
+            onAddImage = {},
+        )
+    }
 }
 
-@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun CreateTicketFormPreviewErrorRouteNumber() {
-    CreateTicketFormPreviewBase(
-        routeNumber = "",
-        licensePlate = "1-ABC-123",
-        images = listOf(),
-        routeNumberError = "Routenummer is ongeldig.",
-        licensePlateError = null,
-        imagesError = null,
-    )
+    TemplateApplicationTheme {
+        CreateTicketForm(
+            routeNumber = "",
+            licensePlate = "1-ABC-123",
+            onRouteNumberChange = {},
+            onLicensePlateChange = {},
+            routeNumberError = "Routenummer is ongeldig.",
+            licensePlateError = null,
+            images = listOf(),
+            onAddImage = {},
+        )
+    }
 }
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CreateTicketFormPreviewDark() {
-    CreateTicketFormPreviewBase(
-        routeNumber = "123",
-        licensePlate = "1-ABC-123",
-        images = listOf(),
-        routeNumberError = null,
-        licensePlateError = null,
-        imagesError = null,
-    )
+    TemplateApplicationTheme {
+        CreateTicketForm(
+            routeNumber = "123",
+            licensePlate = "1-ABC-123",
+            onRouteNumberChange = {},
+            onLicensePlateChange = {},
+            routeNumberError = null,
+            licensePlateError = null,
+            images = listOf(),
+            onAddImage = {},
+        )
+    }
 }
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CreateTicketFormPreviewErrorDark() {
-    CreateTicketFormPreviewBase(
-        routeNumber = "",
-        licensePlate = "",
-        images = listOf(),
-        routeNumberError = "Routenummer is ongeldig.",
-        licensePlateError = "Gelieve een nummerplaat in te geven.",
-        imagesError = "Gelieve minstens 1 foto toe te voegen.",
-    )
+    TemplateApplicationTheme {
+        CreateTicketForm(
+            routeNumber = "",
+            licensePlate = "",
+            onRouteNumberChange = {},
+            onLicensePlateChange = {},
+            routeNumberError = "Routenummer is ongeldig.",
+            licensePlateError = "Gelieve een nummerplaat in te geven.",
+            images = listOf(),
+            onAddImage = {},
+        )
+    }
 }
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun CreateTicketFormPreviewErrorRouteNumberDark() {
-    CreateTicketFormPreviewBase(
-        routeNumber = "",
-        licensePlate = "1-ABC-123",
-        images = listOf(),
-        routeNumberError = "Routenummer is ongeldig.",
-        licensePlateError = null,
-        imagesError = null,
-    )
+    TemplateApplicationTheme {
+        CreateTicketForm(
+            routeNumber = "",
+            licensePlate = "1-ABC-123",
+            onRouteNumberChange = {},
+            onLicensePlateChange = {},
+            routeNumberError = "Routenummer is ongeldig.",
+            licensePlateError = null,
+            images = listOf(),
+            onAddImage = {},
+        )
+    }
 }
