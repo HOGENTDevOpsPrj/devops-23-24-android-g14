@@ -26,6 +26,7 @@ fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel)
     val routeNumberError by createTicketScreenViewModel.routeNumberError
     val licensePlateError by createTicketScreenViewModel.licensePlateError
     val imagesError by createTicketScreenViewModel.imagesError
+    val showDialog by createTicketScreenViewModel.showDialog
 
     Scaffold(floatingActionButton = {
         SendFloatingActionButton(onSend = createTicketScreenViewModel::onSend)
@@ -50,6 +51,9 @@ fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel)
                 licensePlateError = licensePlateError,
                 imagesError = imagesError
             )
+            if (showDialog) {
+                ConfirmationPopUp(onDismissRequest = {createTicketScreenViewModel.toggleDialog()})
+            }
         }
     }
 }
