@@ -33,6 +33,13 @@ class CreateTicketScreenViewModel(
     private var _imagesError = mutableStateOf<String?>(value = null)
     // val imagesError: State<String?> get() = _imagesError
 
+    private var _showDialog = mutableStateOf<Boolean>(value = false)
+    val showDialog: State<Boolean> get() = _showDialog
+
+    fun toggleDialog() {
+        _showDialog.value = !_showDialog.value
+    }
+
     fun addImage(image: Image) {
         _images.add(element = image)
     }
@@ -49,6 +56,7 @@ class CreateTicketScreenViewModel(
             is CreationResult.Success -> {
                 ticketRepository.addTicket(creationResult.ticket)
                 resetForm()
+                toggleDialog()
             }
 
             is CreationResult.Failure -> {
