@@ -46,7 +46,8 @@ fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel)
                 routeNumberError = routeNumberError,
                 licensePlateError = licensePlateError,
                 images = images,
-                onAddImage = createTicketScreenViewModel::addImage
+                onAddImage = createTicketScreenViewModel::addImage,
+                onDeleteImage = createTicketScreenViewModel::deleteImage
             )
         }
     }

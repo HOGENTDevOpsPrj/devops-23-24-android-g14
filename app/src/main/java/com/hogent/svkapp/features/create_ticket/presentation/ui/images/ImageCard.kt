@@ -9,14 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-<<<<<<< HEAD:app/src/main/java/com/hogent/svkapp/features/create_ticket/presentation/ui/images/ImageCard.kt
-import androidx.compose.material3.MaterialTheme
-=======
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
->>>>>>> feature/upload-photo:app/src/main/java/com/hogent/svkapp/features/upload_image/presentation/ui/ImageCard.kt
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,41 +27,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.hogent.svkapp.R
 import com.hogent.svkapp.features.create_ticket.domain.entities.Image
+import com.hogent.svkapp.features.upload_image.presentation.ui.DeletePhotoDialog
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
-import com.hogent.svkapp.main.presentation.ui.theme.spacing
 
 @Composable
-<<<<<<< HEAD:app/src/main/java/com/hogent/svkapp/features/create_ticket/presentation/ui/images/ImageCard.kt
-fun ImageCard(image: Image) {
+fun ImageCard(image: Image, onDelete: () -> Unit) {
     val painter = when (image) {
         is Image.BitmapImage -> BitmapPainter(image.bitmap.asImageBitmap())
         is Image.ResourceImage -> painterResource(id = image.resourceId)
-    }
-
-    Image(
-        painter = painter,
-        contentDescription = null,
-        modifier = Modifier
-            .padding(MaterialTheme.spacing.small)
-            .width(120.dp)
-            .height(205.dp)
-            .clip(RoundedCornerShape(MaterialTheme.spacing.medium)),
-        contentScale = ContentScale.Crop
-    )
-}
-
-@Composable
-fun ImageCardPreviewBase() {
-    TemplateApplicationTheme {
-        ImageCard(image = Image.ResourceImage(resourceId = R.drawable.resource_default))
-    }
-}
-=======
-fun ImageCard(image: Image, onDelete: () -> Unit) {
-    val painter = when {
-        image.bitmap != null -> BitmapPainter(image.bitmap.asImageBitmap())
-        image.resourceId != null -> painterResource(id = image.resourceId)
-        else -> throw IllegalArgumentException("ImageResource must have either a bitmap or a resourceId")
     }
 
     val openAlertDialog = remember { mutableStateOf(false) }
@@ -91,7 +60,8 @@ fun ImageCard(image: Image, onDelete: () -> Unit) {
                 .zIndex(1f),
             contentPadding = PaddingValues(0.dp),
         ) {
-            Icon(Icons.Default.Clear,
+            Icon(
+                Icons.Default.Clear,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize(0.75f)
@@ -110,28 +80,21 @@ fun ImageCard(image: Image, onDelete: () -> Unit) {
     }
 }
 
->>>>>>> feature/upload-photo:app/src/main/java/com/hogent/svkapp/features/upload_image/presentation/ui/ImageCard.kt
+@Composable
+fun ImageCardPreviewBase() {
+    TemplateApplicationTheme {
+        ImageCard(Image.ResourceImage(resourceId = R.drawable.resource_default), onDelete = {})
+    }
+}
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun ImageCardPreview() {
-<<<<<<< HEAD:app/src/main/java/com/hogent/svkapp/features/create_ticket/presentation/ui/images/ImageCard.kt
     ImageCardPreviewBase()
-=======
-    TemplateApplicationTheme {
-        ImageCard(Image(resourceId = R.drawable.resource_default), onDelete = {})
-    }
->>>>>>> feature/upload-photo:app/src/main/java/com/hogent/svkapp/features/upload_image/presentation/ui/ImageCard.kt
 }
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ImageCardPreviewDark() {
-<<<<<<< HEAD:app/src/main/java/com/hogent/svkapp/features/create_ticket/presentation/ui/images/ImageCard.kt
     ImageCardPreviewBase()
-=======
-    TemplateApplicationTheme {
-        ImageCard(Image(resourceId = R.drawable.resource_default), onDelete = {})
-    }
->>>>>>> feature/upload-photo:app/src/main/java/com/hogent/svkapp/features/upload_image/presentation/ui/ImageCard.kt
 }

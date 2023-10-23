@@ -1,13 +1,16 @@
 package com.hogent.svkapp.features.create_ticket.presentation.ui
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import com.hogent.svkapp.features.upload_image.domain.Image
-import com.hogent.svkapp.features.upload_image.presentation.ui.UploadImageForm
+import com.hogent.svkapp.features.create_ticket.domain.entities.Image
+import com.hogent.svkapp.features.create_ticket.presentation.ui.images.ScrollableImageList
+import com.hogent.svkapp.features.create_ticket.presentation.ui.images.UploadImageButton
 import com.hogent.svkapp.main.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.main.presentation.ui.theme.spacing
 
@@ -20,8 +23,17 @@ fun CreateTicketForm(
     routeNumberError: String?,
     licensePlateError: String?,
     images: List<Image>,
-    onAddImage: (Image) -> Unit
+    onAddImage: (Image) -> Unit,
+    onDeleteImage: (Image) -> Unit
 ) {
+    val takePictureLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap ->
+        bitmap?.let {
+            onAddImage(Image.BitmapImage(bitmap))
+        }
+    }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(space = MaterialTheme.spacing.medium)
     ) {
@@ -39,7 +51,8 @@ fun CreateTicketForm(
             error = licensePlateError,
             keyboardType = KeyboardType.Text
         )
-        UploadImageForm(images = images, onAddImage = onAddImage)
+        ScrollableImageList(imageList = images, onDeleteImage = onDeleteImage)
+        UploadImageButton(onClick = { takePictureLauncher.launch(null) })
     }
 }
 
@@ -56,6 +69,7 @@ fun CreateTicketFormPreview() {
             licensePlateError = null,
             images = listOf(),
             onAddImage = {},
+            onDeleteImage = {}
         )
     }
 }
@@ -73,6 +87,7 @@ fun CreateTicketFormPreviewError() {
             licensePlateError = "Gelieve een nummerplaat in te geven.",
             images = listOf(),
             onAddImage = {},
+            onDeleteImage = {}
         )
     }
 }
@@ -90,6 +105,7 @@ fun CreateTicketFormPreviewErrorRouteNumber() {
             licensePlateError = null,
             images = listOf(),
             onAddImage = {},
+            onDeleteImage = {}
         )
     }
 }
@@ -107,6 +123,7 @@ fun CreateTicketFormPreviewDark() {
             licensePlateError = null,
             images = listOf(),
             onAddImage = {},
+            onDeleteImage = {}
         )
     }
 }
@@ -124,6 +141,7 @@ fun CreateTicketFormPreviewErrorDark() {
             licensePlateError = "Gelieve een nummerplaat in te geven.",
             images = listOf(),
             onAddImage = {},
+            onDeleteImage = {}
         )
     }
 }
@@ -141,6 +159,7 @@ fun CreateTicketFormPreviewErrorRouteNumberDark() {
             licensePlateError = null,
             images = listOf(),
             onAddImage = {},
+            onDeleteImage = {}
         )
     }
 }
