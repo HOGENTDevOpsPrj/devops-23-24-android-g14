@@ -5,9 +5,10 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.hogent.svkapp.data.repositories.TicketRepository
+import com.hogent.svkapp.domain.ValidationError
+import com.hogent.svkapp.domain.ValidationResult
 import com.hogent.svkapp.domain.Validator
 import com.hogent.svkapp.domain.entities.CreationResult
-import com.hogent.svkapp.domain.entities.ErrorType
 import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.domain.entities.Ticket
 import java.util.Locale
@@ -31,9 +32,9 @@ class CreateTicketScreenViewModel(
     val licensePlateError: State<String?> get() = _licensePlateError
 
     private var _imagesError = mutableStateOf<String?>(value = null)
-    // val imagesError: State<String?> get() = _imagesError
+    val imagesError: State<String?> get() = _imagesError
 
-    private var _showDialog = mutableStateOf<Boolean>(value = false)
+    private var _showDialog = mutableStateOf(value = false)
     val showDialog: State<Boolean> get() = _showDialog
 
     fun toggleDialog() {
@@ -42,36 +43,42 @@ class CreateTicketScreenViewModel(
 
     fun addImage(image: Image) {
         _images.add(element = image)
+        validate(ValidationType.IMAGES)
     }
 
     fun deleteImage(image: Image) {
         _images.remove(image)
+        validate(ValidationType.IMAGES)
     }
 
     fun onSend() {
-        val creationResult =
-            Ticket.create(validator, _routeNumber.value, _licensePlate.value, _images)
+        val creationResult = Ticket.create(
+            routeNumber = _routeNumber.value,
+            licensePlate = _licensePlate.value,
+            images = _images,
+            validator = validator
+        )
 
         when (creationResult) {
-            is CreationResult.Success -> {
-                ticketRepository.addTicket(creationResult.ticket)
-                resetForm()
-                toggleDialog()
-            }
+            is CreationResult.Success -> handleSuccess(creationResult)
+            is CreationResult.Failure -> handleFailure(creationResult)
+        }
+    }
 
-            is CreationResult.Failure -> {
-                _routeNumberError.value = creationResult.errors.find {
-                    it in listOf(
-                        ErrorType.EMPTY_ROUTE, ErrorType.INVALID_ROUTE_NUMBER
-                    )
-                }?.message
-                _licensePlateError.value = creationResult.errors.find {
-                    it in listOf(
-                        ErrorType.EMPTY_LICENSE_PLATE, ErrorType.LONG_LICENSE_PLATE
-                    )
-                }?.message
-                _imagesError.value =
-                    creationResult.errors.find { it == ErrorType.EMPTY_IMAGES }?.message
+    private fun handleSuccess(result: CreationResult.Success) {
+        ticketRepository.addTicket(result.ticket)
+        resetForm()
+        toggleDialog()
+    }
+
+    private fun handleFailure(result: CreationResult.Failure) {
+        result.errors.forEach { error ->
+            when (error) {
+                ValidationError.EMPTY_ROUTE -> _routeNumberError.value = error.message
+                ValidationError.INVALID_ROUTE_NUMBER -> _routeNumberError.value = error.message
+                ValidationError.EMPTY_LICENSE_PLATE -> _licensePlateError.value = error.message
+                ValidationError.LONG_LICENSE_PLATE -> _licensePlateError.value = error.message
+                ValidationError.EMPTY_IMAGES -> _imagesError.value = error.message
             }
         }
     }
@@ -93,10 +100,22 @@ class CreateTicketScreenViewModel(
             ValidationType.IMAGES -> validator.validateImages(images)
         }
 
-        when (type) {
-            ValidationType.ROUTE_NUMBER -> _routeNumberError.value = result?.message
-            ValidationType.LICENSE_PLATE -> _licensePlateError.value = result?.message
-            ValidationType.IMAGES -> _imagesError.value = result?.message
+        when (result) {
+            is ValidationResult.Success -> {
+                when (type) {
+                    ValidationType.ROUTE_NUMBER -> _routeNumberError.value = null
+                    ValidationType.LICENSE_PLATE -> _licensePlateError.value = null
+                    ValidationType.IMAGES -> _imagesError.value = null
+                }
+            }
+
+            is ValidationResult.Error -> {
+                when (type) {
+                    ValidationType.ROUTE_NUMBER -> _routeNumberError.value = result.error.message
+                    ValidationType.LICENSE_PLATE -> _licensePlateError.value = result.error.message
+                    ValidationType.IMAGES -> _imagesError.value = result.error.message
+                }
+            }
         }
     }
 

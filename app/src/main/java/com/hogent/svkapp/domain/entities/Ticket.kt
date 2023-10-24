@@ -1,5 +1,7 @@
 package com.hogent.svkapp.domain.entities
 
+import com.hogent.svkapp.domain.ValidationError
+import com.hogent.svkapp.domain.ValidationResult
 import com.hogent.svkapp.domain.Validator
 
 class Ticket private constructor(
@@ -7,14 +9,18 @@ class Ticket private constructor(
 ) {
     companion object {
         fun create(
-            validator: Validator, routeNumber: String, licensePlate: String, images: List<Image>
+            routeNumber: String, licensePlate: String, images: List<Image>, validator: Validator
         ): CreationResult {
-            val routeError = validator.validateRouteNumber(routeNumber)
-            val licenseError = validator.validateLicensePlate(licensePlate)
-            val imageError = validator.validateImages(images)
+            val routeResult = validator.validateRouteNumber(routeNumber)
+            val licenseResult = validator.validateLicensePlate(licensePlate)
+            val imageResult = validator.validateImages(images)
 
-            if (routeError == null && licenseError == null && imageError == null) {
-                return CreationResult.Success(
+            val errors = listOf(routeResult, licenseResult, imageResult)
+                .filterIsInstance<ValidationResult.Error>()
+                .map { it.error }
+
+            return if (errors.isEmpty()) {
+                CreationResult.Success(
                     Ticket(
                         routeNumber = routeNumber.toInt(),
                         licensePlate = licensePlate.trim().uppercase(),
@@ -22,9 +28,7 @@ class Ticket private constructor(
                     )
                 )
             } else {
-                return CreationResult.Failure(
-                    errors = listOfNotNull(routeError, licenseError, imageError)
-                )
+                CreationResult.Failure(errors)
             }
         }
     }
@@ -45,13 +49,5 @@ class Ticket private constructor(
 
 sealed class CreationResult {
     data class Success(val ticket: Ticket) : CreationResult()
-    data class Failure(val errors: List<ErrorType>) : CreationResult()
-}
-
-enum class ErrorType(val message: String) {
-    EMPTY_ROUTE("Vul een routenummer in."),
-    INVALID_ROUTE_NUMBER("Dit is geen geldig routenummer."),
-    EMPTY_LICENSE_PLATE("Vul de nummerplaat in."),
-    LONG_LICENSE_PLATE("Dit is geen geldige nummerplaat."),
-    EMPTY_IMAGES("Voeg minstens één foto toe.")
+    data class Failure(val errors: List<ValidationError>) : CreationResult()
 }

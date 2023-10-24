@@ -30,7 +30,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.hogent.svkapp.presentation.ui.CreateTicketScreen
-import com.hogent.svkapp.presentation.ui.LoginScreen
+import com.hogent.svkapp.presentation.ui.login.LoginScreen
 import com.hogent.svkapp.presentation.ui.SVKLogo
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 
