@@ -12,12 +12,9 @@ class LocalTicketDataSource(private val logger: Logger) : TicketDataSource {
     private val tickets = mutableListOf<Ticket>()
 
     override fun addTicket(ticket: Ticket) {
-        tickets.add(element = ticket)
-
+        tickets.add(ticket)
         logger.debug(tag = "Local Database", message = "Added ticket: $ticket")
     }
 
-    override fun getTickets(): List<Ticket> {
-        return tickets.toList()
-    }
+    override fun getTickets(): List<Ticket> = tickets.toList()
 }

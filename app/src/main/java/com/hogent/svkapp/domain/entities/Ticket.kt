@@ -2,7 +2,7 @@ package com.hogent.svkapp.domain.entities
 
 import com.hogent.svkapp.domain.Validator
 
-data class Ticket private constructor(
+class Ticket private constructor(
     val routeNumber: Int, val licensePlate: String, val images: List<Image>
 ) {
     companion object {
@@ -22,13 +22,24 @@ data class Ticket private constructor(
                     )
                 )
             } else {
-                val errors = mutableListOf<ErrorType>()
-                if (routeError != null) errors.add(routeError)
-                if (licenseError != null) errors.add(licenseError)
-                if (imageError != null) errors.add(imageError)
-                return CreationResult.Failure(errors = errors)
+                return CreationResult.Failure(
+                    errors = listOfNotNull(routeError, licenseError, imageError)
+                )
             }
         }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Ticket) return false
+        return routeNumber == other.routeNumber && licensePlate == other.licensePlate && images == other.images
+    }
+
+    override fun hashCode(): Int {
+        var result = routeNumber
+        result = 31 * result + licensePlate.hashCode()
+        result = 31 * result + images.hashCode()
+        return result
     }
 }
 
@@ -38,8 +49,9 @@ sealed class CreationResult {
 }
 
 enum class ErrorType(val message: String) {
-    EMPTY_ROUTE("Vul een routenummer in."), INVALID_ROUTE_NUMBER("Dit is geen geldig routenummer."), EMPTY_LICENSE_PLATE(
-        "Vul de nummerplaat in."
-    ),
-    LONG_LICENSE_PLATE("Dit is geen geldige nummerplaat."), EMPTY_IMAGES("Voeg minstens één foto toe.")
+    EMPTY_ROUTE("Vul een routenummer in."),
+    INVALID_ROUTE_NUMBER("Dit is geen geldig routenummer."),
+    EMPTY_LICENSE_PLATE("Vul de nummerplaat in."),
+    LONG_LICENSE_PLATE("Dit is geen geldige nummerplaat."),
+    EMPTY_IMAGES("Voeg minstens één foto toe.")
 }

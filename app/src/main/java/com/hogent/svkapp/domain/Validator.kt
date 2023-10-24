@@ -10,8 +10,9 @@ class Validator {
         val cleanRouteNumber = routeNumber.trim().filter { !it.isWhitespace() }
 
         if (cleanRouteNumber.isEmpty()) return ErrorType.EMPTY_ROUTE
-        if (cleanRouteNumber.toIntOrNull() == null) return ErrorType.INVALID_ROUTE_NUMBER
-        if (cleanRouteNumber.toInt() <= 0) return ErrorType.INVALID_ROUTE_NUMBER
+        if (cleanRouteNumber.toIntOrNull()
+                ?.let { it <= 0 } == true
+        ) return ErrorType.INVALID_ROUTE_NUMBER
         return null
     }
 

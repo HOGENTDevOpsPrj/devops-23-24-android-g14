@@ -8,9 +8,7 @@ interface TicketRepository {
 }
 
 class TicketRepositoryImpl(private val ticketDataSource: TicketDataSource) : TicketRepository {
-    override fun addTicket(ticket: Ticket) {
-        ticketDataSource.addTicket(ticket = ticket)
-    }
+    override fun addTicket(ticket: Ticket) = ticketDataSource.addTicket(ticket)
 }
 
 class MockTicketRepository : TicketRepository {
