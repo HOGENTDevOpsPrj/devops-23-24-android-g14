@@ -7,11 +7,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.ExperimentalMaterial3Api
 
 class MainActivity : ComponentActivity() {
+    private val mainNavigator = MainNavigator()
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainNavigator().MainNavHost()
+            mainNavigator.MainNavHost()
         }
     }
 }

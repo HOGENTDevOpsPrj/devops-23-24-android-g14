@@ -15,9 +15,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.hogent.svkapp.presentation.ui.CreateTicketScreen
-import com.hogent.svkapp.presentation.ui.LoginScreen
 import com.hogent.svkapp.presentation.ui.SVKTopAppBar
+import com.hogent.svkapp.presentation.ui.login.LoginScreen
+import com.hogent.svkapp.presentation.ui.mainscreen.MainScreen
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 
 class MainNavigator {
@@ -31,7 +31,7 @@ class MainNavigator {
     @Composable
     fun MainNavHost() {
         val navController = rememberNavController()
-        val createTicketModule = CreateTicketModuleImpl()
+        val createTicketModule = AppModuleImpl()
 
         // Track the current screen
         var currentScreen by remember { mutableStateOf(Screen.Login) }
@@ -58,7 +58,7 @@ class MainNavigator {
                     composable(route = Screen.CreateTicket.name) {
                         currentScreen = Screen.CreateTicket
                         TemplateApplicationTheme {
-                            CreateTicketScreen(createTicketScreenViewModel = createTicketModule.getViewModel())
+                            MainScreen(mainScreenViewModel = createTicketModule.getMainScreenViewModel())
                         }
                     }
                 }
@@ -66,4 +66,3 @@ class MainNavigator {
         }
     }
 }
-

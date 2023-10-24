@@ -1,6 +1,5 @@
-package com.hogent.svkapp.presentation.ui
+package com.hogent.svkapp.presentation.ui.mainscreen
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -11,18 +10,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 
 @Composable
-fun TicketTextField(
+fun TextField(
+    modifier: Modifier = Modifier,
     value: String,
     label: String,
     onValueChange: (String) -> Unit,
     error: String? = null,
-    keyboardType: KeyboardType
+    keyboardType: KeyboardType,
 ) {
     TextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(text = label) },
-        modifier = Modifier.fillMaxWidth(),
         supportingText = {
             if (error != null) {
                 Text(text = error)
@@ -30,53 +29,49 @@ fun TicketTextField(
         },
         isError = error != null,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        singleLine = true
+        singleLine = true,
+        modifier = modifier,
     )
 }
 
 @Composable
-fun TicketTextFieldPreviewBase(
-    value: String, label: String, error: String? = null
+fun TextFieldPreviewBase(
+    value: String = "",
+    label: String = "Label",
+    error: String? = null,
+    keyboardType: KeyboardType = KeyboardType.Text
 ) {
     TemplateApplicationTheme {
-        TicketTextField(
+        TextField(
             value = value,
             label = label,
             onValueChange = {},
             error = error,
-            keyboardType = KeyboardType.Text
+            keyboardType = keyboardType
         )
     }
 }
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun ValidTicketTextFieldPreview() {
-    TicketTextFieldPreviewBase(
-        value = "1-ABC-123", label = "Nummerplaat", error = null
-    )
-}
+fun TextFieldPreview() = TextFieldPreviewBase(
+    value = "1-ABC-123", label = "Nummerplaat"
+)
+
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun TextFieldPreviewDark() = TextFieldPreviewBase(
+    value = "1-ABC-123", label = "Nummerplaat"
+)
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun InvalidTicketTextFieldPreview() {
-    TicketTextFieldPreviewBase(
-        value = "", label = "Nummerplaat", error = "Gelieve een nummerplaat in te geven."
-    )
-}
+fun InvalidTextFieldPreview() = TextFieldPreviewBase(
+    value = "1-ABC-123", label = "Nummerplaat", error = "Invalid"
+)
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ValidTicketTextFieldPreviewDark() {
-    TicketTextFieldPreviewBase(
-        value = "1-ABC-123", label = "Nummerplaat", error = null
-    )
-}
-
-@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun InvalidTicketTextFieldPreviewDark() {
-    TicketTextFieldPreviewBase(
-        value = "", label = "Nummerplaat", error = "Gelieve een nummerplaat in te geven."
-    )
-}
+fun InvalidTextFieldPreviewDark() = TextFieldPreviewBase(
+    value = "1-ABC-123", label = "Nummerplaat", error = "Invalid"
+)
