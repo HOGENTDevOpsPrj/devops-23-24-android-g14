@@ -13,14 +13,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navHostController = rememberNavController()
-            val appModule = AppModuleImpl(navHostController)
-
             TemplateApplicationTheme {
                 MainNavHost(
-                    mainScreenViewModel = appModule.getMainScreenViewModel(),
-                    loginViewModel = appModule.getLoginViewModel(),
-                    navController = appModule.getNavController()
+                    navController = rememberNavController()
                 )
             }
         }

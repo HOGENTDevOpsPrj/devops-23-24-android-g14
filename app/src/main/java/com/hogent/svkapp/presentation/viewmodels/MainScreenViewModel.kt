@@ -4,9 +4,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
-import com.hogent.svkapp.Screen
+import androidx.navigation.NavHostController
+import com.hogent.svkapp.Route
 import com.hogent.svkapp.data.repositories.CargoTicketRepository
+import com.hogent.svkapp.data.repositories.CargoTicketRepositoryImpl
 import com.hogent.svkapp.domain.ValidationError
 import com.hogent.svkapp.domain.ValidationResult
 import com.hogent.svkapp.domain.Validator
@@ -16,9 +17,9 @@ import com.hogent.svkapp.domain.entities.Image
 import java.util.Locale
 
 class MainScreenViewModel(
-    private val validator: Validator,
-    private val cargoTicketRepository: CargoTicketRepository,
-    private val navController: NavController
+    private val validator: Validator = Validator(),
+    private val cargoTicketRepository: CargoTicketRepository = CargoTicketRepositoryImpl(),
+    private val navController: NavHostController
 ) : ViewModel() {
     private var _routeNumber = mutableStateOf(value = "")
     val routeNumber: State<String> get() = _routeNumber
@@ -98,7 +99,7 @@ class MainScreenViewModel(
     }
 
     fun onLogout() {
-        navController.navigate(route = Screen.Login.name)
+        navController.navigate(route = Route.Login.name)
     }
 
     private fun validate(type: ValidationType) {

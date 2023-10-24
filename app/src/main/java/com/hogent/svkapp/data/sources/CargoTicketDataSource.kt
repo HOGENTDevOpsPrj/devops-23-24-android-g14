@@ -1,6 +1,7 @@
 package com.hogent.svkapp.data.sources
 
 import com.hogent.svkapp.domain.entities.CargoTicket
+import com.hogent.svkapp.util.AndroidLogger
 import com.hogent.svkapp.util.Logger
 
 interface CargoTicketDataSource {
@@ -8,7 +9,8 @@ interface CargoTicketDataSource {
     fun getCargoTickets(): List<CargoTicket>
 }
 
-class LocalCargoTicketDataSource(private val logger: Logger) : CargoTicketDataSource {
+class LocalCargoTicketDataSource(private val logger: Logger = AndroidLogger()) :
+    CargoTicketDataSource {
     private val cargoTickets = mutableListOf<CargoTicket>()
 
     override fun addCargoTicket(cargoTicket: CargoTicket) {
