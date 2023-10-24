@@ -22,7 +22,8 @@ import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 
 class MainNavigator {
     private enum class Screen {
-        LOGIN, CREATE_TICKET
+        Login,
+        CreateTicket,
     }
 
     @Preview
@@ -33,10 +34,10 @@ class MainNavigator {
         val createTicketModule = CreateTicketModuleImpl()
 
         // Track the current screen
-        var currentScreen by remember { mutableStateOf(Screen.LOGIN) }
+        var currentScreen by remember { mutableStateOf(Screen.Login) }
 
         Scaffold(topBar = {
-            if (currentScreen != Screen.LOGIN) {
+            if (currentScreen != Screen.Login) {
                 SVKTopAppBar(navController)
             }
         }) { innerPadding ->
@@ -45,17 +46,17 @@ class MainNavigator {
             ) {
                 NavHost(
                     navController = navController,
-                    startDestination = "login",
+                    startDestination = Screen.Login.name,
                     modifier = Modifier.padding(paddingValues = innerPadding)
                 ) {
-                    composable(route = "login") {
-                        currentScreen = Screen.LOGIN
+                    composable(route = Screen.Login.name) {
+                        currentScreen = Screen.Login
                         TemplateApplicationTheme {
                             LoginScreen(navController = navController)
                         }
                     }
-                    composable(route = "createTicket") {
-                        currentScreen = Screen.CREATE_TICKET
+                    composable(route = Screen.CreateTicket.name) {
+                        currentScreen = Screen.CreateTicket
                         TemplateApplicationTheme {
                             CreateTicketScreen(createTicketScreenViewModel = createTicketModule.getViewModel())
                         }
