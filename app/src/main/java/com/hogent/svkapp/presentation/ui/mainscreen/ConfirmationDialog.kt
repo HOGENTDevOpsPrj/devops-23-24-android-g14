@@ -1,4 +1,4 @@
-package com.hogent.svkapp.presentation.ui
+package com.hogent.svkapp.presentation.ui.mainscreen
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 
 @Composable
-fun ConfirmationPopUp(onDismissRequest: () -> Unit, modifier: Modifier = Modifier) {
+fun ConfirmationDialog(onDismissRequest: () -> Unit, modifier: Modifier = Modifier) {
     AlertDialog(icon = {
         Icon(Icons.Filled.Check, contentDescription = "Example Icon")
     }, title = {
@@ -33,12 +33,12 @@ fun ConfirmationPopUp(onDismissRequest: () -> Unit, modifier: Modifier = Modifie
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun ConfirmationPopUpPreview() {
+fun ConfirmationDialogPreview() {
     TemplateApplicationTheme {
-        ConfirmationPopUp(onDismissRequest = {})
+        ConfirmationDialog(onDismissRequest = {})
     }
 }
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ConfirmationPopUpPreviewDark() = ConfirmationPopUpPreview()
+fun ConfirmationDialogPreviewDark() = ConfirmationDialogPreview()

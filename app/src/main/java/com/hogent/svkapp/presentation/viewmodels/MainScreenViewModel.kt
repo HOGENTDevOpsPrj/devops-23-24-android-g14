@@ -4,17 +4,17 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.hogent.svkapp.data.repositories.TicketRepository
+import com.hogent.svkapp.data.repositories.CargoTicketRepository
 import com.hogent.svkapp.domain.ValidationError
 import com.hogent.svkapp.domain.ValidationResult
 import com.hogent.svkapp.domain.Validator
 import com.hogent.svkapp.domain.entities.CreationResult
 import com.hogent.svkapp.domain.entities.Image
-import com.hogent.svkapp.domain.entities.Ticket
+import com.hogent.svkapp.domain.entities.CargoTicket
 import java.util.Locale
 
-class CreateTicketScreenViewModel(
-    private val validator: Validator, private val ticketRepository: TicketRepository,
+class MainScreenViewModel(
+    private val validator: Validator, private val cargoTicketRepository: CargoTicketRepository,
 ) : ViewModel() {
     private var _routeNumber = mutableStateOf(value = "")
     val routeNumber: State<String> get() = _routeNumber
@@ -52,7 +52,7 @@ class CreateTicketScreenViewModel(
     }
 
     fun onSend() {
-        val creationResult = Ticket.create(
+        val creationResult = CargoTicket.create(
             routeNumber = _routeNumber.value,
             licensePlate = _licensePlate.value,
             images = _images,
@@ -66,7 +66,7 @@ class CreateTicketScreenViewModel(
     }
 
     private fun handleSuccess(result: CreationResult.Success) {
-        ticketRepository.addTicket(result.ticket)
+        cargoTicketRepository.addCargoTicket(result.cargoTicket)
         resetForm()
         toggleDialog()
     }

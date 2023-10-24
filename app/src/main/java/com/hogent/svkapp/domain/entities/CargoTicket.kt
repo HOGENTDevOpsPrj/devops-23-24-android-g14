@@ -4,7 +4,7 @@ import com.hogent.svkapp.domain.ValidationError
 import com.hogent.svkapp.domain.ValidationResult
 import com.hogent.svkapp.domain.Validator
 
-class Ticket private constructor(
+class CargoTicket private constructor(
     val routeNumber: Int, val licensePlate: String, val images: List<Image>
 ) {
     companion object {
@@ -21,7 +21,7 @@ class Ticket private constructor(
 
             return if (errors.isEmpty()) {
                 CreationResult.Success(
-                    Ticket(
+                    CargoTicket(
                         routeNumber = routeNumber.toInt(),
                         licensePlate = licensePlate.trim().uppercase(),
                         images = images
@@ -35,7 +35,7 @@ class Ticket private constructor(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is Ticket) return false
+        if (other !is CargoTicket) return false
         return routeNumber == other.routeNumber && licensePlate == other.licensePlate && images == other.images
     }
 
@@ -48,6 +48,6 @@ class Ticket private constructor(
 }
 
 sealed class CreationResult {
-    data class Success(val ticket: Ticket) : CreationResult()
+    data class Success(val cargoTicket: CargoTicket) : CreationResult()
     data class Failure(val errors: List<ValidationError>) : CreationResult()
 }

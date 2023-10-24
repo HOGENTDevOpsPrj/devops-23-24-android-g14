@@ -1,4 +1,4 @@
-package com.hogent.svkapp.presentation.ui
+package com.hogent.svkapp.presentation.ui.mainscreen
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
