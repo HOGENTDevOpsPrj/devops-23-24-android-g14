@@ -56,7 +56,7 @@ dependencies {
     val lifecycleVersion = "2.6.2"
     val activityVersion = "1.8.0"
     val composeBomVersion = "2023.10.00"
-    val composeUiVersion = "1.5.3"
+    val composeUiVersion = "1.5.4"
     val composeMaterial3Version = "1.1.2"
     val composeNavigationVersion = "2.7.4"
 
