@@ -1,5 +1,8 @@
 package com.hogent.svkapp.presentation.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,53 +30,66 @@ import androidx.navigation.compose.rememberNavController
 
 @ExperimentalMaterial3Api
 @Composable
-fun SVKTopAppBar(navController: NavHostController) {
-    TopAppBar(
-//            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-        modifier = Modifier.padding(start = 0.dp),
-        windowInsets = WindowInsets(0),
-        title = {
-            SVKLogo(Modifier.height(64.dp))
-        },
-        actions = {
-            var expanded by remember {
-                mutableStateOf(false)
-            }
-
-            IconButton(onClick = { expanded = true }) {
-                Icon(imageVector = Icons.Default.MoreVert, contentDescription = "More")
-            }
-
-            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-
-                DropdownMenuItem(leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.AccountBox,
-                        contentDescription = "Gebruikersnaam"
-                    )
-                }, text = { Text(text = "Gebruiker") }, onClick = { /*Nothing*/ })
-
-                DropdownMenuItem(leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.ExitToApp, contentDescription = "Uitloggen"
-                    )
-                }, text = {
-                    Text(text = "Log Uit")
-                }, onClick = {
-                    navController.navigate(route = "login") {
-                        popUpTo(route = "login") {
-                            inclusive = true
-                        }
+fun SVKTopAppBar(navController: NavHostController, visible: Boolean) {
+    AnimatedVisibility(visible = visible,
+        enter = slideInVertically(initialOffsetY = { it }),
+        exit = slideOutVertically(targetOffsetY = { it }),
+        content = {
+            TopAppBar(
+                //            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+                modifier = Modifier.padding(start = 0.dp),
+                windowInsets = WindowInsets(0),
+                title = {
+                    SVKLogo(Modifier.height(64.dp))
+                },
+                actions = {
+                    var expanded by remember {
+                        mutableStateOf(false)
                     }
-                })
-            }
-        },
-    )
+
+                    IconButton(onClick = { expanded = true }) {
+                        Icon(imageVector = Icons.Default.MoreVert, contentDescription = "More")
+                    }
+
+                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+
+                        DropdownUserInfo("test user") // username van auth0 doorgeven
+
+                        DropdownMenuItem(leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.ExitToApp,
+                                contentDescription = "Uitloggen"
+                            )
+                        }, text = {
+                            Text(text = "Log Uit")
+                        }, onClick = {
+                            navController.navigate(route = "login") {
+                                popUpTo(route = "login") {
+                                    inclusive = true
+                                }
+                            }
+                        })
+                    }
+                },
+            )
+        })
+}
+
+@Composable
+private fun DropdownUserInfo(username: String) {
+    DropdownMenuItem(leadingIcon = {
+        Icon(
+            imageVector = Icons.Default.AccountBox, contentDescription = "Gebruikersnaam"
+        )
+    }, text = { Text(text = username) }, onClick = { /*Nothing*/ })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun SVKTopAppBarPreview() {
-    SVKTopAppBar(navController = rememberNavController())
+    SVKTopAppBar(
+        navController = rememberNavController(),
+        visible = true,
+    )
 }

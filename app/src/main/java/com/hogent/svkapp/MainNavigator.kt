@@ -38,7 +38,7 @@ class MainNavigator {
 
         Scaffold(topBar = {
             if (currentScreen != Screen.Login) {
-                SVKTopAppBar(navController)
+                SVKTopAppBar(navController, currentScreen != Screen.Login)
             }
         }) { innerPadding ->
             Surface(
