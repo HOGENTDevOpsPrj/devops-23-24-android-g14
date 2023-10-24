@@ -1,7 +1,5 @@
 package com.hogent.svkapp.presentation.ui
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,39 +22,38 @@ fun CreateTicketScreen(createTicketScreenViewModel: CreateTicketScreenViewModel)
     val images = remember { createTicketScreenViewModel.images }
     val routeNumberError by createTicketScreenViewModel.routeNumberError
     val licensePlateError by createTicketScreenViewModel.licensePlateError
+    val imagesError by createTicketScreenViewModel.imagesError
     val showDialog by createTicketScreenViewModel.showDialog
 
     Scaffold(floatingActionButton = {
         SendFloatingActionButton(onSend = createTicketScreenViewModel::onSend)
     }) { innerPadding ->
-        Column(
+        CreateTicketForm(
+            routeNumber = routeNumber,
+            licensePlate = licensePlate,
+            images = images,
+            routeNumberError = routeNumberError,
+            licensePlateError = licensePlateError,
+            imagesError = imagesError,
+            onRouteNumberChange = createTicketScreenViewModel::onRouteNumberChange,
+            onLicensePlateChange = createTicketScreenViewModel::onLicensePlateChange,
+            onAddImage = createTicketScreenViewModel::addImage,
+            onRemoveImage = createTicketScreenViewModel::deleteImage,
             modifier = Modifier
                 .fillMaxHeight()
                 .fillMaxWidth()
                 .padding(paddingValues = innerPadding)
                 .padding(all = MaterialTheme.spacing.large),
-            verticalArrangement = Arrangement.spacedBy(space = MaterialTheme.spacing.large)
-        ) {
-            CreateTicketForm(
-                routeNumber = routeNumber,
-                onRouteNumberChange = createTicketScreenViewModel::onRouteNumberChange,
-                routeNumberError = routeNumberError,
-                licensePlate = licensePlate,
-                onLicensePlateChange = createTicketScreenViewModel::onLicensePlateChange,
-                licensePlateError = licensePlateError,
-                images = images,
-                onAddImage = createTicketScreenViewModel::addImage,
-                onDeleteImage = createTicketScreenViewModel::deleteImage
-            )
-            if (showDialog) {
-                ConfirmationPopUp(onDismissRequest = {createTicketScreenViewModel.toggleDialog()})
-            }
+        )
+        if (showDialog) {
+            ConfirmationPopUp(onDismissRequest = createTicketScreenViewModel::toggleDialog)
         }
     }
 }
 
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun CreateTicketScreenPreviewBase() {
+fun CreateTicketScreenPreview() {
     val mockCreateTicketModule = MockCreateTicketModule()
 
     TemplateApplicationTheme {
@@ -66,14 +63,6 @@ fun CreateTicketScreenPreviewBase() {
     }
 }
 
-@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
-@Composable
-fun CreateTicketScreenPreview() {
-    CreateTicketScreenPreviewBase()
-}
-
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun CreateTicketScreenPreviewDark() {
-    CreateTicketScreenPreviewBase()
-}
+fun CreateTicketScreenPreviewDark() = CreateTicketScreenPreview()
