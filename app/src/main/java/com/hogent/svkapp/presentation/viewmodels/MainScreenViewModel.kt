@@ -4,17 +4,21 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import com.hogent.svkapp.Screen
 import com.hogent.svkapp.data.repositories.CargoTicketRepository
 import com.hogent.svkapp.domain.ValidationError
 import com.hogent.svkapp.domain.ValidationResult
 import com.hogent.svkapp.domain.Validator
+import com.hogent.svkapp.domain.entities.CargoTicket
 import com.hogent.svkapp.domain.entities.CreationResult
 import com.hogent.svkapp.domain.entities.Image
-import com.hogent.svkapp.domain.entities.CargoTicket
 import java.util.Locale
 
 class MainScreenViewModel(
-    private val validator: Validator, private val cargoTicketRepository: CargoTicketRepository,
+    private val validator: Validator,
+    private val cargoTicketRepository: CargoTicketRepository,
+    private val navController: NavController
 ) : ViewModel() {
     private var _routeNumber = mutableStateOf(value = "")
     val routeNumber: State<String> get() = _routeNumber
@@ -91,6 +95,10 @@ class MainScreenViewModel(
     fun onLicensePlateChange(licensePlate: String) {
         _licensePlate.value = licensePlate.uppercase(locale = Locale.ROOT)
         validate(ValidationType.LICENSE_PLATE)
+    }
+
+    fun onLogout() {
+        navController.navigate(route = Screen.Login.name)
     }
 
     private fun validate(type: ValidationType) {
