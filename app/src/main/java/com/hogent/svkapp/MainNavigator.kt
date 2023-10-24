@@ -15,10 +15,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.hogent.svkapp.presentation.ui.mainscreen.MainScreen
-import com.hogent.svkapp.presentation.ui.login.LoginScreen
-import com.hogent.svkapp.presentation.ui.SVKLogo
 import com.hogent.svkapp.presentation.ui.SVKTopAppBar
+import com.hogent.svkapp.presentation.ui.login.LoginScreen
+import com.hogent.svkapp.presentation.ui.mainscreen.MainScreen
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 
 class MainNavigator {
