@@ -1,4 +1,4 @@
-package com.hogent.svkapp.presentation.ui.images
+package com.hogent.svkapp.presentation.ui.mainscreen.images
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text

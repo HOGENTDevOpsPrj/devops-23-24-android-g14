@@ -1,4 +1,4 @@
-package com.hogent.svkapp.presentation.ui.images
+package com.hogent.svkapp.presentation.ui.mainscreen.images
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding

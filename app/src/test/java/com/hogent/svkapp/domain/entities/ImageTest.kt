@@ -1,20 +1,18 @@
-package com.hogent.svkapp.features.create_ticket.domain.entities
+package com.hogent.svkapp.domain.entities
 
 import android.graphics.Bitmap
-import com.hogent.svkapp.domain.entities.Image
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.mock
 
 class ImageTest {
-    @Mock
-    lateinit var mockBitmap: Bitmap
+    private lateinit var mockBitmap: Bitmap
 
     @Before
     fun setUp() {
-        MockitoAnnotations.openMocks(this)
+        mockBitmap = mock()
     }
 
     @Test

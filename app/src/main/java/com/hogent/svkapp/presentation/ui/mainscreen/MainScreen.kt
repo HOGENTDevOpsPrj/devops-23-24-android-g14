@@ -1,8 +1,8 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -10,11 +10,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.hogent.svkapp.MockAppModule
+import androidx.navigation.compose.rememberNavController
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
     val routeNumber by mainScreenViewModel.routeNumber
@@ -27,6 +28,8 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
 
     Scaffold(floatingActionButton = {
         SendFloatingActionButton(onSend = mainScreenViewModel::onSend)
+    }, topBar = {
+        MainTopAppBar(onLogout = mainScreenViewModel::onLogout)
     }) { innerPadding ->
         Form(
             routeNumber = routeNumber,
@@ -40,8 +43,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
             onAddImage = mainScreenViewModel::addImage,
             onRemoveImage = mainScreenViewModel::deleteImage,
             modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(paddingValues = innerPadding)
                 .padding(all = MaterialTheme.spacing.large),
         )
@@ -54,11 +56,9 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun MainScreenPreview() {
-    val mockCreateTicketModule = MockAppModule()
-
     TemplateApplicationTheme {
         MainScreen(
-            mainScreenViewModel = mockCreateTicketModule.getMainScreenViewModel()
+            mainScreenViewModel = MainScreenViewModel(navController = rememberNavController())
         )
     }
 }

@@ -13,8 +13,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.R
 import com.hogent.svkapp.domain.entities.Image
-import com.hogent.svkapp.presentation.ui.images.AddImageButton
-import com.hogent.svkapp.presentation.ui.images.ScrollableImageList
+import com.hogent.svkapp.presentation.ui.mainscreen.images.AddImageButton
+import com.hogent.svkapp.presentation.ui.mainscreen.images.ScrollableImageList
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
 

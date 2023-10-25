@@ -15,15 +15,19 @@ class CargoTicket private constructor(
             val licenseResult = validator.validateLicensePlate(licensePlate)
             val imageResult = validator.validateImages(images)
 
-            val errors = listOf(routeResult, licenseResult, imageResult)
-                .filterIsInstance<ValidationResult.Error>()
-                .map { it.error }
+            val errors = listOf(
+                routeResult, licenseResult, imageResult
+            ).filterIsInstance<ValidationResult.Error>().map { it.error }
 
             return if (errors.isEmpty()) {
+                val cleanRouteNumber = routeNumber.trim().filter { !it.isWhitespace() }
+                val cleanLicensePlate =
+                    licensePlate.trim().filter { !it.isWhitespace() }.uppercase()
+
                 CreationResult.Success(
                     CargoTicket(
-                        routeNumber = routeNumber.toInt(),
-                        licensePlate = licensePlate.trim().uppercase(),
+                        routeNumber = cleanRouteNumber.toInt(),
+                        licensePlate = cleanLicensePlate,
                         images = images
                     )
                 )
