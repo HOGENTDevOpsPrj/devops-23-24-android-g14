@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.hogent.svkapp.Route
 import com.hogent.svkapp.data.repositories.CargoTicketRepository
-import com.hogent.svkapp.data.repositories.CargoTicketRepositoryImpl
 import com.hogent.svkapp.domain.ValidationError
 import com.hogent.svkapp.domain.ValidationResult
 import com.hogent.svkapp.domain.Validator
@@ -18,7 +17,7 @@ import java.util.Locale
 
 class MainScreenViewModel(
     private val validator: Validator = Validator(),
-    private val cargoTicketRepository: CargoTicketRepository = CargoTicketRepositoryImpl(),
+    private val cargoTicketRepository: CargoTicketRepository = CargoTicketRepository(),
     private val navController: NavHostController
 ) : ViewModel() {
     private var _routeNumber = mutableStateOf(value = "")

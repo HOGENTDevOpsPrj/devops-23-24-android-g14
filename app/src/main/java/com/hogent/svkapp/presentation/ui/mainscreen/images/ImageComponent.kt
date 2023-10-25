@@ -1,4 +1,4 @@
-package com.hogent.svkapp.presentation.ui.images
+package com.hogent.svkapp.presentation.ui.mainscreen.images
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
@@ -13,6 +13,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hogent.svkapp.R
 import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
@@ -41,7 +42,7 @@ private fun getPainter(image: Image) = when (image) {
 @Composable
 fun ImageComponentPreview() {
     TemplateApplicationTheme {
-        ImageComponent(Image.ResourceImage(resourceId = com.hogent.svkapp.R.drawable.resource_default))
+        ImageComponent(Image.ResourceImage(resourceId = R.drawable.resource_default))
     }
 }
 

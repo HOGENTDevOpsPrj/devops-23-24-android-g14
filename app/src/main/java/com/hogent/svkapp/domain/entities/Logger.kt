@@ -1,4 +1,4 @@
-package com.hogent.svkapp.util
+package com.hogent.svkapp.domain.entities
 
 import android.util.Log
 
@@ -9,11 +9,5 @@ interface Logger {
 class AndroidLogger : Logger {
     override fun debug(tag: String, message: String) {
         Log.d(tag, message)
-    }
-}
-
-class NoOpLogger : Logger {
-    override fun debug(tag: String, message: String) {
-        // Do nothing for tests
     }
 }

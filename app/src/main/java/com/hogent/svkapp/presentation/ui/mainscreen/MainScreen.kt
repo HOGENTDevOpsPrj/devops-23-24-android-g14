@@ -9,6 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
@@ -50,16 +53,16 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
     }
 }
 
-//@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
-//@Composable
-//fun MainScreenPreview() {
-//    TemplateApplicationTheme {
-//        MainScreen(
-//            mainScreenViewModel = mockCreateTicketModule.getMainScreenViewModel()
-//        )
-//    }
-//}
-//
-//@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
-//@Composable
-//fun MainScreenPreviewDark() = MainScreenPreview()
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
+@Composable
+fun MainScreenPreview() {
+    TemplateApplicationTheme {
+        MainScreen(
+            mainScreenViewModel = MainScreenViewModel(navController = rememberNavController())
+        )
+    }
+}
+
+@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun MainScreenPreviewDark() = MainScreenPreview()

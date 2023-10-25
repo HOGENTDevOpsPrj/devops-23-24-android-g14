@@ -30,4 +30,3 @@ fun SendFloatingActionButtonPreview() {
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun SendFloatingActionButtonPreviewDark() = SendFloatingActionButtonPreview()
-

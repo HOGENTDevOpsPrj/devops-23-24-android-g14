@@ -1,31 +1,27 @@
-package com.hogent.svkapp.features.create_ticket.data.sources
+package com.hogent.svkapp.data.sources
 
-import com.hogent.svkapp.data.sources.LocalCargoTicketDataSource
 import com.hogent.svkapp.domain.entities.CargoTicket
-import com.hogent.svkapp.util.NoOpLogger
+import com.hogent.svkapp.domain.entities.Logger
 import junit.framework.TestCase.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 
-class LocalCargoCargoTicketDataSourceTest {
+class LocalCargoTicketDataSourceTest {
 
-    private lateinit var localTicketDataSource: LocalCargoTicketDataSource
-
-    @Mock
+    private lateinit var logger: Logger
     private lateinit var cargoTicket1: CargoTicket
-
-    @Mock
     private lateinit var cargoTicket2: CargoTicket
-
-    @Mock
     private lateinit var cargoTicket3: CargoTicket
+    private lateinit var localTicketDataSource: LocalCargoTicketDataSource
 
     @Before
     fun setUp() {
-        val logger = NoOpLogger()
-        MockitoAnnotations.openMocks(this)
+        logger = mock()
+        cargoTicket1 = mock()
+        cargoTicket2 = mock()
+        cargoTicket3 = mock()
         localTicketDataSource = LocalCargoTicketDataSource(logger = logger)
     }
 
@@ -34,6 +30,13 @@ class LocalCargoCargoTicketDataSourceTest {
         localTicketDataSource.addCargoTicket(cargoTicket = cargoTicket1)
 
         assertTrue(localTicketDataSource.getCargoTickets().contains(cargoTicket1))
+    }
+
+    @Test
+    fun `when addTicket is called, ticket should be logged`() {
+        localTicketDataSource.addCargoTicket(cargoTicket = cargoTicket1)
+
+        verify(logger).debug(tag = "Local Database", message = "Added cargo ticket: $cargoTicket1")
     }
 
     @Test
