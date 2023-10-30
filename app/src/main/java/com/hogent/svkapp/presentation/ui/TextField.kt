@@ -1,4 +1,4 @@
-package com.hogent.svkapp.presentation.ui.mainscreen
+package com.hogent.svkapp.presentation.ui
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
@@ -6,6 +6,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 
@@ -17,6 +18,7 @@ fun TextField(
     onValueChange: (String) -> Unit,
     error: String? = null,
     keyboardType: KeyboardType,
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     TextField(
         value = value,
@@ -31,6 +33,7 @@ fun TextField(
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         singleLine = true,
         modifier = modifier,
+        visualTransformation = visualTransformation,
     )
 }
 
