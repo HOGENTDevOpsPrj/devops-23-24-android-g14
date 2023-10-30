@@ -2,30 +2,33 @@
 
 ## Group
 
-- Project SVK
-- Group 14
+- SVK
+- G14
 
 ## Team members
 
 ### Development:
 
-[Fill-in] List of team members responsible for development:
+List of team members responsible for development:
 
-- Lars Salembier @larssalembier
-- ...
-- ...
+- Thomas Gielen | @GielenThomas
+- Marwane Koutar | @MarwaneKoutar
+- Lars Salembier | @LarsSalembier
+- Achilles Vanbelleghem | @AchillesVan
+- Adriaan Vander Elst | @AdriaanVanderElst
 
 ### Operations:
 
-[Fill-in] List of team members responsible for operations:
+List of team members responsible for operations:
 
-- Jan Janssens | @janjanssens(githubusername)
-- ...
-- ...
+- Matteo Alexander | @MatteoAlexander
+- Daan De Bonte | @DaanDeBonte
+- Thomas De Schepper | @ThomasDeSchepper26
+- Wout Verfaillie | @woutverfaillie
 
 ## Technologies & Packages
 
-[Fill-in] List of technologies and packages used in this project:
+List of technologies and packages used in this project:
 
 - Database: ...
 - ...
