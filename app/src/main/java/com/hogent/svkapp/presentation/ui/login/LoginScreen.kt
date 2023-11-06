@@ -36,21 +36,21 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
             val useremail by loginViewModel.userEmail
             val password by loginViewModel.password
 
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = useremail,
-                label = "Email",
-                onValueChange = loginViewModel::onUserEmailChange,
-                keyboardType = KeyboardType.Email
-            )
-            TextField(
-                modifier = Modifier.fillMaxWidth(),
-                value = password,
-                label = "Password",
-                onValueChange = loginViewModel::onPasswordChange,
-                keyboardType = KeyboardType.Password,
-                visualTransformation = PasswordVisualTransformation()
-            )
+//            TextField(
+//                modifier = Modifier.fillMaxWidth(),
+//                value = useremail,
+//                label = "Email",
+//                onValueChange = loginViewModel::onUserEmailChange,
+//                keyboardType = KeyboardType.Email
+//            )
+//            TextField(
+//                modifier = Modifier.fillMaxWidth(),
+//                value = password,
+//                label = "Password",
+//                onValueChange = loginViewModel::onPasswordChange,
+//                keyboardType = KeyboardType.Password,
+//                visualTransformation = PasswordVisualTransformation()
+//            )
             LoginButton(
                 onClick = loginViewModel::onLogin, modifier = Modifier.fillMaxWidth()
             )
