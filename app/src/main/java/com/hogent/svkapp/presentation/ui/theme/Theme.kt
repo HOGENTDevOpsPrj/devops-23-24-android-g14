@@ -14,11 +14,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+/**
+ * Apply a consistent theme across the entire application with optional dark and dynamic color theming.
+ *
+ * This composable function sets up the application's theme based on the preferred color schemes (dark or light),
+ * and it can optionally use dynamic color theming on supported devices (Android 12+). It wraps the content in a
+ * MaterialTheme composable with the selected color scheme and typography settings.
+ *
+ * @param useDarkTheme Whether the dark color scheme should be used. Defaults to the system setting.
+ * @param useDynamicColors Whether dynamic color theming should be used. Defaults to false. This is only supported on
+ * Android 12+.
+ * @param content The content of the application.
+ */
 @Composable
 fun TemplateApplicationTheme(
-    useDarkTheme: Boolean = isSystemInDarkTheme(),
-    useDynamicColors: Boolean = false,
-    content: @Composable () -> Unit
+    useDarkTheme: Boolean = isSystemInDarkTheme(), useDynamicColors: Boolean = false, content: @Composable () -> Unit
 ) {
     val colorScheme = determineColorScheme(useDarkTheme, useDynamicColors)
 
@@ -49,8 +59,7 @@ private fun ApplySideEffects(colorScheme: ColorScheme, useDarkTheme: Boolean) {
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
-                useDarkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = useDarkTheme
         }
     }
 }

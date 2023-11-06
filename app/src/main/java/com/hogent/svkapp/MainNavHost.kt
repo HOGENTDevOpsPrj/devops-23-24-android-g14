@@ -10,10 +10,26 @@ import com.hogent.svkapp.presentation.ui.mainscreen.MainScreen
 import com.hogent.svkapp.presentation.viewmodels.LoginViewModel
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
+/**
+ * The routes of the app.
+ */
 enum class Route {
-    Login, Main,
+    /**
+     * The login screen.
+     */
+    Login,
+
+    /**
+     * The main screen.
+     */
+    Main,
 }
 
+/**
+ * The main navigation host of the app.
+ *
+ * @param navController the [NavHostController] that is used to navigate to other screens.
+ */
 @ExperimentalMaterial3Api
 @Composable
 fun MainNavHost(

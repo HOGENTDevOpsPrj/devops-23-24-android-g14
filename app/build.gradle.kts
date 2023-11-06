@@ -3,8 +3,9 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
-val appVersionCode = 1
-val appVersionName = "1.0"
+private val appVersionCode = 1
+
+private val appVersionName = "1.0"
 
 android {
     namespace = "com.hogent.svkapp"
@@ -12,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.hogent.svkapp"
-        minSdk = 31
+        minSdk = 30
         targetSdk = 34
         versionCode = appVersionCode
         versionName = appVersionName
@@ -51,7 +52,7 @@ android {
 }
 
 dependencies {
-    implementation("androidx.navigation:navigation-runtime-ktx:2.7.4")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.7.5")
     val coreVersion = "1.12.0"
     val lifecycleVersion = "2.6.2"
     val activityVersion = "1.8.0"
