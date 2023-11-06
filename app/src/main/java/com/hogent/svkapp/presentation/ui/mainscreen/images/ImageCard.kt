@@ -14,6 +14,16 @@ import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
 
+/**
+ * A card that displays an [Image].
+ *
+ * @param image the [Image] to display.
+ * @param onDelete the action to perform when the delete button is clicked.
+ * @param modifier the modifier for this composable.
+ *
+ * @sample ImageCardPreview
+ * @sample ImageCardPreviewDark
+ */
 @Composable
 fun ImageCard(image: Image, onDelete: () -> Unit, modifier: Modifier = Modifier) {
     val isAlertDialogOpen = remember { mutableStateOf(false) }
@@ -39,7 +49,7 @@ fun ImageCard(image: Image, onDelete: () -> Unit, modifier: Modifier = Modifier)
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun ImageCardPreview() {
+private fun ImageCardPreview() {
     TemplateApplicationTheme {
         ImageCard(Image.ResourceImage(resourceId = R.drawable.resource_default), onDelete = {})
     }
@@ -47,4 +57,4 @@ fun ImageCardPreview() {
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ImageCardPreviewDark() = ImageCardPreview()
+private fun ImageCardPreviewDark() = ImageCardPreview()

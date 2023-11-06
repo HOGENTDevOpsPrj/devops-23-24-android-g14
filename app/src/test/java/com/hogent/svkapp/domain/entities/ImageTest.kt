@@ -1,8 +1,10 @@
 package com.hogent.svkapp.domain.entities
 
 import android.graphics.Bitmap
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.not
+import org.hamcrest.CoreMatchers.sameInstance
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
@@ -20,7 +22,7 @@ class ImageTest {
         val image1 = Image.BitmapImage(mockBitmap)
         val image2 = Image.BitmapImage(mockBitmap)
 
-        assertNotEquals(image1.id, image2.id)
+        assertThat(image2.id, not(`is`(image1.id)))
     }
 
     @Test
@@ -28,14 +30,14 @@ class ImageTest {
         val image1 = Image.ResourceImage(1)
         val image2 = Image.ResourceImage(2)
 
-        assertNotEquals(image1.id, image2.id)
+        assertThat(image2.id, not(`is`(image1.id)))
     }
 
     @Test
     fun `BitmapImage holds correct bitmap`() {
         val image = Image.BitmapImage(mockBitmap)
 
-        assertEquals(mockBitmap, image.bitmap)
+        assertThat(image.bitmap, sameInstance(mockBitmap))
     }
 
     @Test
@@ -43,6 +45,6 @@ class ImageTest {
         val resourceId = 123
         val image = Image.ResourceImage(resourceId)
 
-        assertEquals(resourceId, image.resourceId)
+        assertThat(image.resourceId, `is`(resourceId))
     }
 }

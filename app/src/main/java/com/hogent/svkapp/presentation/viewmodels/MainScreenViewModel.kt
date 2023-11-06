@@ -3,140 +3,193 @@ package com.hogent.svkapp.presentation.viewmodels
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.hogent.svkapp.Route
 import com.hogent.svkapp.data.repositories.CargoTicketRepository
-import com.hogent.svkapp.domain.ValidationError
-import com.hogent.svkapp.domain.ValidationResult
-import com.hogent.svkapp.domain.Validator
 import com.hogent.svkapp.domain.entities.CargoTicket
-import com.hogent.svkapp.domain.entities.CreationResult
 import com.hogent.svkapp.domain.entities.Image
+import com.hogent.svkapp.domain.entities.ImageCollectionError
+import com.hogent.svkapp.domain.entities.LicensePlate
+import com.hogent.svkapp.domain.entities.LicensePlateError
+import com.hogent.svkapp.domain.entities.Result
+import com.hogent.svkapp.domain.entities.RouteNumber
+import com.hogent.svkapp.domain.entities.RouteNumberCollectionError
+import com.hogent.svkapp.domain.entities.RouteNumberError
 import java.util.Locale
 
+/**
+ * The [ViewModel] of the main screen.
+ *
+ * @param cargoTicketRepository the [CargoTicketRepository] that is used to add cargo tickets.
+ * @param navController the [NavHostController] that is used to navigate to other screens.
+ *
+ * @property routeNumberInputFieldValues the values of the route number input fields.
+ * @property licensePlateInputFieldValue the value of the license plate input field.
+ * @property imageCollection the images that are added to the cargo ticket.
+ * @property routeNumberInputFieldValidationErrors the validation errors of the route number input fields.
+ * @property routeNumberCollectionError the validation error of the route number collection.
+ * @property licensePlateInputFieldValidationError the validation error of the license plate input field.
+ * @property imageCollectionError the validation error of the image collection.
+ * @property showDialog whether or not the dialog should be shown.
+ */
 class MainScreenViewModel(
-    private val validator: Validator = Validator(),
     private val cargoTicketRepository: CargoTicketRepository = CargoTicketRepository(),
     private val navController: NavHostController
 ) : ViewModel() {
-    private var _routeNumber = mutableStateOf(value = "")
-    val routeNumber: State<String> get() = _routeNumber
-
-    private var _licensePlate = mutableStateOf(value = "")
-    val licensePlate: State<String> get() = _licensePlate
-
-    private val _images = mutableStateListOf<Image>()
-    val images: List<Image> get() = _images
-
-    private var _routeNumberError = mutableStateOf<String?>(value = null)
-    val routeNumberError: State<String?> get() = _routeNumberError
-
-    private var _licensePlateError = mutableStateOf<String?>(value = null)
-    val licensePlateError: State<String?> get() = _licensePlateError
-
-    private var _imagesError = mutableStateOf<String?>(value = null)
-    val imagesError: State<String?> get() = _imagesError
-
+    private var _routeNumberInputFieldValues = mutableStateListOf("")
+    val routeNumberInputFieldValues: SnapshotStateList<String> get() = _routeNumberInputFieldValues
+    private var _licensePlateInputFieldValue = mutableStateOf(value = "")
+    val licensePlateInputFieldValue: State<String> get() = _licensePlateInputFieldValue
+    private val _imageCollection = mutableStateListOf<Image>()
+    val imageCollection: SnapshotStateList<Image> get() = _imageCollection
+    private var _routeNumberInputFieldValidationErrors = mutableStateListOf<RouteNumberError?>(null)
+    val routeNumberInputFieldValidationErrors: List<RouteNumberError?> get() = _routeNumberInputFieldValidationErrors
+    private var _routeNumberCollectionError =
+        mutableStateOf<RouteNumberCollectionError?>(value = null)
+    val routeNumberCollectionError: State<RouteNumberCollectionError?> get() = _routeNumberCollectionError
+    private var _licensePlateInputFieldValidationError =
+        mutableStateOf<LicensePlateError?>(value = null)
+    val licensePlateInputFieldValidationError: State<LicensePlateError?> get() = _licensePlateInputFieldValidationError
+    private var _imageCollectionError = mutableStateOf<ImageCollectionError?>(value = null)
+    val imageCollectionError: State<ImageCollectionError?> get() = _imageCollectionError
     private var _showDialog = mutableStateOf(value = false)
     val showDialog: State<Boolean> get() = _showDialog
 
+    /**
+     * Toggles the dialog.
+     */
     fun toggleDialog() {
         _showDialog.value = !_showDialog.value
     }
 
+    /**
+     * Adds an image to the image collection.
+     *
+     * @param image the image to add.
+     */
     fun addImage(image: Image) {
-        _images.add(element = image)
-        validate(ValidationType.IMAGES)
+        _imageCollection.add(image)
+        validateImageCollection()
     }
 
-    fun deleteImage(image: Image) {
-        _images.remove(image)
-        validate(ValidationType.IMAGES)
+    /**
+     * Removes an image from the image collection.
+     *
+     * @param image the image to remove.
+     */
+    fun removeImage(image: Image) {
+        _imageCollection.remove(image)
+        validateImageCollection()
     }
 
+    /**
+     * Creates a cargo ticket and adds it to the repository. If the creation fails, the validation
+     * errors are shown. If the creation succeeds, the form is reset and the dialog is shown.
+     */
     fun onSend() {
         val creationResult = CargoTicket.create(
-            routeNumber = _routeNumber.value,
-            licensePlate = _licensePlate.value,
-            images = _images,
-            validator = validator
+            routeNumbers = _routeNumberInputFieldValues,
+            licensePlate = _licensePlateInputFieldValue.value,
+            images = _imageCollection
         )
 
         when (creationResult) {
-            is CreationResult.Success -> handleSuccess(creationResult)
-            is CreationResult.Failure -> handleFailure(creationResult)
-        }
-    }
+            is Result.Success -> {
+                cargoTicketRepository.addCargoTicket(creationResult.value)
+                resetForm()
+                toggleDialog()
+            }
 
-    private fun handleSuccess(result: CreationResult.Success) {
-        cargoTicketRepository.addCargoTicket(result.cargoTicket)
-        resetForm()
-        toggleDialog()
-    }
-
-    private fun handleFailure(result: CreationResult.Failure) {
-        result.errors.forEach { error ->
-            when (error) {
-                ValidationError.EMPTY_ROUTE -> _routeNumberError.value = error.message
-                ValidationError.INVALID_ROUTE_NUMBER -> _routeNumberError.value = error.message
-                ValidationError.EMPTY_LICENSE_PLATE -> _licensePlateError.value = error.message
-                ValidationError.LONG_LICENSE_PLATE -> _licensePlateError.value = error.message
-                ValidationError.EMPTY_IMAGES -> _imagesError.value = error.message
+            is Result.Failure -> {
+                _routeNumberCollectionError.value = creationResult.error.routeNumberCollectionError
+                _routeNumberInputFieldValidationErrors.clear()
+                _routeNumberInputFieldValidationErrors.addAll(creationResult.error.routeNumberErrors)
+                _licensePlateInputFieldValidationError.value =
+                    creationResult.error.licensePlateError
+                _imageCollectionError.value = creationResult.error.imageCollectionError
             }
         }
     }
 
-    fun onRouteNumberChange(routeNumber: String) {
-        _routeNumber.value = routeNumber
-        validate(ValidationType.ROUTE_NUMBER)
+    /**
+     * Updates the value of a route number input field. If the value doesn't represent a valid
+     * route number, the corresponding validation error is set.
+     *
+     * @param index the index of the route number input field.
+     * @param routeNumber the new value of the route number input field.
+     */
+    fun onRouteNumberChange(index: Int, routeNumber: String) {
+        _routeNumberInputFieldValues[index] = routeNumber
+
+        _routeNumberInputFieldValidationErrors[index] =
+            RouteNumber.validateStringRepresentation(routeNumber)
+
+        if (routeNumber.isEmpty()) {
+            _routeNumberInputFieldValidationErrors[index] = null
+        }
     }
 
+    /**
+     * Add a route number to the route number collection.
+     */
+    fun addRouteNumber() {
+        _routeNumberInputFieldValues.add("")
+        _routeNumberInputFieldValidationErrors.add(null)
+        _routeNumberCollectionError.value = null
+    }
+
+    /**
+     * Remove a route number from the route number collection.
+     *
+     * @param index the index of the route number to remove.
+     */
+    fun removeRouteNumber(index: Int) {
+        _routeNumberInputFieldValues.removeAt(index)
+        _routeNumberInputFieldValidationErrors.removeAt(index)
+        if (_routeNumberInputFieldValues.isEmpty()) {
+            _routeNumberCollectionError.value = RouteNumberCollectionError.Empty
+        }
+    }
+
+    /**
+     * Updates the value of the license plate input field. If the value doesn't represent a valid
+     * license plate, the corresponding validation error is set.
+     *
+     * @param licensePlate the new value of the license plate input field.
+     */
     fun onLicensePlateChange(licensePlate: String) {
-        _licensePlate.value = licensePlate.uppercase(locale = Locale.ROOT)
-        validate(ValidationType.LICENSE_PLATE)
+        _licensePlateInputFieldValue.value = licensePlate.uppercase(locale = Locale.ROOT)
+
+        _licensePlateInputFieldValidationError.value = LicensePlate.validate(licensePlate)
+
+        if (_licensePlateInputFieldValue.value.isEmpty()) {
+            _licensePlateInputFieldValidationError.value = null
+        }
     }
 
+    /**
+     * Navigates to the login screen.
+     */
     fun onLogout() {
         navController.navigate(route = Route.Login.name)
     }
 
-    private fun validate(type: ValidationType) {
-        val result = when (type) {
-            ValidationType.ROUTE_NUMBER -> validator.validateRouteNumber(routeNumber.value)
-            ValidationType.LICENSE_PLATE -> validator.validateLicensePlate(licensePlate.value)
-            ValidationType.IMAGES -> validator.validateImages(images)
-        }
-
-        when (result) {
-            is ValidationResult.Success -> {
-                when (type) {
-                    ValidationType.ROUTE_NUMBER -> _routeNumberError.value = null
-                    ValidationType.LICENSE_PLATE -> _licensePlateError.value = null
-                    ValidationType.IMAGES -> _imagesError.value = null
-                }
-            }
-
-            is ValidationResult.Error -> {
-                when (type) {
-                    ValidationType.ROUTE_NUMBER -> _routeNumberError.value = result.error.message
-                    ValidationType.LICENSE_PLATE -> _licensePlateError.value = result.error.message
-                    ValidationType.IMAGES -> _imagesError.value = result.error.message
-                }
-            }
-        }
+    private fun validateImageCollection() {
+        if (_imageCollection.isEmpty()) _imageCollectionError.value = ImageCollectionError.Empty
+        else _imageCollectionError.value = null
     }
 
     private fun resetForm() {
-        _routeNumber.value = ""
-        _licensePlate.value = ""
-        _images.clear()
-        _routeNumberError.value = null
-        _licensePlateError.value = null
-        _imagesError.value = null
+        _routeNumberInputFieldValues.clear()
+        _routeNumberInputFieldValues.add("")
+        _licensePlateInputFieldValue.value = ""
+        _imageCollection.clear()
+        _routeNumberInputFieldValidationErrors.clear()
+        _routeNumberInputFieldValidationErrors.add(null)
+        _routeNumberCollectionError.value = null
+        _licensePlateInputFieldValidationError.value = null
+        _imageCollectionError.value = null
     }
-}
-
-private enum class ValidationType {
-    ROUTE_NUMBER, LICENSE_PLATE, IMAGES
 }

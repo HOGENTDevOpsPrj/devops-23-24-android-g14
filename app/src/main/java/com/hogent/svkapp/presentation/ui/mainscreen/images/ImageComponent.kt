@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hogent.svkapp.R
@@ -18,13 +19,22 @@ import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
 
+/**
+ * A composable that displays an [Image].
+ *
+ * @param image the [Image] to display.
+ * @param modifier the modifier for this composable.
+ *
+ * @sample ImageComponentPreview
+ * @sample ImageComponentPreviewDark
+ */
 @Composable
 fun ImageComponent(image: Image, modifier: Modifier = Modifier) {
     val painter = getPainter(image)
 
     Image(
         painter = painter,
-        contentDescription = "Image you took.",
+        contentDescription = stringResource(R.string.image_description),
         modifier = modifier
             .height(200.dp)
             .clip(shape = RoundedCornerShape(MaterialTheme.spacing.medium)),
@@ -40,7 +50,7 @@ private fun getPainter(image: Image) = when (image) {
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun ImageComponentPreview() {
+private fun ImageComponentPreview() {
     TemplateApplicationTheme {
         ImageComponent(Image.ResourceImage(resourceId = R.drawable.resource_default))
     }
@@ -48,4 +58,4 @@ fun ImageComponentPreview() {
 
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun ImageComponentPreviewDark() = ImageComponentPreview()
+private fun ImageComponentPreviewDark() = ImageComponentPreview()

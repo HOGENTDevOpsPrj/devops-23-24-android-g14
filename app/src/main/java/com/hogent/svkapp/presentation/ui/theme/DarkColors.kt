@@ -1,8 +1,12 @@
 package com.hogent.svkapp.presentation.ui.theme
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
 
-val darkColors = darkColorScheme(
+/**
+ * Dark color scheme for the app.
+ */
+val darkColors: ColorScheme = darkColorScheme(
     primary = md_theme_dark_primary,
     onPrimary = md_theme_dark_onPrimary,
     primaryContainer = md_theme_dark_primaryContainer,

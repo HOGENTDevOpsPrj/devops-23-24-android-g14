@@ -1,5 +1,6 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -7,23 +8,37 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.hogent.svkapp.R
+import com.hogent.svkapp.domain.entities.ImageCollectionError
+import com.hogent.svkapp.domain.entities.LicensePlateError
+import com.hogent.svkapp.domain.entities.RouteNumberCollectionError
+import com.hogent.svkapp.domain.entities.RouteNumberError
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
+/**
+ * The main screen of the app.
+ *
+ * @param mainScreenViewModel the [MainScreenViewModel] that contains the state of the screen.
+ *
+ * @sample MainScreenPreview
+ * @sample MainScreenPreviewDark
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
-    val routeNumber by mainScreenViewModel.routeNumber
-    val licensePlate by mainScreenViewModel.licensePlate
-    val images = remember { mainScreenViewModel.images }
-    val routeNumberError by mainScreenViewModel.routeNumberError
-    val licensePlateError by mainScreenViewModel.licensePlateError
-    val imagesError by mainScreenViewModel.imagesError
+    val routeNumberInputFieldValues = mainScreenViewModel.routeNumberInputFieldValues
+    val licensePlateInputFieldValue by mainScreenViewModel.licensePlateInputFieldValue
+    val imageCollection = mainScreenViewModel.imageCollection
+    val routeNumberInputFieldValidationErrors = mainScreenViewModel.routeNumberInputFieldValidationErrors
+    val routeNumberCollectionError by mainScreenViewModel.routeNumberCollectionError
+    val licensePlateInputFieldValidationError by mainScreenViewModel.licensePlateInputFieldValidationError
+    val imageCollectionError by mainScreenViewModel.imageCollectionError
     val showDialog by mainScreenViewModel.showDialog
 
     Scaffold(floatingActionButton = {
@@ -32,16 +47,41 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
         MainTopAppBar(onLogout = mainScreenViewModel::onLogout)
     }) { innerPadding ->
         Form(
-            routeNumber = routeNumber,
-            licensePlate = licensePlate,
-            images = images,
-            routeNumberError = routeNumberError,
-            licensePlateError = licensePlateError,
-            imagesError = imagesError,
+            routeNumberInputFieldValues = routeNumberInputFieldValues,
+            licensePlateInputFieldValue = licensePlateInputFieldValue,
+            imageCollection = imageCollection,
+            routeNumberInputFieldValidationErrors = routeNumberInputFieldValidationErrors.map {
+                when (it) {
+                    RouteNumberError.Empty -> stringResource(R.string.empty_route_number_error_message)
+                    RouteNumberError.InvalidFormat, RouteNumberError.NonPositiveNumber -> stringResource(
+                        R.string.invalid_route_number_error_message
+                    )
+
+                    null -> null
+                }
+            },
+            routeNumberCollectionError = routeNumberCollectionError?.let {
+                when (it) {
+                    RouteNumberCollectionError.Empty -> stringResource(R.string.missing_route_numbers_error_message)
+                }
+            },
+            licensePlateInputFieldValidationError = licensePlateInputFieldValidationError?.let {
+                when (it) {
+                    LicensePlateError.Empty -> stringResource(R.string.empty_license_plate_error_message)
+                    LicensePlateError.TooLong -> stringResource(R.string.invalid_license_plate_error_message)
+                }
+            },
+            imageCollectionError = imageCollectionError?.let {
+                when (it) {
+                    ImageCollectionError.Empty -> stringResource(R.string.missing_images_error_message)
+                }
+            },
             onRouteNumberChange = mainScreenViewModel::onRouteNumberChange,
+            onAddRouteNumber = mainScreenViewModel::addRouteNumber,
+            onRemoveRouteNumber = mainScreenViewModel::removeRouteNumber,
             onLicensePlateChange = mainScreenViewModel::onLicensePlateChange,
             onAddImage = mainScreenViewModel::addImage,
-            onRemoveImage = mainScreenViewModel::deleteImage,
+            onRemoveImage = mainScreenViewModel::removeImage,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = innerPadding)
@@ -53,9 +93,9 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
     }
 }
 
-@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun MainScreenPreview() {
+private fun MainScreenPreview() {
     TemplateApplicationTheme {
         MainScreen(
             mainScreenViewModel = MainScreenViewModel(navController = rememberNavController())
@@ -63,6 +103,6 @@ fun MainScreenPreview() {
     }
 }
 
-@Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-fun MainScreenPreviewDark() = MainScreenPreview()
+private fun MainScreenPreviewDark() = MainScreenPreview()
