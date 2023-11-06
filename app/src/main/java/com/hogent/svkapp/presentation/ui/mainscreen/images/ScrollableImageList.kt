@@ -7,7 +7,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.hogent.svkapp.R
 import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
@@ -29,8 +28,7 @@ fun ScrollableImageList(
     imageList: List<Image>, onDeleteImage: (Image) -> Unit, modifier: Modifier = Modifier
 ) {
     LazyRow(
-        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small),
-        modifier = modifier
+        horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.small), modifier = modifier
     ) {
         items(imageList) { image ->
             ImageCard(image = image, onDelete = { onDeleteImage(image) })
@@ -39,7 +37,7 @@ fun ScrollableImageList(
 }
 
 private val previewImagesList =
-    List(5) { Image.ResourceImage(resourceId = R.drawable.resource_default) }
+    List(5) { Image(bitmap = android.graphics.Bitmap.createBitmap(100, 100, android.graphics.Bitmap.Config.ARGB_8888)) }
 
 @Composable
 private fun ScrollableImageListPreviewBase(imageList: List<Image>) {

@@ -9,7 +9,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
-import com.hogent.svkapp.R
 import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
@@ -51,7 +50,9 @@ fun ImageCard(image: Image, onDelete: () -> Unit, modifier: Modifier = Modifier)
 @Composable
 private fun ImageCardPreview() {
     TemplateApplicationTheme {
-        ImageCard(Image.ResourceImage(resourceId = R.drawable.resource_default), onDelete = {})
+        ImageCard(Image(
+            bitmap = android.graphics.Bitmap.createBitmap(100, 100, android.graphics.Bitmap.Config.ARGB_8888)
+        ), onDelete = {})
     }
 }
 

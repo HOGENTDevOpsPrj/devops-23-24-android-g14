@@ -10,7 +10,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,7 +29,7 @@ import com.hogent.svkapp.presentation.ui.theme.spacing
  */
 @Composable
 fun ImageComponent(image: Image, modifier: Modifier = Modifier) {
-    val painter = getPainter(image)
+    val painter = BitmapPainter(image = image.bitmap.asImageBitmap())
 
     Image(
         painter = painter,
@@ -42,17 +41,17 @@ fun ImageComponent(image: Image, modifier: Modifier = Modifier) {
     )
 }
 
-@Composable
-private fun getPainter(image: Image) = when (image) {
-    is Image.BitmapImage -> BitmapPainter(image = image.bitmap.asImageBitmap())
-    is Image.ResourceImage -> painterResource(id = image.resourceId)
-}
-
 @Preview(uiMode = android.content.res.Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun ImageComponentPreview() {
     TemplateApplicationTheme {
-        ImageComponent(Image.ResourceImage(resourceId = R.drawable.resource_default))
+        ImageComponent(
+            Image(
+                bitmap = android.graphics.Bitmap.createBitmap(
+                    100, 100, android.graphics.Bitmap.Config.ARGB_8888
+                )
+            )
+        )
     }
 }
 

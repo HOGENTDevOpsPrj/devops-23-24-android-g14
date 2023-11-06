@@ -20,7 +20,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.R
 import com.hogent.svkapp.domain.entities.Image
-import com.hogent.svkapp.presentation.ui.TextField
 import com.hogent.svkapp.presentation.ui.mainscreen.images.AddImageButton
 import com.hogent.svkapp.presentation.ui.mainscreen.images.ScrollableImageList
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
@@ -85,8 +84,7 @@ fun Form(
     val takePictureLauncher = getTakePictureLauncher(onAddImage)
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-        modifier = modifier
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium), modifier = modifier
     ) {
         routeNumberInputFieldValues.forEachIndexed { index, routeNumber ->
             CustomTextField(value = routeNumber,
@@ -137,7 +135,7 @@ private fun getTakePictureLauncher(onAddImage: (Image) -> Unit) = rememberLaunch
     contract = ActivityResultContracts.TakePicturePreview()
 ) { bitmap ->
     bitmap?.let {
-        onAddImage(Image.BitmapImage(bitmap))
+        onAddImage(Image(bitmap = bitmap))
     }
 }
 
@@ -178,8 +176,7 @@ private fun FormPreviewDark() = FormPreview()
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-private fun FormPreviewWithRouteNumbers() =
-    PreviewWrapper(routeNumberInputFieldValues = listOf("1", "2", "3"))
+private fun FormPreviewWithRouteNumbers() = PreviewWrapper(routeNumberInputFieldValues = listOf("1", "2", "3"))
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -198,10 +195,8 @@ private fun FormPreviewWithLicensePlateDark() = FormPreviewWithLicensePlate()
 @Composable
 private fun FormPreviewWithImages() = PreviewWrapper(
     imageCollection = listOf(
-        Image.BitmapImage(
-            android.graphics.Bitmap.createBitmap(
-                100, 100, android.graphics.Bitmap.Config.ARGB_8888
-            )
+        Image(
+            bitmap = android.graphics.Bitmap.createBitmap(100, 100, android.graphics.Bitmap.Config.ARGB_8888)
         )
     )
 )
@@ -213,8 +208,7 @@ private fun FormPreviewWithImagesDark() = FormPreviewWithImages()
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun FormPreviewWithRouteNumberErrors() = PreviewWrapper(
-    routeNumberInputFieldValues = listOf("", "2", ""),
-    routeNumberInputFieldValidationErrors = listOf(
+    routeNumberInputFieldValues = listOf("", "2", ""), routeNumberInputFieldValidationErrors = listOf(
         stringResource(R.string.empty_route_number_error_message), null, stringResource(
             R.string.invalid_route_number_error_message
         )
@@ -250,8 +244,7 @@ private fun FormPreviewWithRouteNumberCollectionError() =
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun FormPreviewWithRouteNumberCollectionErrorDark() =
-    FormPreviewWithRouteNumberCollectionError()
+private fun FormPreviewWithRouteNumberCollectionErrorDark() = FormPreviewWithRouteNumberCollectionError()
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
@@ -277,10 +270,8 @@ private fun FormPreviewWithAll() = PreviewWrapper(
     routeNumberInputFieldValues = listOf("1", "2", "3"),
     licensePlateInputFieldValue = stringResource(R.string.previews_license_plate),
     imageCollection = listOf(
-        Image.BitmapImage(
-            android.graphics.Bitmap.createBitmap(
-                100, 100, android.graphics.Bitmap.Config.ARGB_8888
-            )
+        Image(
+            bitmap = android.graphics.Bitmap.createBitmap(100, 100, android.graphics.Bitmap.Config.ARGB_8888)
         )
     ),
     routeNumberInputFieldValidationErrors = listOf(
