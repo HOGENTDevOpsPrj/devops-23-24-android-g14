@@ -18,6 +18,9 @@ android {
         versionCode = appVersionCode
         versionName = appVersionName
 
+        manifestPlaceholders["auth0Domain"] = "@string/com_auth0_domain"
+        manifestPlaceholders["auth0Scheme"] = "@string/com_auth0_scheme"
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -72,6 +75,9 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class:$composeMaterial3Version")
     implementation("androidx.navigation:navigation-runtime-ktx:$composeNavigationVersion")
     implementation("androidx.navigation:navigation-compose:$composeNavigationVersion")
+
+    implementation("com.auth0.android:auth0:+")
+    implementation("com.auth0.android:jwtdecode:+")
 
     val testJunitVersion = "1.1.5"
     val espressoVersion = "3.5.1"
