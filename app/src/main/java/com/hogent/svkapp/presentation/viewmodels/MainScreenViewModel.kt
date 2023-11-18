@@ -29,6 +29,10 @@ class MainScreenViewModel(
     private val navController: NavHostController
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainScreenState())
+
+    /**
+     * The state of the screen as read-only state flow.
+     */
     val uiState: StateFlow<MainScreenState> = _uiState.asStateFlow()
 
     /**
