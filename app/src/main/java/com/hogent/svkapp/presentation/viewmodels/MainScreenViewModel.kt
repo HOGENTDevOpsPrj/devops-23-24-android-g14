@@ -17,6 +17,10 @@ import com.hogent.svkapp.domain.entities.Result
 import com.hogent.svkapp.domain.entities.RouteNumber
 import com.hogent.svkapp.domain.entities.RouteNumberCollectionError
 import com.hogent.svkapp.domain.entities.RouteNumberError
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.util.Locale
 
 /**
@@ -38,30 +42,18 @@ class MainScreenViewModel(
     private val cargoTicketRepository: CargoTicketRepository = CargoTicketRepository(),
     private val navController: NavHostController
 ) : ViewModel() {
-    private var _routeNumberInputFieldValues = mutableStateListOf("")
-    val routeNumberInputFieldValues: SnapshotStateList<String> get() = _routeNumberInputFieldValues
-    private var _licensePlateInputFieldValue = mutableStateOf(value = "")
-    val licensePlateInputFieldValue: State<String> get() = _licensePlateInputFieldValue
-    private val _imageCollection = mutableStateListOf<Image>()
-    val imageCollection: SnapshotStateList<Image> get() = _imageCollection
-    private var _routeNumberInputFieldValidationErrors = mutableStateListOf<RouteNumberError?>(null)
-    val routeNumberInputFieldValidationErrors: List<RouteNumberError?> get() = _routeNumberInputFieldValidationErrors
-    private var _routeNumberCollectionError =
-        mutableStateOf<RouteNumberCollectionError?>(value = null)
-    val routeNumberCollectionError: State<RouteNumberCollectionError?> get() = _routeNumberCollectionError
-    private var _licensePlateInputFieldValidationError =
-        mutableStateOf<LicensePlateError?>(value = null)
-    val licensePlateInputFieldValidationError: State<LicensePlateError?> get() = _licensePlateInputFieldValidationError
-    private var _imageCollectionError = mutableStateOf<ImageCollectionError?>(value = null)
-    val imageCollectionError: State<ImageCollectionError?> get() = _imageCollectionError
-    private var _showDialog = mutableStateOf(value = false)
-    val showDialog: State<Boolean> get() = _showDialog
+    private val _uiState = MutableStateFlow(MainScreenState())
+    val uiState: StateFlow<MainScreenState> = _uiState.asStateFlow()
 
     /**
      * Toggles the dialog.
      */
     fun toggleDialog() {
-        _showDialog.value = !_showDialog.value
+        //uiState.showDialog.value = !showDialog.value
+
+        _uiState.update { state ->
+            state.copy(showDialog = !state.showDialog)
+        }
     }
 
     /**
@@ -70,8 +62,12 @@ class MainScreenViewModel(
      * @param image the image to add.
      */
     fun addImage(image: Image) {
-        _imageCollection.add(image)
-        validateImageCollection()
+//        _imageCollection.add(image)
+//        validateImageCollection()
+
+        _uiState.update { state ->
+            state.copy(imageCollection = state.imageCollection + image)
+        }
     }
 
     /**
@@ -80,8 +76,12 @@ class MainScreenViewModel(
      * @param image the image to remove.
      */
     fun removeImage(image: Image) {
-        _imageCollection.remove(image)
-        validateImageCollection()
+//        _imageCollection.remove(image)
+//        validateImageCollection()
+
+        _uiState.update { state ->
+            state.copy(imageCollection = state.imageCollection - image)
+        }
     }
 
     /**
@@ -90,9 +90,9 @@ class MainScreenViewModel(
      */
     fun onSend() {
         val creationResult = CargoTicket.create(
-            routeNumbers = _routeNumberInputFieldValues,
-            licensePlate = _licensePlateInputFieldValue.value,
-            images = _imageCollection
+            routeNumbers = _uiState.value.routeNumberInputFieldValues,
+            licensePlate = _uiState.value.licensePlateInputFieldValue,
+            images = _uiState.value.imageCollection
         )
 
         when (creationResult) {
@@ -103,12 +103,19 @@ class MainScreenViewModel(
             }
 
             is Result.Failure -> {
-                _routeNumberCollectionError.value = creationResult.error.routeNumberCollectionError
-                _routeNumberInputFieldValidationErrors.clear()
-                _routeNumberInputFieldValidationErrors.addAll(creationResult.error.routeNumberErrors)
-                _licensePlateInputFieldValidationError.value =
-                    creationResult.error.licensePlateError
-                _imageCollectionError.value = creationResult.error.imageCollectionError
+                _uiState.update { state ->
+                    state.copy(
+                        routeNumberCollectionError = creationResult.error.routeNumberCollectionError,
+                        routeNumberInputFieldValidationErrors = creationResult.error.routeNumberErrors,
+                        licensePlateInputFieldValidationError = creationResult.error.licensePlateError,
+                        imageCollectionError = creationResult.error.imageCollectionError
+                    ) }
+//                _routeNumberCollectionError.value = creationResult.error.routeNumberCollectionError
+//                _routeNumberInputFieldValidationErrors.clear()
+//                _routeNumberInputFieldValidationErrors.addAll(creationResult.error.routeNumberErrors)
+//                _licensePlateInputFieldValidationError.value =
+//                    creationResult.error.licensePlateError
+//                _imageCollectionError.value = creationResult.error.imageCollectionError
             }
         }
     }
@@ -121,13 +128,24 @@ class MainScreenViewModel(
      * @param routeNumber the new value of the route number input field.
      */
     fun onRouteNumberChange(index: Int, routeNumber: String) {
-        _routeNumberInputFieldValues[index] = routeNumber
+//        _routeNumberInputFieldValues[index] = routeNumber
+//
+//        _routeNumberInputFieldValidationErrors[index] =
+//            RouteNumber.validateStringRepresentation(routeNumber)
+//
+//        if (routeNumber.isEmpty()) {
+//            _routeNumberInputFieldValidationErrors[index] = null
+//        }
 
-        _routeNumberInputFieldValidationErrors[index] =
-            RouteNumber.validateStringRepresentation(routeNumber)
-
-        if (routeNumber.isEmpty()) {
-            _routeNumberInputFieldValidationErrors[index] = null
+        _uiState.update { state ->
+            state.copy(
+                routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
+                    set(index, routeNumber)
+                },
+                routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors.toMutableList().apply {
+                    set(index, RouteNumber.validateStringRepresentation(routeNumber))
+                }
+            )
         }
     }
 
@@ -135,9 +153,17 @@ class MainScreenViewModel(
      * Add a route number to the route number collection.
      */
     fun addRouteNumber() {
-        _routeNumberInputFieldValues.add("")
-        _routeNumberInputFieldValidationErrors.add(null)
-        _routeNumberCollectionError.value = null
+//        _routeNumberInputFieldValues.add("")
+//        _routeNumberInputFieldValidationErrors.add(null)
+//        _routeNumberCollectionError.value = null
+
+        _uiState.update { state ->
+            state.copy(
+                routeNumberInputFieldValues = state.routeNumberInputFieldValues + "",
+                routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors + null,
+                routeNumberCollectionError = null
+            )
+        }
     }
 
     /**
@@ -146,10 +172,22 @@ class MainScreenViewModel(
      * @param index the index of the route number to remove.
      */
     fun removeRouteNumber(index: Int) {
-        _routeNumberInputFieldValues.removeAt(index)
-        _routeNumberInputFieldValidationErrors.removeAt(index)
-        if (_routeNumberInputFieldValues.isEmpty()) {
-            _routeNumberCollectionError.value = RouteNumberCollectionError.Empty
+//        _routeNumberInputFieldValues.removeAt(index)
+//        _routeNumberInputFieldValidationErrors.removeAt(index)
+//        if (_routeNumberInputFieldValues.isEmpty()) {
+//            _routeNumberCollectionError.value = RouteNumberCollectionError.Empty
+//        }
+
+        _uiState.update { state ->
+            state.copy(
+                routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
+                    removeAt(index)
+                },
+                routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors.toMutableList().apply {
+                    removeAt(index)
+                },
+                routeNumberCollectionError = if (state.routeNumberInputFieldValues.isEmpty()) RouteNumberCollectionError.Empty else null
+            )
         }
     }
 
@@ -160,13 +198,20 @@ class MainScreenViewModel(
      * @param licensePlate the new value of the license plate input field.
      */
     fun onLicensePlateChange(licensePlate: String) {
-        _licensePlateInputFieldValue.value = licensePlate.uppercase(locale = Locale.ROOT)
+//        _licensePlateInputFieldValue.value = licensePlate.uppercase(locale = Locale.ROOT)
+//
+//        _licensePlateInputFieldValidationError.value = LicensePlate.validate(licensePlate)
+//
+//        if (_licensePlateInputFieldValue.value.isEmpty()) {
+//            _licensePlateInputFieldValidationError.value = null
+//        }
 
-        _licensePlateInputFieldValidationError.value = LicensePlate.validate(licensePlate)
-
-        if (_licensePlateInputFieldValue.value.isEmpty()) {
-            _licensePlateInputFieldValidationError.value = null
-        }
+            _uiState.update { state ->
+                state.copy(
+                    licensePlateInputFieldValue = licensePlate.uppercase(locale = Locale.ROOT),
+                    licensePlateInputFieldValidationError = LicensePlate.validate(licensePlate)
+                )
+            }
     }
 
     /**
@@ -177,19 +222,36 @@ class MainScreenViewModel(
     }
 
     private fun validateImageCollection() {
-        if (_imageCollection.isEmpty()) _imageCollectionError.value = ImageCollectionError.Empty
-        else _imageCollectionError.value = null
+//        if (_imageCollection.isEmpty()) _imageCollectionError.value = ImageCollectionError.Empty
+//        else _imageCollectionError.value = null
+
+        _uiState.update { state ->
+            state.copy(
+                imageCollectionError = if (state.imageCollection.isEmpty()) ImageCollectionError.Empty else null
+            )
+        }
     }
 
     private fun resetForm() {
-        _routeNumberInputFieldValues.clear()
-        _routeNumberInputFieldValues.add("")
-        _licensePlateInputFieldValue.value = ""
-        _imageCollection.clear()
-        _routeNumberInputFieldValidationErrors.clear()
-        _routeNumberInputFieldValidationErrors.add(null)
-        _routeNumberCollectionError.value = null
-        _licensePlateInputFieldValidationError.value = null
-        _imageCollectionError.value = null
+        _uiState.update { state ->
+            state.copy(
+                routeNumberInputFieldValues = listOf(""),
+                licensePlateInputFieldValue = "",
+                imageCollection = listOf(),
+                routeNumberInputFieldValidationErrors = listOf(null),
+                routeNumberCollectionError = null,
+                licensePlateInputFieldValidationError = null,
+                imageCollectionError = null
+            )
+        }
+//        _routeNumberInputFieldValues.clear()
+//        _routeNumberInputFieldValues.add("")
+//        _licensePlateInputFieldValue.value = ""
+//        _imageCollection.clear()
+//        _routeNumberInputFieldValidationErrors.clear()
+//        _routeNumberInputFieldValidationErrors.add(null)
+//        _routeNumberCollectionError.value = null
+//        _licensePlateInputFieldValidationError.value = null
+//        _imageCollectionError.value = null
     }
 }
