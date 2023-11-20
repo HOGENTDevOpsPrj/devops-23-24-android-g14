@@ -7,10 +7,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.hogent.svkapp.R
 import com.hogent.svkapp.domain.entities.ImageCollectionError
@@ -31,15 +33,8 @@ import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
-    val routeNumberInputFieldValues = mainScreenViewModel.routeNumberInputFieldValues
-    val licensePlateInputFieldValue by mainScreenViewModel.licensePlateInputFieldValue
-    val imageCollection = mainScreenViewModel.imageCollection
-    val routeNumberInputFieldValidationErrors = mainScreenViewModel.routeNumberInputFieldValidationErrors
-    val routeNumberCollectionError by mainScreenViewModel.routeNumberCollectionError
-    val licensePlateInputFieldValidationError by mainScreenViewModel.licensePlateInputFieldValidationError
-    val imageCollectionError by mainScreenViewModel.imageCollectionError
-    val showDialog by mainScreenViewModel.showDialog
+fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
+    val mainScreenState by mainScreenViewModel.uiState.collectAsState()
 
     Scaffold(floatingActionButton = {
         SendFloatingActionButton(onSend = mainScreenViewModel::onSend)
@@ -47,10 +42,10 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
         MainTopAppBar(onLogout = mainScreenViewModel::onLogout)
     }) { innerPadding ->
         Form(
-            routeNumberInputFieldValues = routeNumberInputFieldValues,
-            licensePlateInputFieldValue = licensePlateInputFieldValue,
-            imageCollection = imageCollection,
-            routeNumberInputFieldValidationErrors = routeNumberInputFieldValidationErrors.map {
+            routeNumberInputFieldValues = mainScreenState.routeNumberInputFieldValues,
+            licensePlateInputFieldValue = mainScreenState.licensePlateInputFieldValue,
+            imageCollection = mainScreenState.imageCollection,
+            routeNumberInputFieldValidationErrors = mainScreenState.routeNumberInputFieldValidationErrors.map {
                 when (it) {
                     RouteNumberError.Empty -> stringResource(R.string.empty_route_number_error_message)
                     RouteNumberError.InvalidFormat, RouteNumberError.NonPositiveNumber -> stringResource(
@@ -60,18 +55,18 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
                     null -> null
                 }
             },
-            routeNumberCollectionError = routeNumberCollectionError?.let {
+            routeNumberCollectionError = mainScreenState.routeNumberCollectionError?.let {
                 when (it) {
                     RouteNumberCollectionError.Empty -> stringResource(R.string.missing_route_numbers_error_message)
                 }
             },
-            licensePlateInputFieldValidationError = licensePlateInputFieldValidationError?.let {
+            licensePlateInputFieldValidationError = mainScreenState.licensePlateInputFieldValidationError?.let {
                 when (it) {
                     LicensePlateError.Empty -> stringResource(R.string.empty_license_plate_error_message)
                     LicensePlateError.TooLong -> stringResource(R.string.invalid_license_plate_error_message)
                 }
             },
-            imageCollectionError = imageCollectionError?.let {
+            imageCollectionError = mainScreenState.imageCollectionError?.let {
                 when (it) {
                     ImageCollectionError.Empty -> stringResource(R.string.missing_images_error_message)
                 }
@@ -87,7 +82,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel) {
                 .padding(paddingValues = innerPadding)
                 .padding(all = MaterialTheme.spacing.large),
         )
-        if (showDialog) {
+        if (mainScreenState.showDialog) {
             ConfirmationDialog(onDismissRequest = mainScreenViewModel::toggleDialog)
         }
     }
