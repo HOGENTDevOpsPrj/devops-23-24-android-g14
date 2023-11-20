@@ -176,6 +176,10 @@ class MainScreenViewModel(
         navController.navigate(route = Route.Login.name)
     }
 
+    fun onTakePhoto() {
+        navController.navigate(route = Route.Camera.name)
+    }
+
     private fun validateImageCollection() {
         if (_imageCollection.isEmpty()) _imageCollectionError.value = ImageCollectionError.Empty
         else _imageCollectionError.value = null

@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.hogent.svkapp.presentation.ui.camera.CameraScreen
 import com.hogent.svkapp.presentation.ui.login.LoginScreen
 import com.hogent.svkapp.presentation.ui.mainscreen.MainScreen
 import com.hogent.svkapp.presentation.viewmodels.LoginViewModel
@@ -23,6 +24,7 @@ enum class Route {
      * The main screen.
      */
     Main,
+    Camera,
 }
 
 /**
@@ -43,6 +45,9 @@ fun MainNavHost(
         }
         composable(route = Route.Main.name) {
             MainScreen(mainScreenViewModel = MainScreenViewModel(navController = navController))
+        }
+        composable(route = Route.Camera.name) {
+            CameraScreen()
         }
     }
 }

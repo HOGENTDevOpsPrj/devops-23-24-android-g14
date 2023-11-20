@@ -56,6 +56,7 @@ android {
 
 dependencies {
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.5")
+    implementation("androidx.camera:camera-lifecycle:1.3.0")
     val coreVersion = "1.12.0"
     val lifecycleVersion = "2.6.2"
     val activityVersion = "1.8.0"
@@ -78,6 +79,15 @@ dependencies {
 
     implementation("com.auth0.android:auth0:+")
     implementation("com.auth0.android:jwtdecode:+")
+
+    // Camera
+    implementation("androidx.camera:camera-core:1.1.0")
+    implementation("androidx.camera:camera-camera2:1.1.0")
+    implementation("androidx.activity:activity-compose:1.3.1")
+
+    //Permissions
+    implementation("com.google.accompanist:accompanist-permissions:0.18.0")
+
 
     val testJunitVersion = "1.1.5"
     val espressoVersion = "3.5.1"

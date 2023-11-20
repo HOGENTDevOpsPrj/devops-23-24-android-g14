@@ -3,6 +3,7 @@ package com.hogent.svkapp.presentation.ui.mainscreen
 import android.content.res.Configuration
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.core.ImageProxy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -83,6 +88,8 @@ fun Form(
 ) {
     val takePictureLauncher = getTakePictureLauncher(onAddImage)
 
+    var capturedImage: ImageProxy? by remember { mutableStateOf(null) }
+
     Column(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium), modifier = modifier
     ) {
@@ -125,7 +132,12 @@ fun Form(
             ScrollableImageList(imageList = imageCollection, onDeleteImage = onRemoveImage)
         }
         AddImageButton(
-            onClick = { takePictureLauncher.launch(null) }, modifier = Modifier.fillMaxWidth()
+//            onClick = { takePictureLauncher.launch(null) },
+            onClick = {
+                capturedImage = null
+                      },
+            modifier = Modifier.fillMaxWidth()
+
         )
     }
 }
