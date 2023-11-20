@@ -23,12 +23,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.rememberPermissionState
 import com.hogent.svkapp.R
 import com.hogent.svkapp.domain.entities.Image
+import com.hogent.svkapp.presentation.ui.camera.CameraScreen
 import com.hogent.svkapp.presentation.ui.mainscreen.images.AddImageButton
 import com.hogent.svkapp.presentation.ui.mainscreen.images.ScrollableImageList
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
+import com.hogent.svkapp.presentation.viewmodels.CameraViewModel
+import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
 /**
  * A form for the user to fill in the details of a cargo ticket.
@@ -69,6 +75,7 @@ import com.hogent.svkapp.presentation.ui.theme.spacing
  * @sample FormPreviewWithAll
  * @sample FormPreviewWithAllDark
  */
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun Form(
     routeNumberInputFieldValues: List<String>,
@@ -84,11 +91,14 @@ fun Form(
     onLicensePlateChange: (String) -> Unit,
     onAddImage: (Image) -> Unit,
     onRemoveImage: (Image) -> Unit,
+    onTakePhoto: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val takePictureLauncher = getTakePictureLauncher(onAddImage)
 
     var capturedImage: ImageProxy? by remember { mutableStateOf(null) }
+
+    val cameraPermissionState: PermissionState = rememberPermissionState(permission = android.Manifest.permission.CAMERA)
 
     Column(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium), modifier = modifier
@@ -134,7 +144,12 @@ fun Form(
         AddImageButton(
 //            onClick = { takePictureLauncher.launch(null) },
             onClick = {
-                capturedImage = null
+                if (cameraPermissionState.hasPermission) {
+                    // navigate to
+                    onTakePhoto()
+                } else {
+                    /* Unlucky bro gg */
+                }
                       },
             modifier = Modifier.fillMaxWidth()
 
@@ -174,6 +189,7 @@ private fun PreviewWrapper(
             onRemoveRouteNumber = {},
             onLicensePlateChange = {},
             onAddImage = {},
+            onTakePhoto = {},
             onRemoveImage = {})
     }
 }

@@ -77,6 +77,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
             onLicensePlateChange = mainScreenViewModel::onLicensePlateChange,
             onAddImage = mainScreenViewModel::addImage,
             onRemoveImage = mainScreenViewModel::removeImage,
+            onTakePhoto = mainScreenViewModel::onTakePhoto,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = innerPadding)
