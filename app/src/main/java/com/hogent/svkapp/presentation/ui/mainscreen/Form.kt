@@ -6,6 +6,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
@@ -83,50 +84,63 @@ fun Form(
 ) {
     val takePictureLauncher = getTakePictureLauncher(onAddImage)
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium), modifier = modifier
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
+        modifier = modifier
     ) {
-        routeNumberInputFieldValues.forEachIndexed { index, routeNumber ->
-            CustomTextField(value = routeNumber,
-                label = stringResource(R.string.route_number_text_field_label, index + 1),
-                onValueChange = { newRouteNumber -> onRouteNumberChange(index, newRouteNumber) },
-                error = routeNumberInputFieldValidationErrors.getOrNull(index),
-                keyboardType = KeyboardType.Number,
+        item {
+            routeNumberInputFieldValues.forEachIndexed { index, routeNumber ->
+                CustomTextField(value = routeNumber,
+                    label = stringResource(R.string.route_number_text_field_label, index + 1),
+                    onValueChange = { newRouteNumber -> onRouteNumberChange(index, newRouteNumber) },
+                    error = routeNumberInputFieldValidationErrors.getOrNull(index),
+                    keyboardType = KeyboardType.Number,
+                    modifier = Modifier.fillMaxWidth(),
+                    trailingIcon = {
+                        if(index != 0) {
+                            IconButton(onClick = { onRemoveRouteNumber(index) }) {
+                                Icon(
+                                    Icons.Filled.Close, contentDescription = stringResource(
+                                        R.string.remove_route_number_button_content_description, index + 1
+                                    )
+                                )
+                            }
+                        }
+                    })
+            }
+        }
+        item {
+            if (routeNumberCollectionError != null) {
+                Text(text = routeNumberCollectionError, color = MaterialTheme.colorScheme.error)
+            }
+        }
+        item {
+            Button(onClick = onAddRouteNumber) {
+                Text(text = stringResource(R.string.add_extra_route_number_button_text))
+            }
+        }
+        item {
+            CustomTextField(
+                value = licensePlateInputFieldValue,
+                label = stringResource(R.string.license_plate_label_text),
+                onValueChange = onLicensePlateChange,
+                error = licensePlateInputFieldValidationError,
+                keyboardType = KeyboardType.Text,
                 modifier = Modifier.fillMaxWidth(),
-                trailingIcon = {
-                    IconButton(onClick = { onRemoveRouteNumber(index) }) {
-                        Icon(
-                            Icons.Filled.Close, contentDescription = stringResource(
-                                R.string.remove_route_number_button_content_description, index + 1
-                            )
-                        )
-                    }
-                })
+            )
         }
-        if (routeNumberCollectionError != null) {
-            Text(text = routeNumberCollectionError, color = MaterialTheme.colorScheme.error)
+        item {
+            if (imageCollectionError != null) {
+                Text(text = imageCollectionError, color = MaterialTheme.colorScheme.error)
+            } else {
+                ScrollableImageList(imageList = imageCollection, onDeleteImage = onRemoveImage)
+            }
         }
-
-        Button(onClick = onAddRouteNumber) {
-            Text(text = stringResource(R.string.add_extra_route_number_button_text))
+        item {
+            AddImageButton(
+                onClick = { takePictureLauncher.launch(null) }, modifier = Modifier.fillMaxWidth()
+            )
         }
-
-        CustomTextField(
-            value = licensePlateInputFieldValue,
-            label = stringResource(R.string.license_plate_label_text),
-            onValueChange = onLicensePlateChange,
-            error = licensePlateInputFieldValidationError,
-            keyboardType = KeyboardType.Text,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        if (imageCollectionError != null) {
-            Text(text = imageCollectionError, color = MaterialTheme.colorScheme.error)
-        } else {
-            ScrollableImageList(imageList = imageCollection, onDeleteImage = onRemoveImage)
-        }
-        AddImageButton(
-            onClick = { takePictureLauncher.launch(null) }, modifier = Modifier.fillMaxWidth()
-        )
     }
 }
 
