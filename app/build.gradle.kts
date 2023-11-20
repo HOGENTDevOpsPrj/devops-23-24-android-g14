@@ -63,6 +63,7 @@ dependencies {
     val composeUiVersion = "1.5.4"
     val composeMaterial3Version = "1.1.2"
     val composeNavigationVersion = "2.7.4"
+    val room_version = "2.6.0"
 
     implementation("androidx.core:core-ktx:$coreVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
@@ -78,6 +79,8 @@ dependencies {
 
     implementation("com.auth0.android:auth0:+")
     implementation("com.auth0.android:jwtdecode:+")
+    implementation("androidx.room:room-runtime:$room_version")
+
 
     val testJunitVersion = "1.1.5"
     val espressoVersion = "3.5.1"
@@ -89,6 +92,7 @@ dependencies {
     androidTestImplementation("androidx.test:runner:$testRunnerVersion")
     androidTestImplementation("androidx.test:rules:$testRulesVersion")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
 
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
