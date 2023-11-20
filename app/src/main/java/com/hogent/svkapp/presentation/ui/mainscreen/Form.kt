@@ -143,14 +143,7 @@ fun Form(
         }
         AddImageButton(
 //            onClick = { takePictureLauncher.launch(null) },
-            onClick = {
-                if (cameraPermissionState.hasPermission) {
-                    // navigate to
-                    onTakePhoto()
-                } else {
-                    /* Unlucky bro gg */
-                }
-                      },
+            onClick = { onTakePhoto() },
             modifier = Modifier.fillMaxWidth()
 
         )

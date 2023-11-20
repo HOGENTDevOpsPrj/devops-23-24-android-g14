@@ -34,10 +34,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hogent.svkapp.presentation.viewmodels.CameraViewModel
 import java.text.SimpleDateFormat
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraScreen(cameraViewModel: CameraViewModel = viewModel()) {
-
     val cameraState by cameraViewModel.cameraState.collectAsState()
 
     CameraContent(
@@ -46,12 +44,13 @@ fun CameraScreen(cameraViewModel: CameraViewModel = viewModel()) {
     )
 }
 
+// THE PROBLEM IS PERMISSIONS
+
 @Composable
 fun CameraContent(
-   onPhotoCaptured: (Bitmap) -> Unit,
-   lastCapturedPhoto: Bitmap? = null,
+    onPhotoCaptured: (Bitmap) -> Unit,
+    lastCapturedPhoto: Bitmap? = null,
 ) {
-
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraProvider = remember {
@@ -73,7 +72,6 @@ fun CameraContent(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            startCamera(context, lifecycleOwner)
             DisposableEffect(cameraProvider) {
                 val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
                 val preview = Preview.Builder().build()
@@ -96,35 +94,15 @@ fun CameraContent(
                     cameraProvider.unbindAll()
                 }
             }
+
+            // Call startCamera function here
+            startCamera(context, lifecycleOwner)
         }
     }
-
-//    DisposableEffect(cameraProvider) {
-//        val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-//        val preview = Preview.Builder().build()
-//        val imageCapture = ImageCapture.Builder().build()
-//
-//        try {
-//            cameraProvider.unbindAll()
-//            cameraProvider.bindToLifecycle(
-//                lifecycleOwner,
-//                cameraSelector,
-//                preview,
-//                imageCapture
-//            )
-//        } catch (exc: Exception) {
-//            // Handle exception
-//        }
-//
-//        onDispose {
-//            cameraProvider.unbindAll()
-//        }
-//    }
-
 }
 
 fun takePhoto(context: Context, cameraProvider: ProcessCameraProvider?, onCaptureClick: (Bitmap) -> Unit) {
-
+    // TODO: Implement the logic for capturing a photo
 }
 
 fun startCamera(context: Context, lifeCycleOwner: LifecycleOwner) {
@@ -137,9 +115,6 @@ fun startCamera(context: Context, lifeCycleOwner: LifecycleOwner) {
         // Preview
         val preview = Preview.Builder()
             .build()
-//                .also {
-//                    it.setSurfaceProvider()
-//                }
 
         val imageCapture = ImageCapture.Builder().build()
 
