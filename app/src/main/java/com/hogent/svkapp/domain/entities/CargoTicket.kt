@@ -37,14 +37,14 @@ data class CargoTicketError(
  * @property licensePlate the license plate of the cargo.
  * @property images the images of the cargo.
  */
-class CargoTicket private constructor(
+class CargoTicket public constructor(
     routeNumbers: RouteNumberCollection, licensePlate: LicensePlate, images: ImageCollection
 ) {
     private var _routeNumbers: RouteNumberCollection = routeNumbers
-    private val routeNumbers: RouteNumberCollection get() = _routeNumbers
+     val routeNumbers: RouteNumberCollection get() = _routeNumbers
 
     private var _licensePlate: LicensePlate = licensePlate
-    private val licensePlate: LicensePlate get() = _licensePlate
+    val licensePlate: LicensePlate get() = _licensePlate
 
     private var _images: ImageCollection = images
     val images: ImageCollection get() = _images
