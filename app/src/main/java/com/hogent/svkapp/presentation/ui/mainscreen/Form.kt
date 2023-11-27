@@ -1,6 +1,5 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -67,8 +66,6 @@ fun Form(
     ) {
         item {
             mainScreenState.routeNumberInputFieldValues.forEachIndexed { index, routeNumber ->
-                Log.d("Index", index.toString())
-                Log.d("Lengte", mainScreenState.routeNumberInputFieldValidationErrors.size.toString())
                 CustomTextField(
                     value = routeNumber,
                     label = stringResource(R.string.route_number_text_field_label, index + 1),
