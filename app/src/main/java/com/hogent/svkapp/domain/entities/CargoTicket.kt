@@ -7,7 +7,7 @@ data class CargoTicketError(
     /**
      * The errors that occurred when validating the route numbers.
      */
-    val routeNumberErrors: List<RouteNumberError?>,
+    val routeNumberErrors: List<List<RouteNumberError?>>,
     /**
      * The error that occurred when validating the route number collection.
      */
