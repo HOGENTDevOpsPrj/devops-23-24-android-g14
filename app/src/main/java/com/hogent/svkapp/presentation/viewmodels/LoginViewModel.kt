@@ -1,11 +1,23 @@
 package com.hogent.svkapp.presentation.viewmodels
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.Factory
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
+import androidx.navigation.Navigation
+import androidx.navigation.compose.rememberNavController
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.provider.WebAuthProvider
@@ -19,60 +31,85 @@ import com.auth0.android.callback.Callback
  *
  * @param navController the [NavHostController] that is used to navigate to other screens.
  */
-class LoginViewModel(private val navController: NavHostController) : ViewModel() {
-//    private var _userEmail = mutableStateOf(value = "")
-//
-//    /**
-//     * The email of the user.
-//     */
-//    val userEmail: State<String> get() = _userEmail
-//
-//    private var _password = mutableStateOf(value = "")
-//
-//    /**
-//     * The password of the user.
-//     */
-//    val password: State<String> get() = _password
+class LoginViewModel(application: Application) : AndroidViewModel(
+    application
+) {
 
-//    private val TAG = "LoginViewModel"
-//    private lateinit var account: Auth0
-//    private lateinit var context: Context
+    var appJustLaunched by mutableStateOf(true)
+    var userIsAuthenticated by mutableStateOf(false)
 
-//    init {
-//        private val context = getApplication<Application>().applicationContext
-//        setContext(context)
-//    }
 
-//    fun setContext(activityContext: Context) {
-//        context = activityContext
-//        account = Auth0(
-//            context.getString(R.string.com_auth0_client_id),
-//            context.getString(R.string.com_auth0_domain)
-//        )
-//    }
+    private val TAG = "LoginViewModel"
+    private lateinit var account: Auth0
+    private lateinit var context: Context
+
+    init {
+        val context = getApplication<Application>().applicationContext
+        setContext(context)
+    }
+
+    fun setContext(activityContext: Context) {
+        context = activityContext
+        account = Auth0(
+            context.getString(R.string.com_auth0_client_id),
+            context.getString(R.string.com_auth0_domain)
+        )
+    }
 
     /**
      * Called when login button is clicked.
      */
-    fun onLogin() {
+    fun onLogin(onSuccessNavigation: () -> Unit) {
 
-//        WebAuthProvider
-//            .login(account)
-//            .withScheme(context.getString(R.string.com_auth0_scheme))
-//            .start(context, object : Callback<Credentials, AuthenticationException> {
-//                override fun onFailure(error: AuthenticationException) {
-//                    Log.e(TAG, "Error occurred in onLogin(): $error")
-//                }
-//
-//                override fun onSuccess(result: Credentials) {
-//                    val idToken = result.idToken
-//                    Log.d(TAG, "ID Token: $idToken")
-//
-//                    navController.navigate(Route.Main.name)
-//                }
-//
-//            })
+        WebAuthProvider
+            .login(account)
+            .withScheme(context.getString(R.string.com_auth0_scheme))
+            .start(context, object : Callback<Credentials, AuthenticationException> {
+                override fun onFailure(error: AuthenticationException) {
+                    Log.e(TAG, "Error occurred in onLogin(): $error")
+                }
 
-        navController.navigate(Route.Main.name)
+                override fun onSuccess(result: Credentials) {
+                    val idToken = result.idToken
+                    Log.d(TAG, "ID Token: $idToken")
+
+                    onSuccessNavigation()
+                }
+
+            })
+
+//         onSuccessNavigation()
     }
+
+    companion object {
+
+//        private lateinit var capturedNavController: NavHostController
+//        fun setNavController(navController: NavHostController) {
+//            capturedNavController = navController
+//        }
+
+        val Factory: Factory = viewModelFactory { /* navController: NavHostController -> */
+            initializer {
+                val application = (this[APPLICATION_KEY] as Application)
+//                val navController = capturedNavController
+                LoginViewModel(application = application)
+            }
+        }
+    }
+
 }
+
+//class LoginViewModelFactory(
+//    private val navController: NavHostController,
+//    private val application: Application
+//) : ViewModelProvider.AndroidViewModelFactory(application) {
+//
+//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//        if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
+//            @Suppress("UNCHECKED_CAST")
+//            return LoginViewModel(navController, application) as T
+//        }
+//        throw IllegalArgumentException("Unknown ViewModel class")
+//    }
+//}
+

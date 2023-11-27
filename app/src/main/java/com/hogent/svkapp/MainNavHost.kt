@@ -1,7 +1,12 @@
 package com.hogent.svkapp
 
+import android.app.Application
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,13 +38,19 @@ enum class Route {
 @ExperimentalMaterial3Api
 @Composable
 fun MainNavHost(
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     NavHost(
         navController = navController, startDestination = Route.Login.name
     ) {
         composable(route = Route.Login.name) {
-            LoginScreen(loginViewModel = LoginViewModel(navController = navController))
+            //
+            LoginScreen(loginViewModel = viewModel(factory = LoginViewModel.Factory)) {
+                navController.navigate(
+                    Route
+                        .Main.name
+                )
+            }
         }
         composable(route = Route.Main.name) {
             MainScreen(mainScreenViewModel = MainScreenViewModel(navController = navController))

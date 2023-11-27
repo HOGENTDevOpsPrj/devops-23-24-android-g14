@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hogent.svkapp.presentation.ui.SVKLogo
 import com.hogent.svkapp.presentation.ui.theme.spacing
@@ -25,7 +26,7 @@ import com.hogent.svkapp.presentation.viewmodels.LoginViewModel
  * @sample LoginScreenPreviewDark
  */
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel) {
+fun LoginScreen(loginViewModel: LoginViewModel, onSuccessNav: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -39,37 +40,24 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-//            val useremail by loginViewModel.userEmail
-//            val password by loginViewModel.password
-
-//            TextField(
-//                modifier = Modifier.fillMaxWidth(),
-//                value = useremail,
-//                label = "Email",
-//                onValueChange = loginViewModel::onUserEmailChange,
-//                keyboardType = KeyboardType.Email
-//            )
-//            TextField(
-//                modifier = Modifier.fillMaxWidth(),
-//                value = password,
-//                label = "Password",
-//                onValueChange = loginViewModel::onPasswordChange,
-//                keyboardType = KeyboardType.Password,
-//                visualTransformation = PasswordVisualTransformation()
-//            )
             LoginButton(
-                onClick = loginViewModel::onLogin, modifier = Modifier.fillMaxWidth()
+                onClick = {loginViewModel.onLogin { onSuccessNav }}, modifier = Modifier.fillMaxWidth()
             )
         }
     }
+    fun login() {
+
+    }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun LoginScreenPreview() {
-    LoginScreen(loginViewModel = LoginViewModel(navController = rememberNavController()))
-}
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun LoginScreenPreviewDark() = LoginScreenPreview()
+
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Composable
+//private fun LoginScreenPreview() {
+//    LoginScreen(loginViewModel = LoginViewModel(navController = rememberNavController()))
+//}
+
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun LoginScreenPreviewDark() = LoginScreenPreview()
