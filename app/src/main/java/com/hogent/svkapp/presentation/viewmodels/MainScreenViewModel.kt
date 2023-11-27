@@ -1,5 +1,10 @@
 package com.hogent.svkapp.presentation.viewmodels
 
+import android.content.Context
+import android.content.pm.PackageManager
+import android.util.Log
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.hogent.svkapp.Route
@@ -34,6 +39,10 @@ class MainScreenViewModel(
      * The state of the screen as read-only state flow.
      */
     val uiState: StateFlow<MainScreenState> = _uiState.asStateFlow()
+
+    init {
+        Log.i("vm", "vm init: ")
+    }
 
     /**
      * Toggles the dialog.
@@ -175,8 +184,20 @@ class MainScreenViewModel(
         navController.navigate(route = Route.Login.name)
     }
 
-    fun onTakePhoto() {
-        navController.navigate(route = Route.Camera.name)
+    /**
+     *
+     */
+    fun onTakePhoto(
+        context: Context,
+        permission: String,
+        launcher: ManagedActivityResultLauncher<String, Boolean>
+    ) {
+        val permissionCheckResult = ContextCompat.checkSelfPermission(context, permission)
+        if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+            navController.navigate(route = Route.Camera.name)
+        } else {
+            launcher.launch(permission)
+        }
     }
 
     private fun validateImageCollection() {
@@ -198,6 +219,19 @@ class MainScreenViewModel(
                 licensePlateInputFieldValidationError = null,
                 imageCollectionError = null
             )
+        }
+    }
+
+    fun checkAndRequestCameraPermission(
+        context: Context,
+        permission: String,
+        launcher: ManagedActivityResultLauncher<String, Boolean>
+    ) {
+        val permissionCheckResult = ContextCompat.checkSelfPermission(context, permission)
+        if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+            navController.navigate(route = Route.Camera.name)
+        } else {
+            launcher.launch(permission)
         }
     }
 }

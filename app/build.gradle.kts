@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.hogent.svkapp"
-        minSdk = 30
+        minSdk = 29
         targetSdk = 34
         versionCode = appVersionCode
         versionName = appVersionName

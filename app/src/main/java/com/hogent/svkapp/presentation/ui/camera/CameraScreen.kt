@@ -1,26 +1,21 @@
 package com.hogent.svkapp.presentation.ui.camera
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.Preview
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.LinearLayout
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -28,11 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.hogent.svkapp.presentation.viewmodels.CameraViewModel
-import java.text.SimpleDateFormat
 
 @Composable
 fun CameraScreen(cameraViewModel: CameraViewModel = viewModel()) {
@@ -44,8 +37,7 @@ fun CameraScreen(cameraViewModel: CameraViewModel = viewModel()) {
     )
 }
 
-// THE PROBLEM IS PERMISSIONS
-
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraContent(
     onPhotoCaptured: (Bitmap) -> Unit,
@@ -56,168 +48,34 @@ fun CameraContent(
     val cameraProvider = remember {
         ProcessCameraProvider.getInstance(context).get()
     }
+    val cameraController = remember {
+        LifecycleCameraController(context)
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 text = { Text(text = "Take Photo") },
-                onClick = { takePhoto(context, cameraProvider, onPhotoCaptured) },
+                onClick = { },
                 icon = { Icon(imageVector = Icons.Default.Add, contentDescription = "Camera capture icon") }
             )
         },
     ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            DisposableEffect(cameraProvider) {
-                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-                val preview = Preview.Builder().build()
-                val imageCapture = ImageCapture.Builder().build()
-
-                try {
-                    cameraProvider.unbindAll()
-                    cameraProvider.bindToLifecycle(
-                        lifecycleOwner,
-                        cameraSelector,
-                        preview,
-                        imageCapture
-                    )
-                } catch (exc: Exception) {
-                    // Handle exception
-                    Log.e(TAG, "Error binding camera use cases", exc)
+        AndroidView(
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            factory = { context ->
+                PreviewView(context).apply {
+                    layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+                    scaleType = PreviewView.ScaleType.FILL_START
+                }.also { previewView ->
+                    previewView.controller = cameraController
+                    cameraController.bindToLifecycle(lifecycleOwner)
                 }
+            })
+    }
 
-                onDispose {
-                    cameraProvider.unbindAll()
-                }
-            }
+    fun takePhoto(context: Context, cameraProvider: ProcessCameraProvider?, onPhotoCaptured: (Bitmap) -> Unit) {
 
-            // Call startCamera function here
-            startCamera(context, lifecycleOwner)
-        }
     }
 }
-
-fun takePhoto(context: Context, cameraProvider: ProcessCameraProvider?, onCaptureClick: (Bitmap) -> Unit) {
-    // TODO: Implement the logic for capturing a photo
-}
-
-fun startCamera(context: Context, lifeCycleOwner: LifecycleOwner) {
-    val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-
-    cameraProviderFuture.addListener({
-        // Used to bind the lifecycle of cameras to the lifecycle owner
-        val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-
-        // Preview
-        val preview = Preview.Builder()
-            .build()
-
-        val imageCapture = ImageCapture.Builder().build()
-
-        // Select back camera as a default
-        val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-        try {
-            // Unbind use cases before rebinding
-            cameraProvider.unbindAll()
-
-            // Bind use cases to camera
-            cameraProvider.bindToLifecycle(
-                lifeCycleOwner, cameraSelector, preview, imageCapture
-            )
-
-        } catch (exc: Exception) {
-            Log.e(TAG, "Use case binding failed", exc)
-        }
-
-    }, ContextCompat.getMainExecutor(context))
-}
-
-//class CameraConfig(val context: Context, val lifeCycleOwner: LifecycleOwner) {
-//    private fun startCamera() {
-//        val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-//
-//        cameraProviderFuture.addListener({
-//            // Used to bind the lifecycle of cameras to the lifecycle owner
-//            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-//
-//            // Preview
-//            val preview = Preview.Builder()
-//                .build()
-////                .also {
-////                    it.setSurfaceProvider()
-////                }
-//
-//            imageCapture = ImageCapture.Builder()
-//                .build()
-//
-//            // Select back camera as a default
-//            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-//
-//            try {
-//                // Unbind use cases before rebinding
-//                cameraProvider.unbindAll()
-//
-//                // Bind use cases to camera
-//                cameraProvider.bindToLifecycle(
-//                    lifeCycleOwner, cameraSelector, preview, imageCapture
-//                )
-//
-//            } catch (exc: Exception) {
-//                Log.e(TAG, "Use case binding failed", exc)
-//            }
-//
-//        }, ContextCompat.getMainExecutor(context))
-//    }
-//
-//
-//    private fun takePhoto() {
-//        // Get a stable reference of the modifiable image capture use case
-//        val imageCapture = imageCapture ?: return
-//
-//        // Create time stamped name and MediaStore entry.
-//        val name = SimpleDateFormat(FILENAME_FORMAT, Locale.US)
-//            .format(System.currentTimeMillis())
-//        val contentValues = ContentValues().apply {
-//            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-//            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-//                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
-//            }
-//        }
-//
-//        // Create output options object which contains file + metadata
-//        val outputOptions = ImageCapture.OutputFileOptions
-//            .Builder(
-//                contentResolver,
-//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                contentValues
-//            )
-//            .build()
-//
-//        // Set up image capture listener, which is triggered after photo has
-//        // been taken
-//        imageCapture.takePicture(
-//            outputOptions,
-//            ContextCompat.getMainExecutor(this),
-//            object : ImageCapture.OnImageSavedCallback {
-//                override fun onError(exc: ImageCaptureException) {
-//                    Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
-//                }
-//
-//                override fun
-//                        onImageSaved(output: ImageCapture.OutputFileResults) {
-//                    val msg = "Photo capture succeeded: ${output.savedUri}"
-//                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-//                    Log.d(TAG, msg)
-//                }
-//            }
-//        )
-//    }
-//}
-
-
