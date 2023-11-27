@@ -1,10 +1,9 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
-import android.content.res.Configuration
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -15,125 +14,127 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.R
 import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.presentation.ui.mainscreen.images.AddImageButton
 import com.hogent.svkapp.presentation.ui.mainscreen.images.ScrollableImageList
-import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
+import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
 /**
  * A form for the user to fill in the details of a cargo ticket.
  *
- * @param routeNumberInputFieldValues The values of the route number input fields.
- * @param licensePlateInputFieldValue The value of the license plate input field.
- * @param imageCollection The collection of images.
- * @param routeNumberInputFieldValidationErrors The validation errors of the route number input fields.
- * @param routeNumberCollectionError The validation error of the route number collection.
- * @param licensePlateInputFieldValidationError The validation error of the license plate input field.
- * @param imageCollectionError The validation error of the image collection.
- * @param onRouteNumberChange The callback to be invoked when the value of a route number input field changes.
- * @param onAddRouteNumber The callback to be invoked when the user wants to add a route number input field.
- * @param onRemoveRouteNumber The callback to be invoked when the user wants to remove a route number input field.
- * @param onLicensePlateChange The callback to be invoked when the value of the license plate input field changes.
- * @param onAddImage The callback to be invoked when the user wants to add an image.
- * @param onRemoveImage The callback to be invoked when the user wants to remove an image.
  * @param modifier The modifier to be applied to the form.
  *
- * @sample FormPreview
- * @sample FormPreviewDark
- * @sample FormPreviewWithRouteNumbers
- * @sample FormPreviewWithRouteNumbersDark
- * @sample FormPreviewWithLicensePlate
- * @sample FormPreviewWithLicensePlateDark
- * @sample FormPreviewWithImages
- * @sample FormPreviewWithImagesDark
- * @sample FormPreviewWithRouteNumberErrors
- * @sample FormPreviewWithRouteNumberErrorsDark
- * @sample FormPreviewWithLicensePlateError
- * @sample FormPreviewWithLicensePlateErrorDark
- * @sample FormPreviewWithImageError
- * @sample FormPreviewWithImageErrorDark
- * @sample FormPreviewWithRouteNumberCollectionError
- * @sample FormPreviewWithRouteNumberCollectionErrorDark
- * @sample FormPreviewWithAllErrors
- * @sample FormPreviewWithAllErrorsDark
- * @sample FormPreviewWithAll
- * @sample FormPreviewWithAllDark
- */
+// * @sample FormPreview
+// * @sample FormPreviewDark
+// * @sample FormPreviewWithRouteNumbers
+// * @sample FormPreviewWithRouteNumbersDark
+// * @sample FormPreviewWithLicensePlate
+// * @sample FormPreviewWithLicensePlateDark
+// * @sample FormPreviewWithImages
+// * @sample FormPreviewWithImagesDark
+// * @sample FormPreviewWithRouteNumberErrors
+// * @sample FormPreviewWithRouteNumberErrorsDark
+// * @sample FormPreviewWithLicensePlateError
+// * @sample FormPreviewWithLicensePlateErrorDark
+// * @sample FormPreviewWithImageError
+// * @sample FormPreviewWithImageErrorDark
+// * @sample FormPreviewWithRouteNumberCollectionError
+// * @sample FormPreviewWithRouteNumberCollectionErrorDark
+// * @sample FormPreviewWithAllErrors
+// * @sample FormPreviewWithAllErrorsDark
+// * @sample FormPreviewWithAll
+// * @sample FormPreviewWithAllDark
+// */
 @Composable
 fun Form(
-    routeNumberInputFieldValues: List<String>,
-    licensePlateInputFieldValue: String,
-    imageCollection: List<Image>,
-    routeNumberInputFieldValidationErrors: List<String?>,
-    routeNumberCollectionError: String?,
-    licensePlateInputFieldValidationError: String?,
-    imageCollectionError: String?,
-    onRouteNumberChange: (Int, String) -> Unit,
-    onAddRouteNumber: () -> Unit,
-    onRemoveRouteNumber: (Int) -> Unit,
-    onLicensePlateChange: (String) -> Unit,
-    onAddImage: (Image) -> Unit,
-    onRemoveImage: (Image) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    mainScreenViewModel: MainScreenViewModel
 ) {
-    val takePictureLauncher = getTakePictureLauncher(onAddImage)
+    val mainScreenState by mainScreenViewModel.uiState.collectAsState()
+
+    val takePictureLauncher = getTakePictureLauncher { mainScreenViewModel.addImage(it) }
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
         modifier = modifier
     ) {
         item {
-            routeNumberInputFieldValues.forEachIndexed { index, routeNumber ->
-                CustomTextField(value = routeNumber,
+            mainScreenState.routeNumberInputFieldValues.forEachIndexed { index, routeNumber ->
+                Log.d("Index", index.toString())
+                Log.d("Lengte", mainScreenState.routeNumberInputFieldValidationErrors.size.toString())
+                CustomTextField(
+                    value = routeNumber,
                     label = stringResource(R.string.route_number_text_field_label, index + 1),
-                    onValueChange = { newRouteNumber -> onRouteNumberChange(index, newRouteNumber) },
-                    error = routeNumberInputFieldValidationErrors.getOrNull(index),
+                    onValueChange = { newRouteNumber ->
+                        mainScreenViewModel.onRouteNumberChange(
+                            index,
+                            newRouteNumber
+                        )
+                    },
+                    errors = routeNumberErrors(mainScreenState.routeNumberInputFieldValidationErrors[index]),
                     keyboardType = KeyboardType.Number,
-                    modifier = Modifier.fillMaxWidth(),
-                    trailingIcon = {
-                        if(index != 0) {
-                            IconButton(onClick = { onRemoveRouteNumber(index) }) {
-                                Icon(
-                                    Icons.Filled.Close, contentDescription = stringResource(
-                                        R.string.remove_route_number_button_content_description, index + 1
-                                    )
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    if (index != 0) {
+                        IconButton(onClick = { mainScreenViewModel.removeRouteNumber(index) }) {
+                            Icon(
+                                Icons.Filled.Close, contentDescription = stringResource(
+                                    R.string.remove_route_number_button_content_description, index + 1
                                 )
-                            }
+                            )
                         }
-                    })
+                    }
+                }
             }
         }
         item {
-            if (routeNumberCollectionError != null) {
-                Text(text = routeNumberCollectionError, color = MaterialTheme.colorScheme.error)
+            if (mainScreenState.routeNumberCollectionError != null) {
+                routeNumberCollectionError(mainScreenState.routeNumberCollectionError)?.getOrNull(0)?.let {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         }
         item {
-            Button(onClick = onAddRouteNumber) {
+            Button(onClick = { mainScreenViewModel.addRouteNumber() }) {
                 Text(text = stringResource(R.string.add_extra_route_number_button_text))
             }
         }
         item {
             CustomTextField(
-                value = licensePlateInputFieldValue,
+                value = mainScreenState.licensePlateInputFieldValue,
                 label = stringResource(R.string.license_plate_label_text),
-                onValueChange = onLicensePlateChange,
-                error = licensePlateInputFieldValidationError,
+                onValueChange = { newLicencePlate ->
+                    mainScreenViewModel.onLicensePlateChange(
+                        newLicencePlate
+                    )
+                },
+                errors = licencePlateInputFieldValidationError(mainScreenState.licensePlateInputFieldValidationError),
                 keyboardType = KeyboardType.Text,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
         item {
-            if (imageCollectionError != null) {
-                Text(text = imageCollectionError, color = MaterialTheme.colorScheme.error)
+            if (mainScreenState.imageCollectionError != null) {
+                imageCollectionError(mainScreenState.imageCollectionError)?.getOrNull(0)?.let {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             } else {
-                ScrollableImageList(imageList = imageCollection, onDeleteImage = onRemoveImage)
+                ScrollableImageList(
+                    mainScreenViewModel = mainScreenViewModel,
+                )
             }
         }
         item {
@@ -153,151 +154,140 @@ private fun getTakePictureLauncher(onAddImage: (Image) -> Unit) = rememberLaunch
     }
 }
 
-@Composable
-private fun PreviewWrapper(
-    routeNumberInputFieldValues: List<String> = listOf(),
-    licensePlateInputFieldValue: String = "",
-    imageCollection: List<Image> = listOf(),
-    routeNumberInputFieldValidationErrors: List<String?> = listOf(),
-    routeNumberCollectionError: String? = null,
-    licensePlateInputFieldValidationError: String? = null,
-    imageCollectionError: String? = null
-) {
-    TemplateApplicationTheme {
-        Form(routeNumberInputFieldValues = routeNumberInputFieldValues,
-            licensePlateInputFieldValue = licensePlateInputFieldValue,
-            imageCollection = imageCollection,
-            routeNumberInputFieldValidationErrors = routeNumberInputFieldValidationErrors,
-            routeNumberCollectionError = routeNumberCollectionError,
-            licensePlateInputFieldValidationError = licensePlateInputFieldValidationError,
-            imageCollectionError = imageCollectionError,
-            onRouteNumberChange = { _: Int, _: String -> },
-            onAddRouteNumber = {},
-            onRemoveRouteNumber = {},
-            onLicensePlateChange = {},
-            onAddImage = {},
-            onRemoveImage = {})
-    }
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun FormPreview() = PreviewWrapper()
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun FormPreviewDark() = FormPreview()
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun FormPreviewWithRouteNumbers() = PreviewWrapper(routeNumberInputFieldValues = listOf("1", "2", "3"))
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun FormPreviewWithRouteNumbersDark() = FormPreviewWithRouteNumbers()
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun FormPreviewWithLicensePlate() =
-    PreviewWrapper(licensePlateInputFieldValue = stringResource(R.string.previews_license_plate))
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun FormPreviewWithLicensePlateDark() = FormPreviewWithLicensePlate()
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun FormPreviewWithImages() = PreviewWrapper(
-    imageCollection = listOf(
-        Image(
-            bitmap = android.graphics.Bitmap.createBitmap(100, 100, android.graphics.Bitmap.Config.ARGB_8888)
-        )
-    )
-)
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun FormPreviewWithImagesDark() = FormPreviewWithImages()
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun FormPreviewWithRouteNumberErrors() = PreviewWrapper(
-    routeNumberInputFieldValues = listOf("", "2", ""), routeNumberInputFieldValidationErrors = listOf(
-        stringResource(R.string.empty_route_number_error_message), null, stringResource(
-            R.string.invalid_route_number_error_message
-        )
-    )
-)
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun FormPreviewWithRouteNumberErrorsDark() = FormPreviewWithRouteNumberErrors()
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun FormPreviewWithLicensePlateError() =
-    PreviewWrapper(licensePlateInputFieldValidationError = stringResource(R.string.invalid_license_plate_error_message))
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun FormPreviewWithLicensePlateErrorDark() = FormPreviewWithLicensePlateError()
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun FormPreviewWithImageError() =
-    PreviewWrapper(imageCollectionError = stringResource(R.string.missing_images_error_message))
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun FormPreviewWithImageErrorDark() = FormPreviewWithImageError()
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun FormPreviewWithRouteNumberCollectionError() =
-    PreviewWrapper(routeNumberCollectionError = stringResource(R.string.missing_route_numbers_error_message))
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun FormPreviewWithRouteNumberCollectionErrorDark() = FormPreviewWithRouteNumberCollectionError()
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun FormPreviewWithAllErrors() = PreviewWrapper(
-    routeNumberInputFieldValues = listOf("", "2", ""),
-    routeNumberInputFieldValidationErrors = listOf(
-        stringResource(R.string.empty_route_number_error_message), null, stringResource(
-            R.string.invalid_route_number_error_message
-        )
-    ),
-    licensePlateInputFieldValidationError = stringResource(R.string.empty_route_number_error_message),
-    routeNumberCollectionError = stringResource(R.string.missing_route_numbers_error_message),
-    imageCollectionError = stringResource(R.string.missing_images_error_message),
-)
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun FormPreviewWithAllErrorsDark() = FormPreviewWithAllErrors()
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun FormPreviewWithAll() = PreviewWrapper(
-    routeNumberInputFieldValues = listOf("1", "2", "3"),
-    licensePlateInputFieldValue = stringResource(R.string.previews_license_plate),
-    imageCollection = listOf(
-        Image(
-            bitmap = android.graphics.Bitmap.createBitmap(100, 100, android.graphics.Bitmap.Config.ARGB_8888)
-        )
-    ),
-    routeNumberInputFieldValidationErrors = listOf(
-        stringResource(R.string.empty_route_number_error_message), null, stringResource(
-            R.string.invalid_route_number_error_message
-        )
-    ),
-    licensePlateInputFieldValidationError = stringResource(R.string.empty_route_number_error_message),
-    routeNumberCollectionError = stringResource(R.string.missing_route_numbers_error_message),
-    imageCollectionError = stringResource(R.string.missing_images_error_message),
-)
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun FormPreviewWithAllDark() = FormPreviewWithAll()
+//@Composable
+//private fun PreviewWrapper(
+//    routeNumberInputFieldValues: List<String> = listOf(),
+//    licensePlateInputFieldValue: String = "",
+//    imageCollection: List<Image> = listOf(),
+//    routeNumberInputFieldValidationErrors: List<String?> = listOf(),
+//    routeNumberCollectionError: String? = null,
+//    licensePlateInputFieldValidationError: String? = null,
+//    imageCollectionError: String? = null
+//) {
+//    TemplateApplicationTheme {
+//        Form(
+//        )
+//    }
+//}
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Composable
+//private fun FormPreview() = PreviewWrapper()
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun FormPreviewDark() = FormPreview()
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Composable
+//private fun FormPreviewWithRouteNumbers() = PreviewWrapper(routeNumberInputFieldValues = listOf("1", "2", "3"))
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun FormPreviewWithRouteNumbersDark() = FormPreviewWithRouteNumbers()
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Composable
+//private fun FormPreviewWithLicensePlate() =
+//    PreviewWrapper(licensePlateInputFieldValue = stringResource(R.string.previews_license_plate))
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun FormPreviewWithLicensePlateDark() = FormPreviewWithLicensePlate()
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Composable
+//private fun FormPreviewWithImages() = PreviewWrapper(
+//    imageCollection = listOf(
+//        Image(
+//            bitmap = android.graphics.Bitmap.createBitmap(100, 100, android.graphics.Bitmap.Config.ARGB_8888)
+//        )
+//    )
+//)
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun FormPreviewWithImagesDark() = FormPreviewWithImages()
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Composable
+//private fun FormPreviewWithRouteNumberErrors() = PreviewWrapper(
+//    routeNumberInputFieldValues = listOf("", "2", ""), routeNumberInputFieldValidationErrors = listOf(
+//        stringResource(R.string.empty_route_number_error_message), null, stringResource(
+//            R.string.invalid_route_number_error_message
+//        )
+//    )
+//)
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun FormPreviewWithRouteNumberErrorsDark() = FormPreviewWithRouteNumberErrors()
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Composable
+//private fun FormPreviewWithLicensePlateError() =
+//    PreviewWrapper(licensePlateInputFieldValidationError = stringResource(R.string.invalid_license_plate_error_message))
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun FormPreviewWithLicensePlateErrorDark() = FormPreviewWithLicensePlateError()
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Composable
+//private fun FormPreviewWithImageError() =
+//    PreviewWrapper(imageCollectionError = stringResource(R.string.missing_images_error_message))
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun FormPreviewWithImageErrorDark() = FormPreviewWithImageError()
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Composable
+//private fun FormPreviewWithRouteNumberCollectionError() =
+//    PreviewWrapper(routeNumberCollectionError = stringResource(R.string.missing_route_numbers_error_message))
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun FormPreviewWithRouteNumberCollectionErrorDark() = FormPreviewWithRouteNumberCollectionError()
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Composable
+//private fun FormPreviewWithAllErrors() = PreviewWrapper(
+//    routeNumberInputFieldValues = listOf("", "2", ""),
+//    routeNumberInputFieldValidationErrors = listOf(
+//        stringResource(R.string.empty_route_number_error_message), null, stringResource(
+//            R.string.invalid_route_number_error_message
+//        )
+//    ),
+//    licensePlateInputFieldValidationError = stringResource(R.string.empty_route_number_error_message),
+//    routeNumberCollectionError = stringResource(R.string.missing_route_numbers_error_message),
+//    imageCollectionError = stringResource(R.string.missing_images_error_message),
+//)
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun FormPreviewWithAllErrorsDark() = FormPreviewWithAllErrors()
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Composable
+//private fun FormPreviewWithAll() = PreviewWrapper(
+//    routeNumberInputFieldValues = listOf("1", "2", "3"),
+//    licensePlateInputFieldValue = stringResource(R.string.previews_license_plate),
+//    imageCollection = listOf(
+//        Image(
+//            bitmap = android.graphics.Bitmap.createBitmap(100, 100, android.graphics.Bitmap.Config.ARGB_8888)
+//        )
+//    ),
+//    routeNumberInputFieldValidationErrors = listOf(
+//        stringResource(R.string.empty_route_number_error_message), null, stringResource(
+//            R.string.invalid_route_number_error_message
+//        )
+//    ),
+//    licensePlateInputFieldValidationError = stringResource(R.string.empty_route_number_error_message),
+//    routeNumberCollectionError = stringResource(R.string.missing_route_numbers_error_message),
+//    imageCollectionError = stringResource(R.string.missing_images_error_message),
+//)
+//
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun FormPreviewWithAllDark() = FormPreviewWithAll()

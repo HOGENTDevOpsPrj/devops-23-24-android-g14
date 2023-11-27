@@ -1,5 +1,6 @@
 package com.hogent.svkapp.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.hogent.svkapp.Route
@@ -40,7 +41,7 @@ class MainScreenViewModel(
      */
     fun toggleDialog() {
         _uiState.update { state ->
-            state.copy(showDialog = !state.showDialog)
+            state.copy(showPopup = !state.showPopup)
         }
     }
 
@@ -73,6 +74,8 @@ class MainScreenViewModel(
      * errors are shown. If the creation succeeds, the form is reset and the dialog is shown.
      */
     fun onSend() {
+        Log.d("State on send", uiState.value.toString())
+
         val creationResult = CargoTicket.create(
             routeNumbers = _uiState.value.routeNumberInputFieldValues,
             licensePlate = _uiState.value.licensePlateInputFieldValue,
@@ -126,11 +129,18 @@ class MainScreenViewModel(
     fun addRouteNumber() {
         _uiState.update { state ->
             state.copy(
-                routeNumberInputFieldValues = state.routeNumberInputFieldValues + "",
-                routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors + null,
+                routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList()
+                    .apply {
+                        add("")
+                    },
+                routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors.toMutableList()
+                    .apply {
+                        add(emptyList())
+                    },
                 routeNumberCollectionError = null
             )
         }
+        Log.d("State on add", uiState.value.toString())
     }
 
     /**
@@ -151,6 +161,7 @@ class MainScreenViewModel(
                 routeNumberCollectionError = if (state.routeNumberInputFieldValues.isEmpty()) RouteNumberCollectionError.Empty else null
             )
         }
+        Log.d("State on remove", uiState.value.toString())
     }
 
     /**
@@ -188,8 +199,8 @@ class MainScreenViewModel(
             state.copy(
                 routeNumberInputFieldValues = listOf(""),
                 licensePlateInputFieldValue = "",
-                imageCollection = listOf(),
-                routeNumberInputFieldValidationErrors = listOf(null),
+                imageCollection = emptyList(),
+                routeNumberInputFieldValidationErrors = listOf(emptyList()),
                 routeNumberCollectionError = null,
                 licensePlateInputFieldValidationError = null,
                 imageCollectionError = null

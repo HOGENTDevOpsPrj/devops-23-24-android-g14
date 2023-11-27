@@ -10,15 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import com.hogent.svkapp.R
-import com.hogent.svkapp.domain.entities.ImageCollectionError
-import com.hogent.svkapp.domain.entities.LicensePlateError
-import com.hogent.svkapp.domain.entities.RouteNumberCollectionError
-import com.hogent.svkapp.domain.entities.RouteNumberError
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
@@ -42,47 +36,13 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
         MainTopAppBar(onLogout = mainScreenViewModel::onLogout)
     }) { innerPadding ->
         Form(
-            routeNumberInputFieldValues = mainScreenState.routeNumberInputFieldValues,
-            licensePlateInputFieldValue = mainScreenState.licensePlateInputFieldValue,
-            imageCollection = mainScreenState.imageCollection,
-            routeNumberInputFieldValidationErrors = mainScreenState.routeNumberInputFieldValidationErrors.map {
-                when (it) {
-                    RouteNumberError.Empty -> stringResource(R.string.empty_route_number_error_message)
-                    RouteNumberError.InvalidFormat, RouteNumberError.NonPositiveNumber -> stringResource(
-                        R.string.invalid_route_number_error_message
-                    )
-
-                    null -> null
-                }
-            },
-            routeNumberCollectionError = mainScreenState.routeNumberCollectionError?.let {
-                when (it) {
-                    RouteNumberCollectionError.Empty -> stringResource(R.string.missing_route_numbers_error_message)
-                }
-            },
-            licensePlateInputFieldValidationError = mainScreenState.licensePlateInputFieldValidationError?.let {
-                when (it) {
-                    LicensePlateError.Empty -> stringResource(R.string.empty_license_plate_error_message)
-                    LicensePlateError.TooLong -> stringResource(R.string.invalid_license_plate_error_message)
-                }
-            },
-            imageCollectionError = mainScreenState.imageCollectionError?.let {
-                when (it) {
-                    ImageCollectionError.Empty -> stringResource(R.string.missing_images_error_message)
-                }
-            },
-            onRouteNumberChange = mainScreenViewModel::onRouteNumberChange,
-            onAddRouteNumber = mainScreenViewModel::addRouteNumber,
-            onRemoveRouteNumber = mainScreenViewModel::removeRouteNumber,
-            onLicensePlateChange = mainScreenViewModel::onLicensePlateChange,
-            onAddImage = mainScreenViewModel::addImage,
-            onRemoveImage = mainScreenViewModel::removeImage,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = innerPadding)
                 .padding(all = MaterialTheme.spacing.large),
+            mainScreenViewModel = mainScreenViewModel,
         )
-        if (mainScreenState.showDialog) {
+        if (mainScreenState.showPopup) {
             ConfirmationDialog(onDismissRequest = mainScreenViewModel::toggleDialog)
         }
     }
