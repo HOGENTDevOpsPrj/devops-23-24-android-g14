@@ -39,14 +39,10 @@ class RouteNumber private constructor(value: Int) {
          * @param routeNumber the value of the route number.
          * @return a [Result] containing either the [RouteNumber] or a [RouteNumberError].
          */
-        fun create(routeNumber: String): Result<RouteNumber, RouteNumberError> {
+        fun create(routeNumber: String): Result<RouteNumber, List<RouteNumberError?>> {
             val result = validateStringRepresentation(routeNumber)
 
-            return if (result == null) {
-                Result.Success(RouteNumber(clean(routeNumber).toInt()))
-            } else {
-                Result.Failure(result)
-            }
+            return Result.Failure(result)
         }
 
         /**
@@ -56,18 +52,18 @@ class RouteNumber private constructor(value: Int) {
          *
          * @return a [RouteNumberError] if the [routeNumber] is invalid, null otherwise.
          */
-        fun validateStringRepresentation(routeNumber: String): RouteNumberError? {
+        fun validateStringRepresentation(routeNumber: String): List<RouteNumberError?> {
             val cleanedRouteNumber = clean(routeNumber)
 
-            if (cleanedRouteNumber.isEmpty()) return RouteNumberError.Empty
+            if (cleanedRouteNumber.isEmpty()) return listOf(RouteNumberError.Empty)
 
-            val intValue = cleanedRouteNumber.toIntOrNull() ?: return RouteNumberError.InvalidFormat
+            val intValue = cleanedRouteNumber.toIntOrNull() ?: return listOf(RouteNumberError.InvalidFormat)
 
             if (intValue <= 0) {
-                return RouteNumberError.NonPositiveNumber
+                return listOf(RouteNumberError.NonPositiveNumber)
             }
 
-            return null
+            return emptyList()
         }
 
         private fun clean(routeNumber: String): String {

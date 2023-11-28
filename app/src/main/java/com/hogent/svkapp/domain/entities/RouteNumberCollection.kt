@@ -43,7 +43,7 @@ class RouteNumberCollection private constructor(value: List<RouteNumber>) {
          * @return an [RouteNumberCollectionError] if the [RouteNumber]s are invalid, null otherwise.
          */
         fun validateStringRepresentations(routeNumbers: List<String>):
-                Result<List<RouteNumberError?>, RouteNumberCollectionError> {
+                Result<List<List<RouteNumberError?>>, RouteNumberCollectionError> {
             val routeNumberResults =
                 routeNumbers.map { RouteNumber.validateStringRepresentation(it) }
             return if (routeNumberResults.isEmpty()) {

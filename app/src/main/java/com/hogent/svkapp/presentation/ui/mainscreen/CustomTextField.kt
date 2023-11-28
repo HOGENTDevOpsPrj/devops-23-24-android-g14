@@ -1,13 +1,20 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -22,7 +29,7 @@ import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
  * @param value The value of the text field.
  * @param label The label of the text field.
  * @param onValueChange The callback to be invoked when the value of the text field changes.
- * @param error The error message to be displayed below the text field.
+ * @param errors The error messages to be displayed below the text field.
  * @param keyboardType The type of keyboard to be used for the text field.
  * @param trailingIcon The trailing icon to be displayed in the text field.
  *
@@ -34,51 +41,77 @@ import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 @Composable
 fun CustomTextField(
     modifier: Modifier = Modifier,
+    index: Int,
     value: String,
     label: String,
     onValueChange: (String) -> Unit,
-    error: String? = null,
+    onDelete: () -> Unit,
+    errors: List<String?>? = emptyList(),
     keyboardType: KeyboardType,
+    removable: Boolean = true,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
     TextField(value = value,
         onValueChange = onValueChange,
         label = { Text(text = label) },
         supportingText = {
-            if (error != null) {
-                Text(text = error)
+            Column {
+                errors?.forEach { error ->
+                    if (error != null) {
+                        Text(text = error)
+                    }
+                }
             }
         },
-        isError = error != null,
+        isError = !errors.isNullOrEmpty(),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         singleLine = true,
         modifier = modifier,
         trailingIcon = {
-            if (error != null) {
-                Icon(
-                    Icons.Filled.Warning,
-                    contentDescription = stringResource(R.string.error_icon_content_description)
-                )
-            } else {
-                trailingIcon?.invoke()
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (!errors.isNullOrEmpty()) {
+                    Icon(
+                        Icons.Filled.Warning,
+                        contentDescription = stringResource(R.string.error_icon_content_description)
+                    )
+                }
+                if (removable) {
+                    IconButton(
+                        onClick = { onDelete() },
+                    ) {
+                        Icon(
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = stringResource(
+                                R.string.remove_route_number_button_content_description, index + 1
+                            )
+                        )
+                    }
+                }
             }
-        })
+        }
+    )
 }
+
 
 @Composable
 private fun TextFieldPreviewBase(
     value: String = "",
     label: String = stringResource(R.string.custom_text_field_previews_label_text),
-    error: String? = null,
+    errors: List<String?> = emptyList(),
     keyboardType: KeyboardType = KeyboardType.Text
 ) {
     TemplateApplicationTheme {
         CustomTextField(
+            index = 0,
             value = value,
             label = label,
             onValueChange = {},
-            error = error,
-            keyboardType = keyboardType
+            errors = errors,
+            keyboardType = keyboardType,
+            onDelete = {},
         )
     }
 }
@@ -99,7 +132,10 @@ private fun TextFieldPreviewDark(): Unit = TextFieldPreview()
 private fun InvalidTextFieldPreview(): Unit = TextFieldPreviewBase(
     value = stringResource(R.string.previews_license_plate),
     label = stringResource(R.string.license_plate_label_text),
-    error = stringResource(R.string.invalid_license_plate_error_message)
+    errors = listOf(
+        stringResource(id = R.string.empty_route_number_error_message),
+        stringResource(id = R.string.invalid_route_number_error_message),
+    )
 )
 
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
