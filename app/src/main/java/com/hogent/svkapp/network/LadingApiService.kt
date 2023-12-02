@@ -19,7 +19,7 @@ interface LadingApiService {
 
 }
 
-object MarsApi {
+object LadingApi {
     val retrofitService : LadingApiService by lazy {
         retrofit.create(LadingApiService::class.java)
     }

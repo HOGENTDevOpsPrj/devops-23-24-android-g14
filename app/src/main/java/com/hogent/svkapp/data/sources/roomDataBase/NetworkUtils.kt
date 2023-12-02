@@ -1,14 +1,16 @@
+
+
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
-
 import android.util.Log
-
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hogent.svkapp.data.sources.roomDataBase.AppDatabase
 import com.hogent.svkapp.domain.entities.CargoTicket
+import com.hogent.svkapp.network.LadingApi
+
 
 class NetworkUtils(context: Context) {
 
@@ -60,7 +62,12 @@ class NetworkUtils(context: Context) {
     private fun sendUnprocessedCargoTickets(){
         val ladingen = dao?.getAll();
         ladingen?.forEach {
-            //TODO verstuur de lading naar de back-end
+            LadingApi.retrofitService.createLading(
+                CargoTicket(
+                    routeNumbers = it.routeNumbers, images = it.images,
+                    licensePlate = it.licensePlate
+                )
+            );
             dao?.delete(it);
         }
     }
