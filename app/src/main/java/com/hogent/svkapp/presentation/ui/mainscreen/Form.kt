@@ -1,6 +1,5 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -67,9 +66,8 @@ fun Form(
     ) {
         item {
             mainScreenState.routeNumberInputFieldValues.forEachIndexed { index, routeNumber ->
-                Log.d("Index", index.toString())
-                Log.d("Lengte", mainScreenState.routeNumberInputFieldValidationErrors.size.toString())
                 CustomTextField(
+                    index = index,
                     value = routeNumber,
                     label = stringResource(R.string.route_number_text_field_label, index + 1),
                     onValueChange = { newRouteNumber ->
@@ -80,17 +78,10 @@ fun Form(
                     },
                     errors = routeNumberErrors(mainScreenState.routeNumberInputFieldValidationErrors[index]),
                     keyboardType = KeyboardType.Number,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    onDelete = { mainScreenViewModel.removeRouteNumber(index) },
+                    removable = index != 0,
                 ) {
-                    if (index != 0) {
-                        IconButton(onClick = { mainScreenViewModel.removeRouteNumber(index) }) {
-                            Icon(
-                                Icons.Filled.Close, contentDescription = stringResource(
-                                    R.string.remove_route_number_button_content_description, index + 1
-                                )
-                            )
-                        }
-                    }
                 }
             }
         }
@@ -111,6 +102,7 @@ fun Form(
         }
         item {
             CustomTextField(
+                index = 0,
                 value = mainScreenState.licensePlateInputFieldValue,
                 label = stringResource(R.string.license_plate_label_text),
                 onValueChange = { newLicencePlate ->
@@ -121,6 +113,8 @@ fun Form(
                 errors = licencePlateInputFieldValidationError(mainScreenState.licensePlateInputFieldValidationError),
                 keyboardType = KeyboardType.Text,
                 modifier = Modifier.fillMaxWidth(),
+                removable = false,
+                onDelete = {},
             )
         }
         item {

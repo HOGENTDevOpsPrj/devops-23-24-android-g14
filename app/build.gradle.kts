@@ -64,6 +64,8 @@ dependencies {
     val composeMaterial3Version = "1.1.2"
     val composeNavigationVersion = "2.7.4"
     val room_version = "2.6.0"
+    val retrofit_version = "2.9.0"
+
 
     implementation("androidx.core:core-ktx:$coreVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
@@ -80,6 +82,9 @@ dependencies {
     implementation("com.auth0.android:auth0:+")
     implementation("com.auth0.android:jwtdecode:+")
     implementation("androidx.room:room-runtime:$room_version")
+    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
+    implementation("com.squareup.retrofit2:converter-scalars:$retrofit_version")
+
 
 
     val testJunitVersion = "1.1.5"

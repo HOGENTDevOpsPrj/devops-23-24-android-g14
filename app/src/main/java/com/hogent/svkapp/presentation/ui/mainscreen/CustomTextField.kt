@@ -1,14 +1,20 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -35,11 +41,14 @@ import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 @Composable
 fun CustomTextField(
     modifier: Modifier = Modifier,
+    index: Int,
     value: String,
     label: String,
     onValueChange: (String) -> Unit,
+    onDelete: () -> Unit,
     errors: List<String?>? = emptyList(),
     keyboardType: KeyboardType,
+    removable: Boolean = true,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
     TextField(value = value,
@@ -59,15 +68,31 @@ fun CustomTextField(
         singleLine = true,
         modifier = modifier,
         trailingIcon = {
-            if (!errors.isNullOrEmpty()) {
-                Icon(
-                    Icons.Filled.Warning,
-                    contentDescription = stringResource(R.string.error_icon_content_description)
-                )
-            } else {
-                trailingIcon?.invoke()
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (!errors.isNullOrEmpty()) {
+                    Icon(
+                        Icons.Filled.Warning,
+                        contentDescription = stringResource(R.string.error_icon_content_description)
+                    )
+                }
+                if (removable) {
+                    IconButton(
+                        onClick = { onDelete() },
+                    ) {
+                        Icon(
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = stringResource(
+                                R.string.remove_route_number_button_content_description, index + 1
+                            )
+                        )
+                    }
+                }
             }
-        })
+        }
+    )
 }
 
 
@@ -80,11 +105,13 @@ private fun TextFieldPreviewBase(
 ) {
     TemplateApplicationTheme {
         CustomTextField(
+            index = 0,
             value = value,
             label = label,
             onValueChange = {},
             errors = errors,
-            keyboardType = keyboardType
+            keyboardType = keyboardType,
+            onDelete = {},
         )
     }
 }
