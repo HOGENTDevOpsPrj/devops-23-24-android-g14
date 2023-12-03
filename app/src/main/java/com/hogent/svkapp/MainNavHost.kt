@@ -47,7 +47,7 @@ fun MainNavHost(
             LoginScreen(loginViewModel = LoginViewModel(), navController)
         }
         composable(route = Route.Main.name) {
-            MainScreen(mainScreenViewModel = MainScreenViewModel(navController = navController))
+            MainScreen(mainScreenViewModel = MainScreenViewModel(navController = navController), navController)
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -10,10 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
-import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
+import androidx.navigation.NavController
+import com.auth0.android.Auth0
+import com.hogent.svkapp.R
+import com.hogent.svkapp.Route
 import com.hogent.svkapp.presentation.ui.theme.spacing
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
@@ -27,13 +28,23 @@ import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
+fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel(), navController: NavController) {
     val mainScreenState by mainScreenViewModel.uiState.collectAsState()
+
+    val context = LocalContext.current
+    val auth = Auth0(
+        context.getString(R.string.com_auth0_client_id),
+        context.getString(R.string.com_auth0_domain)
+    )
 
     Scaffold(floatingActionButton = {
         SendFloatingActionButton(onSend = mainScreenViewModel::onSend)
     }, topBar = {
-        MainTopAppBar(onLogout = mainScreenViewModel::onLogout)
+        MainTopAppBar(onLogout = {
+            mainScreenViewModel.onLogout(context, auth = auth, onLogoutNavigation = {
+                navController.navigate(Route.Login.name)
+            })
+        })
     }) { innerPadding ->
         Form(
             modifier = Modifier
@@ -48,16 +59,16 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
     }
 }
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-@Composable
-private fun MainScreenPreview() {
-    TemplateApplicationTheme {
-        MainScreen(
-            mainScreenViewModel = MainScreenViewModel(navController = rememberNavController())
-        )
-    }
-}
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+//@Composable
+//private fun MainScreenPreview() {
+//    TemplateApplicationTheme {
+//        MainScreen(
+//            mainScreenViewModel = MainScreenViewModel(navController = rememberNavController())
+//        )
+//    }
+//}
 
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-private fun MainScreenPreviewDark() = MainScreenPreview()
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//private fun MainScreenPreviewDark() = MainScreenPreview()

@@ -1,8 +1,14 @@
 package com.hogent.svkapp.presentation.viewmodels
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
+import com.auth0.android.Auth0
+import com.auth0.android.authentication.AuthenticationException
+import com.auth0.android.provider.WebAuthProvider
+import com.auth0.android.callback.Callback
+import com.hogent.svkapp.R
 import com.hogent.svkapp.Route
 import com.hogent.svkapp.data.repositories.CargoTicketRepository
 import com.hogent.svkapp.domain.entities.CargoTicket
@@ -35,6 +41,8 @@ class MainScreenViewModel(
      * The state of the screen as read-only state flow.
      */
     val uiState: StateFlow<MainScreenState> = _uiState.asStateFlow()
+
+    private val TAG = "MainScreenViewModel"
 
     /**
      * Toggles the dialog.
@@ -182,8 +190,24 @@ class MainScreenViewModel(
     /**
      * Navigates to the login screen.
      */
-    fun onLogout() {
-        navController.navigate(route = Route.Login.name)
+    fun onLogout(context: Context, auth: Auth0, onLogoutNavigation: () -> Unit) {
+        WebAuthProvider
+            .logout(auth)
+            .withScheme(context.getString(R.string.com_auth0_scheme))
+            .start(context, object : Callback<Void?, AuthenticationException> {
+
+                override fun onFailure(error: AuthenticationException) {
+                    // For some reason, logout failed.
+                    Log.e(TAG, "Error occurred in logout(): $error")
+                }
+
+                override fun onSuccess(result: Void?) {
+                    // The user successfully logged out.
+                    // userIsAuthenticated = false
+                    onLogoutNavigation
+                }
+
+            })
     }
 
     private fun validateImageCollection() {
