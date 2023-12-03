@@ -25,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hogent.svkapp.R
+import com.hogent.svkapp.domain.entities.User
 import com.hogent.svkapp.presentation.ui.SVKLogo
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 
@@ -37,7 +38,7 @@ import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
  */
 @ExperimentalMaterial3Api
 @Composable
-fun MainTopAppBar(onLogout: () -> Unit) {
+fun MainTopAppBar(onLogout: () -> Unit, user:User) {
     TopAppBar(
         modifier = Modifier.padding(start = 0.dp),
         windowInsets = WindowInsets(0),
@@ -58,7 +59,7 @@ fun MainTopAppBar(onLogout: () -> Unit) {
 
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
 
-                DropdownUserInfo(username = stringResource(R.string.test_user_username))
+                DropdownUserInfo(username = user.email)
 
                 DropdownMenuItem(leadingIcon = {
                     Icon(
@@ -88,7 +89,7 @@ private fun DropdownUserInfo(username: String) {
 @Composable
 private fun MainTopAppBarPreview() {
     TemplateApplicationTheme {
-        MainTopAppBar(onLogout = {})
+        MainTopAppBar(onLogout = {}, user = User())
     }
 }
 

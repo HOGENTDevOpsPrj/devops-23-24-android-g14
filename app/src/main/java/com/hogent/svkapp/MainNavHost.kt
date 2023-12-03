@@ -39,15 +39,16 @@ enum class Route {
 @Composable
 fun MainNavHost(
     navController: NavHostController,
+    viewModel: MainScreenViewModel
 ) {
     NavHost(
         navController = navController, startDestination = Route.Login.name
     ) {
         composable(route = Route.Login.name) {
-            LoginScreen(loginViewModel = LoginViewModel(), navController)
+            LoginScreen(viewModel, navController)
         }
         composable(route = Route.Main.name) {
-            MainScreen(mainScreenViewModel = MainScreenViewModel(navController = navController), navController)
+            MainScreen(mainScreenViewModel = viewModel, navController)
         }
     }
 }

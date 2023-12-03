@@ -2,12 +2,16 @@ package com.hogent.svkapp.presentation.viewmodels
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.callback.Callback
+import com.auth0.android.result.Credentials
 import com.hogent.svkapp.R
 import com.hogent.svkapp.Route
 import com.hogent.svkapp.data.repositories.CargoTicketRepository
@@ -18,6 +22,7 @@ import com.hogent.svkapp.domain.entities.LicensePlate
 import com.hogent.svkapp.domain.entities.Result
 import com.hogent.svkapp.domain.entities.RouteNumber
 import com.hogent.svkapp.domain.entities.RouteNumberCollectionError
+import com.hogent.svkapp.domain.entities.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,7 +38,6 @@ import java.util.Locale
  */
 class MainScreenViewModel(
     private val cargoTicketRepository: CargoTicketRepository = CargoTicketRepository(),
-    private val navController: NavHostController
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainScreenState())
 
@@ -43,6 +47,35 @@ class MainScreenViewModel(
     val uiState: StateFlow<MainScreenState> = _uiState.asStateFlow()
 
     private val TAG = "MainScreenViewModel"
+
+    var userIsAuthenticated by mutableStateOf(false)
+    var user by mutableStateOf(User())
+
+    /**
+     * Called when login button is clicked.
+     */
+    fun onLogin(context: Context, auth: Auth0, onSuccessNavigation: () -> Unit) {
+
+        WebAuthProvider
+            .login(auth)
+            .withScheme(context.getString(R.string.com_auth0_scheme))
+            .start(context, object : Callback<Credentials, AuthenticationException> {
+                override fun onFailure(error: AuthenticationException) {
+                    Log.e(TAG, "Error occurred in onLogin(): $error")
+                }
+
+                override fun onSuccess(result: Credentials) {
+                    val idToken = result.idToken
+                    Log.d(TAG, "ID Token: $idToken")
+                    user = User(idToken)
+                    userIsAuthenticated = true
+                    onSuccessNavigation()
+                }
+
+            })
+
+
+    }
 
     /**
      * Toggles the dialog.
@@ -203,8 +236,9 @@ class MainScreenViewModel(
 
                 override fun onSuccess(result: Void?) {
                     // The user successfully logged out.
-                    // userIsAuthenticated = false
-                    onLogoutNavigation
+                    userIsAuthenticated = false
+                    user = User()
+                    onLogoutNavigation()
                 }
 
             })

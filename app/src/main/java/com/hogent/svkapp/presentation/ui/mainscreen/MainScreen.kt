@@ -36,6 +36,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel(), navContro
         context.getString(R.string.com_auth0_client_id),
         context.getString(R.string.com_auth0_domain)
     )
+    val user = mainScreenViewModel.user
 
     Scaffold(floatingActionButton = {
         SendFloatingActionButton(onSend = mainScreenViewModel::onSend)
@@ -44,7 +45,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel(), navContro
             mainScreenViewModel.onLogout(context, auth = auth, onLogoutNavigation = {
                 navController.navigate(Route.Login.name)
             })
-        })
+        }, user)
     }) { innerPadding ->
         Form(
             modifier = Modifier

@@ -57,7 +57,7 @@ class LoginViewModel() : ViewModel() {
                 override fun onSuccess(result: Credentials) {
                     val idToken = result.idToken
                     Log.d(TAG, "ID Token: $idToken")
-
+                    userIsAuthenticated = true
                     onSuccessNavigation()
                 }
 

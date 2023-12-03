@@ -17,6 +17,7 @@ import com.hogent.svkapp.Route
 import com.hogent.svkapp.presentation.ui.SVKLogo
 import com.hogent.svkapp.presentation.ui.theme.spacing
 import com.hogent.svkapp.presentation.viewmodels.LoginViewModel
+import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
 /**
  * The login screen of the app.
@@ -27,7 +28,7 @@ import com.hogent.svkapp.presentation.viewmodels.LoginViewModel
  * @sample LoginScreenPreviewDark
  */
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel, navController: NavController) {
+fun LoginScreen(viewModel: MainScreenViewModel, navController: NavController) {
     val context = LocalContext.current
     val auth = Auth0(
         context.getString(R.string.com_auth0_client_id),
@@ -48,7 +49,7 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController: NavController) {
 
             LoginButton(
                 onClick = {
-                    loginViewModel.onLogin(context, auth = auth, onSuccessNavigation = {
+                    viewModel.onLogin(context, auth = auth, onSuccessNavigation = {
                         navController.navigate(Route.Main.name)
                     })
                 },
@@ -56,9 +57,6 @@ fun LoginScreen(loginViewModel: LoginViewModel, navController: NavController) {
                 Modifier.fillMaxWidth()
             )
         }
-    }
-    fun afterLogin() {
-
     }
 }
 
