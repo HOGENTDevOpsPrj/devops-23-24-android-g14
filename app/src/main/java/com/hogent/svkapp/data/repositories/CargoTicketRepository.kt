@@ -1,9 +1,13 @@
 package com.hogent.svkapp.data.repositories
 
+import android.util.Log
 import com.hogent.svkapp.data.sources.CargoTicketDataSource
 import com.hogent.svkapp.data.sources.LocalCargoTicketDataSource
 import com.hogent.svkapp.domain.entities.CargoTicket
+import com.hogent.svkapp.network.ApiCargoTicket
 import com.hogent.svkapp.network.CargoTicketApiService
+import com.hogent.svkapp.network.CargoTicketConverter.Companion.convertToApiCargoTicket
+import kotlin.math.log
 
 
 interface CargoTicketRepository {
@@ -39,6 +43,8 @@ class ApiCargoTicketRepository(
      * @param cargoTicket the [CargoTicket] to add.
      */
     override suspend fun addCargoTicket(cargoTicket: CargoTicket) {
-        cargoTicketApiService.postCargoTicket(cargoTicket)
+        val apiCargoTicket = convertToApiCargoTicket(cargoTicket)
+        cargoTicketApiService.postCargoTicket(apiCargoTicket)
     }
+
 }

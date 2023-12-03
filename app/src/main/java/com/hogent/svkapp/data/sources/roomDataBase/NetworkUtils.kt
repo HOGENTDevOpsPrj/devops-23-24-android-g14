@@ -8,7 +8,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hogent.svkapp.domain.entities.CargoTicket
+import com.hogent.svkapp.network.ApiCargoTicket
 import com.hogent.svkapp.network.CargoTicketApiService
+import com.hogent.svkapp.network.CargoTicketConverter.Companion.convertToApiCargoTicket
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -68,16 +70,15 @@ class NetworkUtils(
         ladingen?.forEach {
             GlobalScope.launch {
                 cargoTicketApiService.postCargoTicket(
-                    CargoTicket(
-                        routeNumbers = it.routeNumbers, images = it.images,
-                        licensePlate = it.licensePlate
+                    convertToApiCargoTicket(
+                        CargoTicket(
+                            routeNumbers = it.routeNumbers, images = it.images,
+                            licensePlate = it.licensePlate
+                        )
                     )
-
                 )
             }
             dao?.delete(it)
         }
     }
-
-
 }

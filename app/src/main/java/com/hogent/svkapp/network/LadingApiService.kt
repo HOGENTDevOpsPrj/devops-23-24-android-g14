@@ -7,9 +7,9 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-
+/*
 private const val BASE_URL =
-    "https://localhost:5001/api/"
+    "https://127.0.0.1:5001/api/"
 
 private val retrofit = Retrofit.Builder().addConverterFactory(ScalarsConverterFactory.create()).baseUrl(BASE_URL)
     .build()
@@ -24,3 +24,4 @@ object LadingApi {
         retrofit.create(LadingApiService::class.java)
     }
 }
+*/

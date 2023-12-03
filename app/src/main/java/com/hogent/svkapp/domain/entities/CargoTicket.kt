@@ -1,5 +1,8 @@
 package com.hogent.svkapp.domain.entities
 
+import android.util.Log
+import kotlinx.serialization.Serializable
+
 /**
  * An error that can occur when validating a [CargoTicket].
  */
@@ -26,7 +29,8 @@ data class CargoTicketError(
      */
     val hasErrors: Boolean
         get() {
-            return routeNumberCollectionError != null || licensePlateError != null || imageCollectionError != null || routeNumberErrors.any { it != null }
+            return routeNumberCollectionError != null || licensePlateError != null || imageCollectionError != null ||
+                    routeNumberErrors.isEmpty()
         }
 }
 
@@ -41,7 +45,7 @@ class CargoTicket public constructor(
     routeNumbers: RouteNumberCollection, licensePlate: LicensePlate, images: ImageCollection
 ) {
     private var _routeNumbers: RouteNumberCollection = routeNumbers
-     val routeNumbers: RouteNumberCollection get() = _routeNumbers
+    val routeNumbers: RouteNumberCollection get() = _routeNumbers
 
     private var _licensePlate: LicensePlate = licensePlate
     val licensePlate: LicensePlate get() = _licensePlate

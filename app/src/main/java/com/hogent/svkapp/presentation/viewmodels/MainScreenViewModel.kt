@@ -1,5 +1,6 @@
 package com.hogent.svkapp.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -98,6 +99,7 @@ class MainScreenViewModel(
 
         when (creationResult) {
             is Result.Success -> {
+                Log.d("onsend", "onsend")
                 viewModelScope.launch { cargoTicketRepository.addCargoTicket(creationResult.value) }
                 resetForm()
                 toggleDialog()
@@ -105,6 +107,7 @@ class MainScreenViewModel(
 
             is Result.Failure -> {
                 _uiState.update { state ->
+                    Log.d("onsendfail", "onsendfail")
                     state.copy(
                         routeNumberCollectionError = creationResult.error.routeNumberCollectionError,
                         routeNumberInputFieldValidationErrors = creationResult.error.routeNumberErrors,
