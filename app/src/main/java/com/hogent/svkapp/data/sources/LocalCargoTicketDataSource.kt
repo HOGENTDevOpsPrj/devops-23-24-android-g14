@@ -13,7 +13,7 @@ class LocalCargoTicketDataSource(private val logger: Logger = AndroidLogger()) :
     CargoTicketDataSource {
     private val cargoTickets = mutableListOf<CargoTicket>()
 
-    override fun addCargoTicket(cargoTicket: CargoTicket) {
+    override suspend fun addCargoTicket(cargoTicket: CargoTicket) {
         cargoTickets.add(cargoTicket)
         logger.debug(tag = "Local Database", message = "Added cargo ticket: $cargoTicket")
     }

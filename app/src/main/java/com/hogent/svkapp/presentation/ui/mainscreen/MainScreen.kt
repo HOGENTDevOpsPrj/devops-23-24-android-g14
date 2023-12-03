@@ -12,7 +12,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
@@ -27,13 +26,21 @@ import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
+fun MainScreen(
+    mainScreenViewModel: MainScreenViewModel = viewModel(factory = MainScreenViewModel.Factory),
+    goToLogin: () -> Unit,
+) {
     val mainScreenState by mainScreenViewModel.uiState.collectAsState()
 
     Scaffold(floatingActionButton = {
         SendFloatingActionButton(onSend = mainScreenViewModel::onSend)
     }, topBar = {
-        MainTopAppBar(onLogout = mainScreenViewModel::onLogout)
+        MainTopAppBar(
+            onLogout = {
+                mainScreenViewModel.onLogout()
+                goToLogin()
+            }
+        )
     }) { innerPadding ->
         Form(
             modifier = Modifier
@@ -53,7 +60,8 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
 private fun MainScreenPreview() {
     TemplateApplicationTheme {
         MainScreen(
-            mainScreenViewModel = MainScreenViewModel(navController = rememberNavController())
+            mainScreenViewModel = viewModel(factory = MainScreenViewModel.Factory),
+            goToLogin = {},
         )
     }
 }

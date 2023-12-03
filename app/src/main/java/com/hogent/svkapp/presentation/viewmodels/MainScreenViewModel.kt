@@ -1,9 +1,11 @@
 package com.hogent.svkapp.presentation.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavHostController
-import com.hogent.svkapp.Route
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.hogent.svkapp.SVKApplication
 import com.hogent.svkapp.data.repositories.CargoTicketRepository
 import com.hogent.svkapp.domain.entities.CargoTicket
 import com.hogent.svkapp.domain.entities.Image
@@ -16,18 +18,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 /**
  * The [ViewModel] of the main screen.
  *
  * @param cargoTicketRepository the [CargoTicketRepository] that is used to add cargo tickets.
- * @param navController the [NavHostController] that is used to navigate to other screens.
  *
  */
 class MainScreenViewModel(
-    private val cargoTicketRepository: CargoTicketRepository = CargoTicketRepository(),
-    private val navController: NavHostController
+    private val cargoTicketRepository: CargoTicketRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainScreenState())
 
@@ -42,6 +43,21 @@ class MainScreenViewModel(
     fun toggleDialog() {
         _uiState.update { state ->
             state.copy(showPopup = !state.showPopup)
+        }
+    }
+
+    companion object {
+        /**
+         * The [ViewModelProvider.Factory] of the [MainScreenViewModel].
+         */
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as SVKApplication)
+                val cargoTicketRepository = application.container.cargoTicketRepository
+                MainScreenViewModel(
+                    cargoTicketRepository = cargoTicketRepository,
+                )
+            }
         }
     }
 
@@ -74,8 +90,6 @@ class MainScreenViewModel(
      * errors are shown. If the creation succeeds, the form is reset and the dialog is shown.
      */
     fun onSend() {
-        Log.d("State on send", uiState.value.toString())
-
         val creationResult = CargoTicket.create(
             routeNumbers = _uiState.value.routeNumberInputFieldValues,
             licensePlate = _uiState.value.licensePlateInputFieldValue,
@@ -84,7 +98,7 @@ class MainScreenViewModel(
 
         when (creationResult) {
             is Result.Success -> {
-                cargoTicketRepository.addCargoTicket(creationResult.value)
+                viewModelScope.launch { cargoTicketRepository.addCargoTicket(creationResult.value) }
                 resetForm()
                 toggleDialog()
             }
@@ -140,7 +154,6 @@ class MainScreenViewModel(
                 routeNumberCollectionError = null
             )
         }
-        Log.d("State on add", uiState.value.toString())
     }
 
     /**
@@ -161,7 +174,6 @@ class MainScreenViewModel(
                 routeNumberCollectionError = if (state.routeNumberInputFieldValues.isEmpty()) RouteNumberCollectionError.Empty else null
             )
         }
-        Log.d("State on remove", uiState.value.toString())
     }
 
     /**
@@ -183,7 +195,7 @@ class MainScreenViewModel(
      * Navigates to the login screen.
      */
     fun onLogout() {
-        navController.navigate(route = Route.Login.name)
+        // Loguit
     }
 
     private fun validateImageCollection() {

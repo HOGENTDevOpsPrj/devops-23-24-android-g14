@@ -1,4 +1,4 @@
-
+package com.hogent.svkapp.data.sources.roomDataBase
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -7,15 +7,19 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.hogent.svkapp.data.sources.roomDataBase.AppDatabase
 import com.hogent.svkapp.domain.entities.CargoTicket
-import com.hogent.svkapp.network.LadingApi
+import com.hogent.svkapp.network.CargoTicketApiService
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
-class NetworkUtils(context: Context) {
+class NetworkUtils(
+    private val cargoTicketApiService: CargoTicketApiService,
+    context: Context,
+) {
 
-    private val db = AppDatabase.getInstance(context);
-    private val dao = db?.cargoTicketDAO();
+    private val db = AppDatabase.getInstance(context)
+    private val dao = db?.cargoTicketDAO()
 
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -37,14 +41,14 @@ class NetworkUtils(context: Context) {
         val networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                Log.d("NetworkUtils", "Internet beschikbaar")
+                Log.d("com.hogent.svkapp.data.sources.roomDataBase.NetworkUtils", "Internet beschikbaar")
                 _isInternetAvailable.postValue(true)
-                sendUnprocessedCargoTickets();
+                sendUnprocessedCargoTickets()
             }
 
             override fun onLost(network: Network) {
                 super.onLost(network)
-                Log.d("NetworkUtils", "Internet niet beschikbaar")
+                Log.d("com.hogent.svkapp.data.sources.roomDataBase.NetworkUtils", "Internet niet beschikbaar")
                 _isInternetAvailable.postValue(false)
             }
         }
@@ -59,16 +63,19 @@ class NetworkUtils(context: Context) {
         _isInternetAvailable.postValue(isConnected)
     }
 
-    private fun sendUnprocessedCargoTickets(){
-        val ladingen = dao?.getAll();
+    private fun sendUnprocessedCargoTickets() {
+        val ladingen = dao?.getAll()
         ladingen?.forEach {
-            LadingApi.retrofitService.createLading(
-                CargoTicket(
-                    routeNumbers = it.routeNumbers, images = it.images,
-                    licensePlate = it.licensePlate
+            GlobalScope.launch {
+                cargoTicketApiService.postCargoTicket(
+                    CargoTicket(
+                        routeNumbers = it.routeNumbers, images = it.images,
+                        licensePlate = it.licensePlate
+                    )
+
                 )
-            );
-            dao?.delete(it);
+            }
+            dao?.delete(it)
         }
     }
 
