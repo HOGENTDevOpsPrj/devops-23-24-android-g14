@@ -31,38 +31,23 @@ import com.auth0.android.callback.Callback
  *
  * @param navController the [NavHostController] that is used to navigate to other screens.
  */
-class LoginViewModel(application: Application) : AndroidViewModel(
-    application
-) {
+class LoginViewModel() : ViewModel() {
 
     var appJustLaunched by mutableStateOf(true)
     var userIsAuthenticated by mutableStateOf(false)
 
 
     private val TAG = "LoginViewModel"
-    private lateinit var account: Auth0
-    private lateinit var context: Context
 
-    init {
-        val context = getApplication<Application>().applicationContext
-        setContext(context)
-    }
 
-    fun setContext(activityContext: Context) {
-        context = activityContext
-        account = Auth0(
-            context.getString(R.string.com_auth0_client_id),
-            context.getString(R.string.com_auth0_domain)
-        )
-    }
 
     /**
      * Called when login button is clicked.
      */
-    fun onLogin(onSuccessNavigation: () -> Unit) {
+    fun onLogin(context: Context, auth: Auth0, onSuccessNavigation: () -> Unit) {
 
         WebAuthProvider
-            .login(account)
+            .login(auth)
             .withScheme(context.getString(R.string.com_auth0_scheme))
             .start(context, object : Callback<Credentials, AuthenticationException> {
                 override fun onFailure(error: AuthenticationException) {
@@ -78,25 +63,25 @@ class LoginViewModel(application: Application) : AndroidViewModel(
 
             })
 
-//         onSuccessNavigation()
+
     }
 
-    companion object {
-
-//        private lateinit var capturedNavController: NavHostController
-//        fun setNavController(navController: NavHostController) {
-//            capturedNavController = navController
+//    companion object {
+//
+////        private lateinit var capturedNavController: NavHostController
+////        fun setNavController(navController: NavHostController) {
+////            capturedNavController = navController
+////        }
+//
+//        val Factory: Factory = viewModelFactory { /* navController: NavHostController -> */
+//            initializer {
+//                val application = (this[APPLICATION_KEY] as Application)
+////                val navController = capturedNavController
+//                LoginViewModel(application = application)
+//            }
 //        }
-
-        val Factory: Factory = viewModelFactory { /* navController: NavHostController -> */
-            initializer {
-                val application = (this[APPLICATION_KEY] as Application)
-//                val navController = capturedNavController
-                LoginViewModel(application = application)
-            }
-        }
-    }
-
+//    }
+//
 }
 
 //class LoginViewModelFactory(

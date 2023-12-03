@@ -1,6 +1,5 @@
 package com.hogent.svkapp.presentation.ui.login
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,9 +9,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavController
+import com.auth0.android.Auth0
+import com.hogent.svkapp.R
+import com.hogent.svkapp.Route
 import com.hogent.svkapp.presentation.ui.SVKLogo
 import com.hogent.svkapp.presentation.ui.theme.spacing
 import com.hogent.svkapp.presentation.viewmodels.LoginViewModel
@@ -26,7 +27,12 @@ import com.hogent.svkapp.presentation.viewmodels.LoginViewModel
  * @sample LoginScreenPreviewDark
  */
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel, onSuccessNav: () -> Unit) {
+fun LoginScreen(loginViewModel: LoginViewModel, navController: NavController) {
+    val context = LocalContext.current
+    val auth = Auth0(
+        context.getString(R.string.com_auth0_client_id),
+        context.getString(R.string.com_auth0_domain)
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -41,15 +47,20 @@ fun LoginScreen(loginViewModel: LoginViewModel, onSuccessNav: () -> Unit) {
         ) {
 
             LoginButton(
-                onClick = {loginViewModel.onLogin { onSuccessNav }}, modifier = Modifier.fillMaxWidth()
+                onClick = {
+                    loginViewModel.onLogin(context, auth = auth, onSuccessNavigation = {
+                        navController.navigate(Route.Main.name)
+                    })
+                },
+                modifier =
+                Modifier.fillMaxWidth()
             )
         }
     }
-    fun login() {
+    fun afterLogin() {
 
     }
 }
-
 
 
 //@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
