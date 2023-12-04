@@ -41,8 +41,11 @@ class RouteNumber private constructor(value: Int) {
          */
         fun create(routeNumber: String): Result<RouteNumber, List<RouteNumberError?>> {
             val result = validateStringRepresentation(routeNumber)
-
-            return Result.Failure(result)
+            return if (result.isEmpty()) {
+                Result.Success(RouteNumber(routeNumber.toInt()))
+            } else {
+                Result.Failure(result)
+            }
         }
 
         /**

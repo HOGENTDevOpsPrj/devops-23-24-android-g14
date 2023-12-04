@@ -1,6 +1,7 @@
 package com.hogent.svkapp.network
 
 import com.hogent.svkapp.domain.entities.CargoTicket
+import retrofit2.http.Body
 import retrofit2.http.POST
 
 /**
@@ -9,5 +10,5 @@ import retrofit2.http.POST
 interface CargoTicketApiService {
 
     @POST("cargo-tickets")
-    suspend fun postCargoTicket(cargoTicket: CargoTicket)
+    suspend fun postCargoTicket(@Body cargoTicket: ApiCargoTicket)
 }
