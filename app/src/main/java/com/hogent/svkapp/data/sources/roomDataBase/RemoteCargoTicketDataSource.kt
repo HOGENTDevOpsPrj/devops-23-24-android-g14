@@ -4,7 +4,6 @@ import android.content.Context
 import com.hogent.svkapp.data.sources.CargoTicketDataSource
 import com.hogent.svkapp.domain.entities.CargoTicket
 import com.hogent.svkapp.network.CargoTicketApiService
-import com.hogent.svkapp.network.CargoTicketConverter
 import com.hogent.svkapp.network.CargoTicketConverter.Companion.convertToApiCargoTicket
 import com.hogent.svkapp.data.sources.roomDataBase.DbCargoTicket as DataCargoTicket
 
