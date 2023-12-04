@@ -11,7 +11,7 @@ interface CargoTicketDataSource {
      *
      * @param cargoTicket the [CargoTicket] to add.
      */
-    fun addCargoTicket(cargoTicket: CargoTicket)
+    suspend fun addCargoTicket(cargoTicket: CargoTicket)
 
     /**
      * Gets all [CargoTicket]s from the data source.

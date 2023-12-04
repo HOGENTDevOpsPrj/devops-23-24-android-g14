@@ -8,7 +8,7 @@ import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 
-class LocalCargoTicketDataSourceTest {
+class LocalDbCargoTicketDataSourceTest {
 
     private lateinit var logger: Logger
     private lateinit var cargoTicket1: CargoTicket

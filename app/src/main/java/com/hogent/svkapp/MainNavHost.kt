@@ -1,12 +1,12 @@
 package com.hogent.svkapp
 
-import android.app.Application
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -48,7 +48,10 @@ fun MainNavHost(
             LoginScreen(viewModel, navController)
         }
         composable(route = Route.Main.name) {
-            MainScreen(mainScreenViewModel = viewModel, navController)
+            MainScreen(
+                mainScreenViewModel = viewModel(factory = MainScreenViewModel.Factory),
+                goToLogin = { navController.navigate(Route.Login.name) }
+            )
         }
     }
 }

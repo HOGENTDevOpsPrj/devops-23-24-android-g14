@@ -3,13 +3,24 @@ package com.hogent.svkapp.data.repositories
 import com.hogent.svkapp.data.sources.CargoTicketDataSource
 import com.hogent.svkapp.data.sources.LocalCargoTicketDataSource
 import com.hogent.svkapp.domain.entities.CargoTicket
+import com.hogent.svkapp.network.CargoTicketApiService
+import kotlin.math.log
+import com.hogent.svkapp.network.CargoTicketConverter.Companion.convertToApiCargoTicket
+
+
+interface CargoTicketRepository {
+    suspend fun addCargoTicket(cargoTicket: CargoTicket)
+}
 
 /**
  * A repository for [CargoTicket]s.
  *
  * @property cargoTicketDataSource the [CargoTicketDataSource] that is used to store the [CargoTicket]s.
  */
-class CargoTicketRepository(private val cargoTicketDataSource: CargoTicketDataSource = LocalCargoTicketDataSource()) {
+class LocalCargoTicketRepository(
+    private val cargoTicketDataSource: CargoTicketDataSource = LocalCargoTicketDataSource
+        ()
+) : CargoTicketRepository {
     /**
      * Adds a [CargoTicket] to the repository.
      *
@@ -17,6 +28,20 @@ class CargoTicketRepository(private val cargoTicketDataSource: CargoTicketDataSo
      */
 
     // TODO: Make suspend function move to coroutine
-    fun addCargoTicket(cargoTicket: CargoTicket): Unit =
+    override suspend fun addCargoTicket(cargoTicket: CargoTicket): Unit =
         cargoTicketDataSource.addCargoTicket(cargoTicket)
+}
+
+class ApiCargoTicketRepository(
+    private val cargoTicketApiService: CargoTicketApiService
+) : CargoTicketRepository {
+    /**
+     * Adds a [CargoTicket] to the repository.
+     *
+     * @param cargoTicket the [CargoTicket] to add.
+     */
+    override suspend fun addCargoTicket(cargoTicket: CargoTicket) {
+        val apiCargoTicket = convertToApiCargoTicket(cargoTicket)
+        cargoTicketApiService.postCargoTicket(apiCargoTicket)
+    }
 }

@@ -10,11 +10,11 @@ import androidx.room.Query
 interface CargoTicketDAO {
 
     @Query("SELECT * FROM cargoTicket")
-    fun getAll(): List<CargoTicket>
+    fun getAll(): List<DbCargoTicket>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(cargoTicket: CargoTicket)
+    fun insert(dbCargoTicket: DbCargoTicket)
 
     @Delete
-    fun delete(cargoTicket: CargoTicket)
+    fun delete(dbCargoTicket: DbCargoTicket)
 }

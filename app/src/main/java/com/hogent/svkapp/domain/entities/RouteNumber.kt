@@ -1,5 +1,7 @@
 package com.hogent.svkapp.domain.entities
 
+import android.util.Log
+
 /**
  * An error that can occur when creating a [RouteNumber].
  */
@@ -41,8 +43,11 @@ class RouteNumber private constructor(value: Int) {
          */
         fun create(routeNumber: String): Result<RouteNumber, List<RouteNumberError?>> {
             val result = validateStringRepresentation(routeNumber)
-
-            return Result.Failure(result)
+            return if (result.isEmpty()) {
+                Result.Success(RouteNumber(routeNumber.toInt()))
+            } else {
+                Result.Failure(result)
+            }
         }
 
         /**

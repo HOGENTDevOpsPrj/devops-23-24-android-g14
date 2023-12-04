@@ -1,5 +1,6 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,6 +16,7 @@ import androidx.navigation.NavController
 import com.auth0.android.Auth0
 import com.hogent.svkapp.R
 import com.hogent.svkapp.Route
+import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
@@ -28,7 +30,10 @@ import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel(), navController: NavController) {
+fun MainScreen(
+    mainScreenViewModel: MainScreenViewModel = viewModel(factory = MainScreenViewModel.Factory),
+    goToLogin: () -> Unit,
+) {
     val mainScreenState by mainScreenViewModel.uiState.collectAsState()
 
     val context = LocalContext.current
@@ -43,7 +48,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel(), navContro
     }, topBar = {
         MainTopAppBar(onLogout = {
             mainScreenViewModel.onLogout(context, auth = auth, onLogoutNavigation = {
-                navController.navigate(Route.Login.name)
+                goToLogin()
             })
         }, user)
     }) { innerPadding ->

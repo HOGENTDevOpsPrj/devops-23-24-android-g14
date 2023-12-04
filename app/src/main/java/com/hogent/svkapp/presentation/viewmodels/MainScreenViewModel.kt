@@ -14,6 +14,11 @@ import com.auth0.android.callback.Callback
 import com.auth0.android.result.Credentials
 import com.hogent.svkapp.R
 import com.hogent.svkapp.Route
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.hogent.svkapp.SVKApplication
 import com.hogent.svkapp.data.repositories.CargoTicketRepository
 import com.hogent.svkapp.domain.entities.CargoTicket
 import com.hogent.svkapp.domain.entities.Image
@@ -27,6 +32,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 /**
@@ -37,7 +43,7 @@ import java.util.Locale
  *
  */
 class MainScreenViewModel(
-    private val cargoTicketRepository: CargoTicketRepository = CargoTicketRepository(),
+    private val cargoTicketRepository: CargoTicketRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainScreenState())
 
@@ -86,6 +92,21 @@ class MainScreenViewModel(
         }
     }
 
+    companion object {
+        /**
+         * The [ViewModelProvider.Factory] of the [MainScreenViewModel].
+         */
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as SVKApplication)
+                val cargoTicketRepository = application.container.cargoTicketRepository
+                MainScreenViewModel(
+                    cargoTicketRepository = cargoTicketRepository,
+                )
+            }
+        }
+    }
+
     /**
      * Adds an image to the image collection.
      *
@@ -125,7 +146,7 @@ class MainScreenViewModel(
 
         when (creationResult) {
             is Result.Success -> {
-                cargoTicketRepository.addCargoTicket(creationResult.value)
+                viewModelScope.launch { cargoTicketRepository.addCargoTicket(creationResult.value) }
                 resetForm()
                 toggleDialog()
             }

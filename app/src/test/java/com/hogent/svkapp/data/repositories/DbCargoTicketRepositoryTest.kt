@@ -7,7 +7,7 @@ import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 
-class CargoTicketRepositoryTest {
+class DbCargoTicketRepositoryTest {
     private lateinit var cargoTicket: CargoTicket
     private lateinit var cargoTicketDataSource: CargoTicketDataSource
     private lateinit var cargoTicketRepository: CargoTicketRepository
