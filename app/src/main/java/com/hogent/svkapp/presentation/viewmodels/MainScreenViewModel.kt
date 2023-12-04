@@ -140,6 +140,8 @@ class MainScreenViewModel(
                     )
                 }
             }
+
+            else -> {}
         }
     }
 

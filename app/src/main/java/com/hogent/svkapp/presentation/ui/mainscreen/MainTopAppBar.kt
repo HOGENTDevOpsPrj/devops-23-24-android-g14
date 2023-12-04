@@ -59,7 +59,7 @@ fun MainTopAppBar(onLogout: () -> Unit, user:User) {
 
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
 
-                DropdownUserInfo(username = user.email)
+                DropdownUserInfo(username = user.name)
 
                 DropdownMenuItem(leadingIcon = {
                     Icon(
