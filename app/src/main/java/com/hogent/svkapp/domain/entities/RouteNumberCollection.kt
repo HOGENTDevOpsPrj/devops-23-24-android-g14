@@ -1,5 +1,7 @@
 package com.hogent.svkapp.domain.entities
 
+import androidx.room.TypeConverter
+
 /**
  * An error that can occur when validating a [RouteNumber].
  */
@@ -52,5 +54,22 @@ class RouteNumberCollection private constructor(value: List<RouteNumber>) {
                 Result.Success(routeNumberResults)
             }
         }
+    }
+}
+
+class RouteNumberCollectionConverter {
+    @TypeConverter
+    fun storedStringToRouteNumberCollection(value: String): RouteNumberCollection {
+        val routeNumbers: List<RouteNumber> = value
+            .split(";")
+            .map {
+                RouteNumber.create(it) as Result.Success
+            }.map { it.value }
+        return (RouteNumberCollection.create(routeNumbers) as Result.Success).value
+    }
+
+    @TypeConverter
+    fun routeNumberCollectionToStoredString(routeNumberCollection: RouteNumberCollection): String {
+        return routeNumberCollection.value.joinToString(";") { it.value.toString() }
     }
 }

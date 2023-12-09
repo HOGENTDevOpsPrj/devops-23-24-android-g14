@@ -1,5 +1,7 @@
 package com.hogent.svkapp.domain.entities
 
+import androidx.room.TypeConverter
+
 /**
  * An error that can occur when validating a [LicensePlate].
  */
@@ -62,5 +64,17 @@ class LicensePlate private constructor(value: String) {
         private fun clean(plate: String): String {
             return plate.trim().filter { !it.isWhitespace() }.uppercase()
         }
+    }
+}
+
+class LicensePlateConverter {
+    @TypeConverter
+    fun storedStringToLicensePlate(value: String): LicensePlate {
+        return (LicensePlate.create(value) as Result.Success).value
+    }
+
+    @TypeConverter
+    fun licensePlateToStoredString(licensePlate: LicensePlate): String {
+        return licensePlate.value
     }
 }

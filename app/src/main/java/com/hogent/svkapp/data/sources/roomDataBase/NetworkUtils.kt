@@ -8,25 +8,32 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hogent.svkapp.domain.entities.CargoTicket
-import com.hogent.svkapp.network.ApiCargoTicket
 import com.hogent.svkapp.network.CargoTicketApiService
 import com.hogent.svkapp.network.CargoTicketConverter.Companion.convertToApiCargoTicket
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
+/**
+ * A utility class to check the internet connection and send unprocessed [CargoTicket]s to the
+ * roomDataBase.
+ */
 class NetworkUtils(
     private val cargoTicketApiService: CargoTicketApiService,
     context: Context,
 ) {
 
     private val db = AppDatabase.getInstance(context)
-    private val dao = db?.cargoTicketDAO()
+    private val dao = db?.cargoTicketDao()
 
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     private val _isInternetAvailable = MutableLiveData<Boolean>()
+
+    /**
+     * A [LiveData] that indicates whether the internet is available.
+     */
     val isInternetAvailable: LiveData<Boolean>
         get() = _isInternetAvailable
 

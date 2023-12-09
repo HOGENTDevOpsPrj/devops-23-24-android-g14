@@ -24,7 +24,11 @@ import com.hogent.svkapp.presentation.ui.theme.spacing
  * @sample ImageCardPreviewDark
  */
 @Composable
-fun ImageCard(image: Image, onDelete: () -> Unit, modifier: Modifier = Modifier) {
+fun ImageCard(
+    image: Image,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val isAlertDialogOpen = remember { mutableStateOf(false) }
 
     Box(modifier = modifier) {

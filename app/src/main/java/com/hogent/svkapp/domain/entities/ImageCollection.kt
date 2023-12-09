@@ -1,5 +1,12 @@
 package com.hogent.svkapp.domain.entities
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64
+import androidx.room.TypeConverter
+import java.io.ByteArrayOutputStream
+
+
 /**
  * An error that can occur when validating an [ImageCollection].
  */
@@ -52,5 +59,33 @@ class ImageCollection private constructor(value: List<Image>) {
                 null
             }
         }
+    }
+}
+
+class ImageCollectionConverter() {
+    @TypeConverter
+    fun fromImageCollection(imageCollection: ImageCollection): String {
+        return imageCollection.value.joinToString(";") { (id, bitmap) ->
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
+            val byteArray = byteArrayOutputStream.toByteArray()
+            val encoded: String = Base64.encodeToString(byteArray, Base64.DEFAULT)
+            "$id,$encoded"
+        }
+    }
+
+    @TypeConverter
+    fun toImageCollection(imageCollectionString: String): ImageCollection {
+        return (ImageCollection.create(
+            imageCollectionString.split(";").map { imageString ->
+                val imageStringParts = imageString.split(",")
+                val decodedString: ByteArray = Base64.decode(imageStringParts[1], Base64.DEFAULT)
+                val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+                Image(
+                    id = imageStringParts[0],
+                    bitmap = decodedByte
+                )
+            }
+        ) as Result.Success).value
     }
 }

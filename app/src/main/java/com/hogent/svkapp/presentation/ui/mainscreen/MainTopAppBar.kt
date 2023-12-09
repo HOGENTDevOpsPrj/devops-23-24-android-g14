@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -38,9 +40,16 @@ import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
  */
 @ExperimentalMaterial3Api
 @Composable
-fun MainTopAppBar(onLogout: () -> Unit, user:User) {
+fun MainTopAppBar(
+    modifier: Modifier = Modifier,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
+    onLogout: () -> Unit,
+    navigateToCargoTickets: () -> Unit,
+    user: User,
+) {
     TopAppBar(
-        modifier = Modifier.padding(start = 0.dp),
+        modifier = modifier.padding(start = 0.dp),
         windowInsets = WindowInsets(0),
         title = {
             SVKLogo(Modifier.height(64.dp))
@@ -61,6 +70,17 @@ fun MainTopAppBar(onLogout: () -> Unit, user:User) {
 
                 DropdownUserInfo(username = user.name)
 
+                DropdownMenuItem(
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.List,
+                            contentDescription = stringResource(R.string.user_icon_content_description)
+                        )
+                    },
+                    text = { Text(text = "Cargo Tickets") },
+                    onClick = navigateToCargoTickets,
+                )
+
                 DropdownMenuItem(leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.ExitToApp,
@@ -69,6 +89,16 @@ fun MainTopAppBar(onLogout: () -> Unit, user:User) {
                 }, text = {
                     Text(text = stringResource(R.string.logout_button_text))
                 }, onClick = onLogout)
+            }
+        },
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "navigate back",
+                    )
+                }
             }
         },
     )
@@ -89,7 +119,13 @@ private fun DropdownUserInfo(username: String) {
 @Composable
 private fun MainTopAppBarPreview() {
     TemplateApplicationTheme {
-        MainTopAppBar(onLogout = {}, user = User())
+        MainTopAppBar(
+            onLogout = {},
+            user = User(),
+            navigateToCargoTickets = {},
+            canNavigateBack = false,
+            navigateUp = {},
+        )
     }
 }
 

@@ -1,6 +1,5 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
-import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,7 +15,6 @@ import androidx.navigation.NavController
 import com.auth0.android.Auth0
 import com.hogent.svkapp.R
 import com.hogent.svkapp.Route
-import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
@@ -32,9 +30,11 @@ import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 @Composable
 fun MainScreen(
     mainScreenViewModel: MainScreenViewModel = viewModel(factory = MainScreenViewModel.Factory),
-    goToLogin: () -> Unit,
+    navController: NavController,
 ) {
     val mainScreenState by mainScreenViewModel.uiState.collectAsState()
+
+    val canNavigateBack = navController.previousBackStackEntry?.destination?.route != Route.Login.name
 
     val context = LocalContext.current
     val auth = Auth0(
@@ -46,11 +46,17 @@ fun MainScreen(
     Scaffold(floatingActionButton = {
         SendFloatingActionButton(onSend = mainScreenViewModel::onSend)
     }, topBar = {
-        MainTopAppBar(onLogout = {
-            mainScreenViewModel.onLogout(context, auth = auth, onLogoutNavigation = {
-                goToLogin()
-            })
-        }, user)
+        MainTopAppBar(
+            onLogout = {
+                mainScreenViewModel.onLogout(context, auth = auth, onLogoutNavigation = {
+                    navController.navigate(Route.Login.name)
+                })
+            },
+            navigateToCargoTickets = { navController.navigate(Route.CargoTickets.name) },
+            canNavigateBack = canNavigateBack,
+            navigateUp = { navController.navigateUp() },
+            user = user,
+        )
     }) { innerPadding ->
         Form(
             modifier = Modifier

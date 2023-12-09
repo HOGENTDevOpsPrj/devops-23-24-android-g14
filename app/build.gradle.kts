@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
     kotlin("plugin.serialization")
 }
 
@@ -38,6 +39,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+
     }
     buildFeatures {
         compose = true
@@ -80,9 +82,15 @@ dependencies {
     implementation("androidx.navigation:navigation-runtime-ktx:$composeNavigationVersion")
     implementation("androidx.navigation:navigation-compose:$composeNavigationVersion")
 
+    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
+
     implementation("com.auth0.android:auth0:+")
     implementation("com.auth0.android:jwtdecode:+")
     implementation("androidx.room:room-runtime:$room_version")
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$room_version")
+    // To use Kotlin Symbol Processing (KSP)
+    ksp("androidx.room:room-compiler:$room_version")
     implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
     implementation("com.squareup.retrofit2:converter-scalars:$retrofit_version")
 

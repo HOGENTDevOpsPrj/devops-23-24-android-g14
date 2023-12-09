@@ -2,17 +2,12 @@ package com.hogent.svkapp
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.viewModelFactory
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.hogent.svkapp.presentation.ui.cargoTicketScreen.CargoTicketScreen
 import com.hogent.svkapp.presentation.ui.login.LoginScreen
 import com.hogent.svkapp.presentation.ui.mainscreen.MainScreen
-import com.hogent.svkapp.presentation.viewmodels.LoginViewModel
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
 /**
@@ -28,6 +23,11 @@ enum class Route {
      * The main screen.
      */
     Main,
+
+    /**
+     * The cargo tickets screen.
+     */
+    CargoTickets,
 }
 
 /**
@@ -49,8 +49,12 @@ fun MainNavHost(
         }
         composable(route = Route.Main.name) {
             MainScreen(
-                mainScreenViewModel = viewModel(factory = MainScreenViewModel.Factory),
-                goToLogin = { navController.navigate(Route.Login.name) }
+                navController = navController,
+            )
+        }
+        composable(route = Route.CargoTickets.name) {
+            CargoTicketScreen(
+                navController = navController,
             )
         }
     }
