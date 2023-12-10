@@ -1,7 +1,6 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,7 +30,6 @@ import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
  * @param onValueChange The callback to be invoked when the value of the text field changes.
  * @param errors The error messages to be displayed below the text field.
  * @param keyboardType The type of keyboard to be used for the text field.
- * @param trailingIcon The trailing icon to be displayed in the text field.
  *
  * @sample TextFieldPreview
  * @sample TextFieldPreviewDark
@@ -49,9 +47,9 @@ fun CustomTextField(
     errors: List<String?>? = emptyList(),
     keyboardType: KeyboardType,
     removable: Boolean = true,
-    trailingIcon: @Composable (() -> Unit)? = null
 ) {
-    TextField(value = value,
+    TextField(
+        value = value,
         onValueChange = onValueChange,
         label = { Text(text = label) },
         supportingText = {

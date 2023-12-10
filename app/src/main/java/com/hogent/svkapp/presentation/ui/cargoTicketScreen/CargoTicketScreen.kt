@@ -64,6 +64,7 @@ fun CargoTicketScreen(
             user = user,
             canNavigateBack = canNavigateBack,
             navigateUp = { navController.navigateUp() },
+            navigateToQrScanner = { navController.navigate(Route.QrScanner.name) },
         )
     }) { innerPadding ->
         CargoTicketList(

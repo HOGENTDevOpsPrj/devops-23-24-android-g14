@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import com.hogent.svkapp.presentation.ui.cargoTicketScreen.CargoTicketScreen
 import com.hogent.svkapp.presentation.ui.login.LoginScreen
 import com.hogent.svkapp.presentation.ui.mainscreen.MainScreen
+import com.hogent.svkapp.presentation.ui.qrScanner.QrPreviewView
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
 /**
@@ -28,6 +29,11 @@ enum class Route {
      * The cargo tickets screen.
      */
     CargoTickets,
+
+    /**
+     * The QR scanner screen.
+     */
+    QrScanner,
 }
 
 /**
@@ -54,6 +60,11 @@ fun MainNavHost(
         }
         composable(route = Route.CargoTickets.name) {
             CargoTicketScreen(
+                navController = navController,
+            )
+        }
+        composable(route = Route.QrScanner.name) {
+            QrPreviewView(
                 navController = navController,
             )
         }

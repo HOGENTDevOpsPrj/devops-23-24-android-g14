@@ -47,7 +47,7 @@ class MainScreenViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainScreenState())
 
-    /** 
+    /**
      * The state of the screen as read-only state flow.
      */
     val uiState: StateFlow<MainScreenState> = _uiState.asStateFlow()
@@ -161,8 +161,6 @@ class MainScreenViewModel(
                     )
                 }
             }
-
-            else -> {}
         }
     }
 
@@ -185,6 +183,16 @@ class MainScreenViewModel(
                     }
             )
         }
+    }
+
+    fun setRouteNumbers(routeNumbers: List<String>) {
+        _uiState.update { state ->
+            state.copy(
+                routeNumberInputFieldValues = routeNumbers,
+                routeNumberInputFieldValidationErrors = routeNumbers.map { RouteNumber.validateStringRepresentation(it) }
+            )
+        }
+        Log.d("RouteNumbers in state after set", uiState.value.routeNumberInputFieldValues.toString())
     }
 
     /**

@@ -56,6 +56,7 @@ fun MainScreen(
             canNavigateBack = canNavigateBack,
             navigateUp = { navController.navigateUp() },
             user = user,
+            navigateToQrScanner = { navController.navigate(Route.QrScanner.name) },
         )
     }) { innerPadding ->
         Form(
