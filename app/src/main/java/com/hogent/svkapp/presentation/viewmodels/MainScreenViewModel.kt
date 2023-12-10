@@ -47,7 +47,7 @@ class MainScreenViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainScreenState())
 
-    /**
+    /** 
      * The state of the screen as read-only state flow.
      */
     val uiState: StateFlow<MainScreenState> = _uiState.asStateFlow()
