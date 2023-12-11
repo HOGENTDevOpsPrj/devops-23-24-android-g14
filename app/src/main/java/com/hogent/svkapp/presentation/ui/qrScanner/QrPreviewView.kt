@@ -22,6 +22,7 @@ import java.util.concurrent.Executors
 @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
 @Composable
 fun QrPreviewView(
+    index: Int,
     navController: NavController,
     mainScreenViewModel: MainScreenViewModel = viewModel(factory = MainScreenViewModel.Factory),
 ) {
@@ -50,7 +51,8 @@ fun QrPreviewView(
                             cameraExecutor, BarcodeAnalyser(
                                 context = context,
                                 navigateToForm = { navController.navigate(Route.Main.name) },
-                                setRouteNumbers = mainScreenViewModel::setRouteNumbers
+                                onRouteNumberChange = mainScreenViewModel::onRouteNumberChange,
+                                index = index,
                             )
                         )
                     }

@@ -28,7 +28,10 @@ import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
  * @sample LoginScreenPreviewDark
  */
 @Composable
-fun LoginScreen(viewModel: MainScreenViewModel, navController: NavController) {
+fun LoginScreen(
+    viewModel: MainScreenViewModel,
+    navController: NavController
+) {
     val context = LocalContext.current
     val auth = Auth0(
         context.getString(R.string.com_auth0_client_id),

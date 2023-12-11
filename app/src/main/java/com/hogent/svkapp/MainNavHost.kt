@@ -31,7 +31,7 @@ enum class Route {
     CargoTickets,
 
     /**
-     * The QR scanner screen.
+     * The qr scanner screen.
      */
     QrScanner,
 }
@@ -51,21 +51,28 @@ fun MainNavHost(
         navController = navController, startDestination = Route.Login.name
     ) {
         composable(route = Route.Login.name) {
-            LoginScreen(viewModel, navController)
+            LoginScreen(
+                viewModel,
+                navController
+            )
         }
         composable(route = Route.Main.name) {
             MainScreen(
+                mainScreenViewModel = viewModel,
                 navController = navController,
             )
         }
         composable(route = Route.CargoTickets.name) {
             CargoTicketScreen(
+                mainScreenViewModel = viewModel,
                 navController = navController,
             )
         }
-        composable(route = Route.QrScanner.name) {
+        composable("${Route.QrScanner.name}/{index}") {
             QrPreviewView(
+                mainScreenViewModel = viewModel,
                 navController = navController,
+                index = it.arguments?.getString("index")?.toInt() ?: 0,
             )
         }
     }

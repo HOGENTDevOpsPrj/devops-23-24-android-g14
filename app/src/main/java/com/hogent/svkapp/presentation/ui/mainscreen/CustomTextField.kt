@@ -13,12 +13,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.R
+import com.hogent.svkapp.presentation.ui.qrScanner.QrScanButton
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 
 /**
@@ -45,8 +45,10 @@ fun CustomTextField(
     onValueChange: (String) -> Unit,
     onDelete: () -> Unit,
     errors: List<String?>? = emptyList(),
+    navigateToQrScanner: (Int) -> Unit,
     keyboardType: KeyboardType,
     removable: Boolean = true,
+    scannable: Boolean = false,
 ) {
     TextField(
         value = value,
@@ -66,13 +68,20 @@ fun CustomTextField(
         singleLine = true,
         modifier = modifier,
         trailingIcon = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row {
                 if (!errors.isNullOrEmpty()) {
-                    Icon(
-                        Icons.Filled.Warning,
-                        contentDescription = stringResource(R.string.error_icon_content_description)
+                    IconButton(
+                        onClick = {},
+                    ) {
+                        Icon(
+                            Icons.Filled.Warning,
+                            contentDescription = stringResource(R.string.error_icon_content_description)
+                        )
+                    }
+                }
+                if (scannable) {
+                    QrScanButton(
+                        navigateToQrScanner = { navigateToQrScanner(index) },
                     )
                 }
                 if (removable) {
@@ -110,6 +119,8 @@ private fun TextFieldPreviewBase(
             errors = errors,
             keyboardType = keyboardType,
             onDelete = {},
+            scannable = true,
+            navigateToQrScanner = {},
         )
     }
 }

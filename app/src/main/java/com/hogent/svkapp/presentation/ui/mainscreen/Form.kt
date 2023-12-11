@@ -30,7 +30,8 @@ import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 @Composable
 fun Form(
     modifier: Modifier = Modifier,
-    mainScreenViewModel: MainScreenViewModel
+    mainScreenViewModel: MainScreenViewModel,
+    navigateToQrScanner: (Int) -> Unit,
 ) {
     val mainScreenState by mainScreenViewModel.uiState.collectAsState()
 
@@ -57,6 +58,8 @@ fun Form(
                     modifier = Modifier.fillMaxWidth(),
                     onDelete = { mainScreenViewModel.removeRouteNumber(index) },
                     removable = index != 0,
+                    scannable = true,
+                    navigateToQrScanner = navigateToQrScanner,
                 )
             }
         }
@@ -90,6 +93,8 @@ fun Form(
                 modifier = Modifier.fillMaxWidth(),
                 removable = false,
                 onDelete = {},
+                scannable = false,
+                navigateToQrScanner = {},
             )
         }
         item {

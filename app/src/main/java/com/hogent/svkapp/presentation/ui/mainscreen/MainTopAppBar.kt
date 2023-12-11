@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.List
@@ -47,7 +46,6 @@ fun MainTopAppBar(
     navigateUp: () -> Unit,
     onLogout: () -> Unit,
     navigateToCargoTickets: () -> Unit,
-    navigateToQrScanner: () -> Unit,
     user: User,
 ) {
     TopAppBar(
@@ -81,17 +79,6 @@ fun MainTopAppBar(
                     },
                     text = { Text(text = "Cargo Tickets") },
                     onClick = navigateToCargoTickets,
-                )
-
-                DropdownMenuItem(
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.AddCircle,
-                            contentDescription = stringResource(R.string.user_icon_content_description)
-                        )
-                    },
-                    text = { Text(text = "Scan QR code") },
-                    onClick = navigateToQrScanner,
                 )
 
                 DropdownMenuItem(leadingIcon = {
@@ -138,7 +125,6 @@ private fun MainTopAppBarPreview() {
             navigateToCargoTickets = {},
             canNavigateBack = false,
             navigateUp = {},
-            navigateToQrScanner = {},
         )
     }
 }

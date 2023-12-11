@@ -12,7 +12,8 @@ import com.google.mlkit.vision.common.InputImage
 
 @ExperimentalGetImage
 class BarcodeAnalyser(
-    val setRouteNumbers: (List<String>) -> Unit,
+    val index: Int,
+    val onRouteNumberChange: (Int, String) -> Unit,
     val context: Context,
     val navigateToForm: () -> Unit,
 ) : ImageAnalysis.Analyzer {
@@ -29,9 +30,9 @@ class BarcodeAnalyser(
             scanner.process(image)
                 .addOnSuccessListener { barcodes ->
                     if (barcodes.size > 0) {
-                        val routeNummers = barcodes[0].rawValue?.split(",") ?: emptyList()
-                        Log.d("RouteNummers", routeNummers.toString())
-                        setRouteNumbers(routeNummers)
+                        val barcode = barcodes[0].rawValue
+                        Log.d("Barcode", "Barcode found: $barcode")
+                        onRouteNumberChange(index, barcode ?: "")
                         navigateToForm()
                     }
                 }
