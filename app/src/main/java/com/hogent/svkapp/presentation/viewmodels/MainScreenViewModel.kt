@@ -6,14 +6,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavHostController
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.callback.Callback
 import com.auth0.android.result.Credentials
 import com.hogent.svkapp.R
-import com.hogent.svkapp.Route
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
@@ -39,7 +37,6 @@ import java.util.Locale
  * The [ViewModel] of the main screen.
  *
  * @param cargoTicketRepository the [CargoTicketRepository] that is used to add cargo tickets.
- * @param navController the [NavHostController] that is used to navigate to other screens.
  *
  */
 class MainScreenViewModel(
@@ -54,8 +51,8 @@ class MainScreenViewModel(
 
     private val TAG = "MainScreenViewModel"
 
-    var userIsAuthenticated by mutableStateOf(false)
-    var user by mutableStateOf(User())
+    var userIsAuthenticated: Boolean by mutableStateOf(false)
+    var user: User by mutableStateOf(User())
 
     /**
      * Called when login button is clicked.
