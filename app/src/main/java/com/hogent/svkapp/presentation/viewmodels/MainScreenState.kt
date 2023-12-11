@@ -5,6 +5,7 @@ import com.hogent.svkapp.domain.entities.ImageCollectionError
 import com.hogent.svkapp.domain.entities.LicensePlateError
 import com.hogent.svkapp.domain.entities.RouteNumberCollectionError
 import com.hogent.svkapp.domain.entities.RouteNumberError
+import com.hogent.svkapp.domain.entities.User
 
 /**
  * The state of the main screen.
@@ -26,4 +27,5 @@ data class MainScreenState(
     val licensePlateInputFieldValidationError: LicensePlateError? = null,
     val imageCollectionError: ImageCollectionError? = null,
     val showPopup: Boolean = false,
+    val user: User = User()
 )

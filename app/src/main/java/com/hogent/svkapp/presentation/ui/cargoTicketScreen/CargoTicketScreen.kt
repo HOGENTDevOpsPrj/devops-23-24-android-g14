@@ -49,7 +49,6 @@ fun CargoTicketScreen(
         context.getString(R.string.com_auth0_client_id),
         context.getString(R.string.com_auth0_domain)
     )
-    val user = mainScreenViewModel.user
 
     Scaffold(topBar = {
         MainTopAppBar(
@@ -61,7 +60,7 @@ fun CargoTicketScreen(
                 })
             },
             navigateToCargoTickets = { navController.navigate(Route.CargoTickets.name) },
-            user = user,
+            user = mainScreenViewModel.user,
             canNavigateBack = canNavigateBack,
             navigateUp = { navController.navigateUp() },
         )

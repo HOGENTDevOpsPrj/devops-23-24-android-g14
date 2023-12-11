@@ -1,5 +1,6 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,7 +30,7 @@ import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    mainScreenViewModel: MainScreenViewModel = viewModel(factory = MainScreenViewModel.Factory),
+    mainScreenViewModel: MainScreenViewModel/* = viewModel(factory = MainScreenViewModel.Factory ) */,
     navController: NavController,
 ) {
     val mainScreenState by mainScreenViewModel.uiState.collectAsState()
@@ -42,6 +43,7 @@ fun MainScreen(
         context.getString(R.string.com_auth0_domain)
     )
     val user = mainScreenViewModel.user
+    Log.d("User ID: ", user.id)
 
     Scaffold(floatingActionButton = {
         SendFloatingActionButton(onSend = mainScreenViewModel::onSend)
@@ -55,7 +57,7 @@ fun MainScreen(
             navigateToCargoTickets = { navController.navigate(Route.CargoTickets.name) },
             canNavigateBack = canNavigateBack,
             navigateUp = { navController.navigateUp() },
-            user = user,
+            user = mainScreenState.user,
         )
     }) { innerPadding ->
         Form(

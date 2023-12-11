@@ -16,13 +16,10 @@ import com.hogent.svkapp.R
 import com.hogent.svkapp.Route
 import com.hogent.svkapp.presentation.ui.SVKLogo
 import com.hogent.svkapp.presentation.ui.theme.spacing
-import com.hogent.svkapp.presentation.viewmodels.LoginViewModel
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
 /**
  * The login screen of the app.
- *
- * @param loginViewModel the [LoginViewModel] that contains the state of the screen.
  *
  * @sample LoginScreenPreview
  * @sample LoginScreenPreviewDark

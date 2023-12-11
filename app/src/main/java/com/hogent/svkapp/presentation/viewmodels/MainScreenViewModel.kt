@@ -54,8 +54,7 @@ class MainScreenViewModel(
 
     private val TAG = "MainScreenViewModel"
 
-    var userIsAuthenticated by mutableStateOf(false)
-    var user by mutableStateOf(User())
+    var user = _uiState.value.user
 
     /**
      * Called when login button is clicked.
@@ -73,8 +72,7 @@ class MainScreenViewModel(
                 override fun onSuccess(result: Credentials) {
                     val idToken = result.idToken
                     Log.d(TAG, "ID Token: $idToken")
-                    user = User(idToken)
-                    userIsAuthenticated = true
+                    _uiState.update { state -> state.copy(user = User(idToken)) }
                     onSuccessNavigation()
                 }
 
@@ -137,6 +135,8 @@ class MainScreenViewModel(
      */
     fun onSend() {
         Log.d("State on send", uiState.value.toString())
+
+
 
         val creationResult = CargoTicket.create(
             routeNumbers = _uiState.value.routeNumberInputFieldValues,
@@ -259,8 +259,7 @@ class MainScreenViewModel(
 
                 override fun onSuccess(result: Void?) {
                     // The user successfully logged out.
-                    userIsAuthenticated = false
-                    user = User()
+                    _uiState.update { state -> state.copy(user = User()) }
                     onLogoutNavigation()
                 }
 
