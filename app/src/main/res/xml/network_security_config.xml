@@ -3,5 +3,6 @@
     <domain-config cleartextTrafficPermitted="false">
         <domain includeSubdomains="true">localhost</domain>
         <domain includeSubdomains="true">127.0.0.1</domain>
+        <domain includeSubdomains="true">svkstorageg14.blob.core.windows.net</domain>
     </domain-config>
 </network-security-config>
