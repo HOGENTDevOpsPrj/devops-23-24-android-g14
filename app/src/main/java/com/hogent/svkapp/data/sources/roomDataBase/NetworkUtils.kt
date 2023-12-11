@@ -81,7 +81,8 @@ class NetworkUtils(
                         CargoTicket(
                             routeNumbers = it.routeNumbers, images = it.images,
                             licensePlate = it.licensePlate
-                        )
+                        ),
+                        user
                     )
                 )
             }

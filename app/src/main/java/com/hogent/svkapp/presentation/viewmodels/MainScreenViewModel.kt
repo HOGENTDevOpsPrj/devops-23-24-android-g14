@@ -2,9 +2,6 @@ package com.hogent.svkapp.presentation.viewmodels
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.auth0.android.Auth0
@@ -13,7 +10,6 @@ import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.callback.Callback
 import com.auth0.android.result.Credentials
 import com.hogent.svkapp.R
-import com.hogent.svkapp.Route
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
@@ -44,6 +40,7 @@ import java.util.Locale
  */
 class MainScreenViewModel(
     private val cargoTicketRepository: CargoTicketRepository,
+    private val userRepository: UserRepository, // TODO
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainScreenState())
 
@@ -146,7 +143,7 @@ class MainScreenViewModel(
 
         when (creationResult) {
             is Result.Success -> {
-                viewModelScope.launch { cargoTicketRepository.addCargoTicket(creationResult.value) }
+                viewModelScope.launch { cargoTicketRepository.addCargoTicket(creationResult.value, user) }
                 resetForm()
                 toggleDialog()
             }

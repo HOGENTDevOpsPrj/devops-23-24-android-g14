@@ -7,13 +7,14 @@ import com.hogent.svkapp.data.sources.roomDataBase.DbCargoTicket
 import com.hogent.svkapp.data.sources.roomDataBase.NetworkUtils
 import com.hogent.svkapp.data.sources.roomDataBase.toDomainCargoTickets
 import com.hogent.svkapp.domain.entities.CargoTicket
+import com.hogent.svkapp.domain.entities.User
 import com.hogent.svkapp.network.CargoTicketApiService
 import com.hogent.svkapp.network.CargoTicketConverter.Companion.convertToApiCargoTicket
 
 
 interface CargoTicketRepository {
     fun getCargoTickets(): List<CargoTicket>
-    suspend fun addCargoTicket(cargoTicket: CargoTicket)
+    suspend fun addCargoTicket(cargoTicket: CargoTicket, user: User)
 }
 
 class RoomCargoTicketRepository(
@@ -28,9 +29,9 @@ class RoomCargoTicketRepository(
         context,
     )
 
-    override suspend fun addCargoTicket(cargoTicket: CargoTicket) {
+    override suspend fun addCargoTicket(cargoTicket: CargoTicket, user: User) {
         if (networkUtils.isInternetAvailable.value == true) {
-            cargoTicketApiService.postCargoTicket(convertToApiCargoTicket(cargoTicket))
+            cargoTicketApiService.postCargoTicket(convertToApiCargoTicket(cargoTicket, user))
         } else {
             dao?.insert(
                 DbCargoTicket(
@@ -69,7 +70,7 @@ class LocalCargoTicketRepository(
      */
 
     // TODO: Make suspend function move to coroutine
-    override suspend fun addCargoTicket(cargoTicket: CargoTicket): Unit =
+    override suspend fun addCargoTicket(cargoTicket: CargoTicket, user: User): Unit =
         cargoTicketDataSource.addCargoTicket(cargoTicket)
 }
 
@@ -89,8 +90,8 @@ class ApiCargoTicketRepository(
      *
      * @param cargoTicket the [CargoTicket] to add.
      */
-    override suspend fun addCargoTicket(cargoTicket: CargoTicket) {
-        val apiCargoTicket = convertToApiCargoTicket(cargoTicket)
+    override suspend fun addCargoTicket(cargoTicket: CargoTicket, user: User) {
+        val apiCargoTicket = convertToApiCargoTicket(cargoTicket, user)
         cargoTicketApiService.postCargoTicket(apiCargoTicket)
     }
 }

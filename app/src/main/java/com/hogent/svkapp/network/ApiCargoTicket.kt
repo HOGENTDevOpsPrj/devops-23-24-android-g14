@@ -1,7 +1,7 @@
 package com.hogent.svkapp.network
 
-import android.util.Log
 import com.hogent.svkapp.domain.entities.CargoTicket
+import com.hogent.svkapp.domain.entities.User
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -19,7 +19,7 @@ data class ApiCargoTicket (
 
 class CargoTicketConverter {
     companion object {
-        fun convertToApiCargoTicket(cargoTicket: CargoTicket): ApiCargoTicket {
+        fun convertToApiCargoTicket(cargoTicket: CargoTicket, user: User): ApiCargoTicket {
             return ApiCargoTicket(
                 loadReceiptNumber = "2346",
                 routeNumbers = cargoTicket.routeNumbers.value.map { it.value.toString() },
@@ -31,7 +31,7 @@ class CargoTicketConverter {
                                 ":12:27Z&spr=https&sig=yGX%2FMbbmyTAu4ACKxf8MK2RB1GJiR1wyPv%2FXyRz0ReE%3D"
                     fotoUploader.uploadImage(it.id, sasToken, it.bitmap)
                 },
-                freightLoaderId = "5e548527-426b-43d7-b90a-ffee739e1900",
+                freightLoaderId = user.id,
                 registrationDateTime = LocalDateTime.now(ZoneId.systemDefault()).format(
                     DateTimeFormatter.ofPattern
                         ("yyyy-MM-dd'T'HH:mm:ss")

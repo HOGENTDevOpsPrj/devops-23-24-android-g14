@@ -21,7 +21,7 @@ class DbCargoTicketRepositoryTest {
 
     @Test
     fun `addTicket should call addTicket on localDataSource`() {
-        cargoTicketRepository.addCargoTicket(cargoTicket = cargoTicket)
+        cargoTicketRepository.addCargoTicket(cargoTicket = cargoTicket, user = user)
 
         verify(cargoTicketDataSource).addCargoTicket(cargoTicket)
     }
