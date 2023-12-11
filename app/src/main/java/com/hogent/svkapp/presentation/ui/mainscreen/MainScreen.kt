@@ -43,6 +43,10 @@ fun MainScreen(
     )
     val user = mainScreenViewModel.user
 
+    val navigateToQrScanner: (Int) -> Unit = { index ->
+        navController.navigate("${Route.QrScanner.name}/$index")
+    }
+
     Scaffold(floatingActionButton = {
         SendFloatingActionButton(onSend = mainScreenViewModel::onSend)
     }, topBar = {
@@ -64,6 +68,7 @@ fun MainScreen(
                 .padding(paddingValues = innerPadding)
                 .padding(all = MaterialTheme.spacing.large),
             mainScreenViewModel = mainScreenViewModel,
+            navigateToQrScanner = navigateToQrScanner,
         )
         if (mainScreenState.showPopup) {
             ConfirmationDialog(onDismissRequest = mainScreenViewModel::toggleDialog)

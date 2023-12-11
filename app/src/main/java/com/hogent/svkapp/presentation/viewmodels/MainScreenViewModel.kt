@@ -47,7 +47,7 @@ class MainScreenViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainScreenState())
 
-    /** 
+    /**
      * The state of the screen as read-only state flow.
      */
     val uiState: StateFlow<MainScreenState> = _uiState.asStateFlow()
@@ -67,12 +67,10 @@ class MainScreenViewModel(
             .withScheme(context.getString(R.string.com_auth0_scheme))
             .start(context, object : Callback<Credentials, AuthenticationException> {
                 override fun onFailure(error: AuthenticationException) {
-                    Log.e(TAG, "Error occurred in onLogin(): $error")
                 }
 
                 override fun onSuccess(result: Credentials) {
                     val idToken = result.idToken
-                    Log.d(TAG, "ID Token: $idToken")
                     user = User(idToken)
                     userIsAuthenticated = true
                     onSuccessNavigation()
@@ -136,7 +134,6 @@ class MainScreenViewModel(
      * errors are shown. If the creation succeeds, the form is reset and the dialog is shown.
      */
     fun onSend() {
-        Log.d("State on send", uiState.value.toString())
 
         val creationResult = CargoTicket.create(
             routeNumbers = _uiState.value.routeNumberInputFieldValues,
@@ -161,8 +158,6 @@ class MainScreenViewModel(
                     )
                 }
             }
-
-            else -> {}
         }
     }
 
@@ -204,7 +199,6 @@ class MainScreenViewModel(
                 routeNumberCollectionError = null
             )
         }
-        Log.d("State on add", uiState.value.toString())
     }
 
     /**
@@ -225,7 +219,6 @@ class MainScreenViewModel(
                 routeNumberCollectionError = if (state.routeNumberInputFieldValues.isEmpty()) RouteNumberCollectionError.Empty else null
             )
         }
-        Log.d("State on remove", uiState.value.toString())
     }
 
     /**
