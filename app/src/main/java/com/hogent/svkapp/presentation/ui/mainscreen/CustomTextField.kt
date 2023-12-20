@@ -1,7 +1,6 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.text.KeyboardOptions
@@ -14,12 +13,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.hogent.svkapp.R
+import com.hogent.svkapp.presentation.ui.qrScanner.QrScanButton
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 
 /**
@@ -31,7 +30,6 @@ import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
  * @param onValueChange The callback to be invoked when the value of the text field changes.
  * @param errors The error messages to be displayed below the text field.
  * @param keyboardType The type of keyboard to be used for the text field.
- * @param trailingIcon The trailing icon to be displayed in the text field.
  *
  * @sample TextFieldPreview
  * @sample TextFieldPreviewDark
@@ -47,11 +45,13 @@ fun CustomTextField(
     onValueChange: (String) -> Unit,
     onDelete: () -> Unit,
     errors: List<String?>? = emptyList(),
+    navigateToQrScanner: (Int) -> Unit,
     keyboardType: KeyboardType,
     removable: Boolean = true,
-    trailingIcon: @Composable (() -> Unit)? = null
+    scannable: Boolean = false,
 ) {
-    TextField(value = value,
+    TextField(
+        value = value,
         onValueChange = onValueChange,
         label = { Text(text = label) },
         supportingText = {
@@ -68,13 +68,20 @@ fun CustomTextField(
         singleLine = true,
         modifier = modifier,
         trailingIcon = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Row {
                 if (!errors.isNullOrEmpty()) {
-                    Icon(
-                        Icons.Filled.Warning,
-                        contentDescription = stringResource(R.string.error_icon_content_description)
+                    IconButton(
+                        onClick = {},
+                    ) {
+                        Icon(
+                            Icons.Filled.Warning,
+                            contentDescription = stringResource(R.string.error_icon_content_description)
+                        )
+                    }
+                }
+                if (scannable) {
+                    QrScanButton(
+                        navigateToQrScanner = { navigateToQrScanner(index) },
                     )
                 }
                 if (removable) {
@@ -112,6 +119,8 @@ private fun TextFieldPreviewBase(
             errors = errors,
             keyboardType = keyboardType,
             onDelete = {},
+            scannable = true,
+            navigateToQrScanner = {},
         )
     }
 }

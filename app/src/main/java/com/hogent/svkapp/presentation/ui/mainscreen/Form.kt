@@ -5,11 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,31 +26,12 @@ import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
  *
  * @param modifier The modifier to be applied to the form.
  *
-// * @sample FormPreview
-// * @sample FormPreviewDark
-// * @sample FormPreviewWithRouteNumbers
-// * @sample FormPreviewWithRouteNumbersDark
-// * @sample FormPreviewWithLicensePlate
-// * @sample FormPreviewWithLicensePlateDark
-// * @sample FormPreviewWithImages
-// * @sample FormPreviewWithImagesDark
-// * @sample FormPreviewWithRouteNumberErrors
-// * @sample FormPreviewWithRouteNumberErrorsDark
-// * @sample FormPreviewWithLicensePlateError
-// * @sample FormPreviewWithLicensePlateErrorDark
-// * @sample FormPreviewWithImageError
-// * @sample FormPreviewWithImageErrorDark
-// * @sample FormPreviewWithRouteNumberCollectionError
-// * @sample FormPreviewWithRouteNumberCollectionErrorDark
-// * @sample FormPreviewWithAllErrors
-// * @sample FormPreviewWithAllErrorsDark
-// * @sample FormPreviewWithAll
-// * @sample FormPreviewWithAllDark
-// */
+ */
 @Composable
 fun Form(
     modifier: Modifier = Modifier,
-    mainScreenViewModel: MainScreenViewModel
+    mainScreenViewModel: MainScreenViewModel,
+    navigateToQrScanner: (Int) -> Unit,
 ) {
     val mainScreenState by mainScreenViewModel.uiState.collectAsState()
 
@@ -65,7 +42,7 @@ fun Form(
         modifier = modifier
     ) {
         item {
-            mainScreenState.routeNumberInputFieldValues.forEachIndexed { index, routeNumber ->
+            mainScreenState.routeNumberInputFieldValues.mapIndexed { index, routeNumber ->
                 CustomTextField(
                     index = index,
                     value = routeNumber,
@@ -81,8 +58,9 @@ fun Form(
                     modifier = Modifier.fillMaxWidth(),
                     onDelete = { mainScreenViewModel.removeRouteNumber(index) },
                     removable = index != 0,
-                ) {
-                }
+                    scannable = true,
+                    navigateToQrScanner = navigateToQrScanner,
+                )
             }
         }
         item {
@@ -115,6 +93,8 @@ fun Form(
                 modifier = Modifier.fillMaxWidth(),
                 removable = false,
                 onDelete = {},
+                scannable = false,
+                navigateToQrScanner = {},
             )
         }
         item {

@@ -3,7 +3,6 @@ package com.hogent.svkapp.presentation.viewmodels
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavHostController
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationException
 import com.auth0.android.provider.WebAuthProvider
@@ -35,7 +34,6 @@ import java.util.Locale
  * The [ViewModel] of the main screen.
  *
  * @param cargoTicketRepository the [CargoTicketRepository] that is used to add cargo tickets.
- * @param navController the [NavHostController] that is used to navigate to other screens.
  *
  */
 class MainScreenViewModel(
@@ -44,7 +42,7 @@ class MainScreenViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainScreenState())
 
-    /** 
+    /**
      * The state of the screen as read-only state flow.
      */
     val uiState: StateFlow<MainScreenState> = _uiState.asStateFlow()
@@ -131,9 +129,6 @@ class MainScreenViewModel(
      * errors are shown. If the creation succeeds, the form is reset and the dialog is shown.
      */
     fun onSend() {
-        Log.d("State on send", uiState.value.toString())
-
-
 
         val creationResult = CargoTicket.create(
             routeNumbers = _uiState.value.routeNumberInputFieldValues,
@@ -158,8 +153,6 @@ class MainScreenViewModel(
                     )
                 }
             }
-
-            else -> {}
         }
     }
 

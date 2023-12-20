@@ -70,6 +70,7 @@ dependencies {
     val retrofit_version = "2.9.0"
 
 
+
     implementation("androidx.core:core-ktx:$coreVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.activity:activity-compose:$activityVersion")
@@ -105,6 +106,14 @@ dependencies {
     val espressoVersion = "3.5.1"
     val testRunnerVersion = "1.5.2"
     val testRulesVersion = "1.5.0"
+
+    // CameraX
+    val camerax_version = "1.3.0-alpha04"
+
+    implementation("androidx.camera:camera-camera2:${camerax_version}")
+    implementation("androidx.camera:camera-lifecycle:${camerax_version}")
+    implementation("androidx.camera:camera-view:${camerax_version}")
+    implementation("com.google.mlkit:barcode-scanning:17.0.3")
 
     androidTestImplementation("androidx.test.ext:junit:$testJunitVersion")
     androidTestImplementation("androidx.test.espresso:espresso-core:$espressoVersion")
