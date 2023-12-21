@@ -13,7 +13,7 @@ import com.hogent.svkapp.network.CargoTicketConverter.Companion.convertToApiCarg
 
 interface CargoTicketRepository {
     fun getCargoTickets(): List<CargoTicket>
-    suspend fun addCargoTicket(cargoTicket: CargoTicket)
+    suspend fun addCargoTicket(cargoTicket: CargoTicket, id: String)
 }
 
 class RoomCargoTicketRepository(
@@ -28,9 +28,9 @@ class RoomCargoTicketRepository(
         context,
     )
 
-    override suspend fun addCargoTicket(cargoTicket: CargoTicket) {
+    override suspend fun addCargoTicket(cargoTicket: CargoTicket, id: String) {
         if (networkUtils.isInternetAvailable.value == true) {
-            cargoTicketApiService.postCargoTicket(convertToApiCargoTicket(cargoTicket))
+            cargoTicketApiService.postCargoTicket(convertToApiCargoTicket(cargoTicket, "test"))
         } else {
             dao?.insert(
                 DbCargoTicket(
@@ -69,7 +69,7 @@ class LocalCargoTicketRepository(
      */
 
     // TODO: Make suspend function move to coroutine
-    override suspend fun addCargoTicket(cargoTicket: CargoTicket): Unit =
+    override suspend fun addCargoTicket(cargoTicket: CargoTicket, id: String): Unit =
         cargoTicketDataSource.addCargoTicket(cargoTicket)
 }
 
@@ -89,9 +89,8 @@ class ApiCargoTicketRepository(
      *
      * @param cargoTicket the [CargoTicket] to add.
      */
-    override suspend fun addCargoTicket(cargoTicket: CargoTicket) {
-        val apiCargoTicket = convertToApiCargoTicket(cargoTicket)
+    override suspend fun addCargoTicket(cargoTicket: CargoTicket, id: String) {
+        val apiCargoTicket = convertToApiCargoTicket(cargoTicket, id)
         cargoTicketApiService.postCargoTicket(apiCargoTicket)
     }
 }
-

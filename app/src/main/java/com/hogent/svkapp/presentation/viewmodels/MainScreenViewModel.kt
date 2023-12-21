@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.auth0.android.Auth0
 import com.auth0.android.authentication.AuthenticationException
@@ -18,6 +20,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.hogent.svkapp.SVKApplication
 import com.hogent.svkapp.data.repositories.CargoTicketRepository
+import com.hogent.svkapp.data.repositories.UserRepository
 import com.hogent.svkapp.domain.entities.CargoTicket
 import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.domain.entities.ImageCollectionError
@@ -41,6 +44,7 @@ import java.util.Locale
  */
 class MainScreenViewModel(
     private val cargoTicketRepository: CargoTicketRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainScreenState())
 
@@ -58,7 +62,6 @@ class MainScreenViewModel(
      * Called when login button is clicked.
      */
     fun onLogin(context: Context, auth: Auth0, onSuccessNavigation: () -> Unit) {
-
         WebAuthProvider
             .login(auth)
             .withScheme(context.getString(R.string.com_auth0_scheme))
@@ -72,10 +75,13 @@ class MainScreenViewModel(
                     userIsAuthenticated = true
                     onSuccessNavigation()
                 }
-
             })
+    }
 
-
+    fun postLoginActions() {
+        viewModelScope.launch {
+            userRepository.postUser(user)
+        }
     }
 
     /**
@@ -95,8 +101,10 @@ class MainScreenViewModel(
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as SVKApplication)
                 val cargoTicketRepository = application.container.cargoTicketRepository
+                val userRepository = application.container.userRepository
                 MainScreenViewModel(
                     cargoTicketRepository = cargoTicketRepository,
+                    userRepository = userRepository
                 )
             }
         }
@@ -140,7 +148,7 @@ class MainScreenViewModel(
 
         when (creationResult) {
             is Result.Success -> {
-                viewModelScope.launch { cargoTicketRepository.addCargoTicket(creationResult.value) }
+                viewModelScope.launch { cargoTicketRepository.addCargoTicket(creationResult.value, user.id) }
                 resetForm()
                 toggleDialog()
             }

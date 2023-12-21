@@ -2,10 +2,12 @@ package com.hogent.svkapp.data
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.hogent.svkapp.data.repositories.ApiCargoTicketRepository
+import com.hogent.svkapp.data.repositories.ApiUserRepository
 import com.hogent.svkapp.data.repositories.CargoTicketRepository
 import com.hogent.svkapp.data.repositories.RoomCargoTicketRepository
+import com.hogent.svkapp.data.repositories.UserRepository
 import com.hogent.svkapp.network.CargoTicketApiService
+import com.hogent.svkapp.network.UserApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -21,6 +23,7 @@ import javax.net.ssl.X509TrustManager
 
 interface AppContainer {
     val cargoTicketRepository: CargoTicketRepository
+    val userRepository: UserRepository
 }
 
 class DefaultAppContainer(private val context: Context) : AppContainer {
@@ -44,6 +47,10 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
             context,
             retrofitCargoTicketService,
         )
+    }
+
+    override val userRepository: UserRepository by lazy {
+        ApiUserRepository(retrofit!!.create(UserApiService::class.java))
     }
 
     private fun getUnsafeOkHttpClient(): OkHttpClient? {
