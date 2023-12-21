@@ -60,7 +60,6 @@ fun MainNavHost(
             MainScreen(
                 mainScreenViewModel = viewModel,
                 navController = navController,
-                mainScreenViewModel = viewModel
             )
         }
         composable(route = Route.CargoTickets.name) {

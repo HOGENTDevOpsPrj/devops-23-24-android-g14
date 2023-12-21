@@ -38,7 +38,7 @@ import java.util.Locale
  */
 class MainScreenViewModel(
     private val cargoTicketRepository: CargoTicketRepository,
-    private val userRepository: UserRepository, // TODO
+    // private val userRepository: UserRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainScreenState())
 
