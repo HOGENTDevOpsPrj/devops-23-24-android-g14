@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.hogent.svkapp.domain.entities.CargoTicket
+import com.hogent.svkapp.domain.entities.User
 import com.hogent.svkapp.network.CargoTicketApiService
 import com.hogent.svkapp.network.CargoTicketConverter.Companion.convertToApiCargoTicket
 import kotlinx.coroutines.GlobalScope

@@ -29,7 +29,7 @@ import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    mainScreenViewModel: MainScreenViewModel = viewModel(factory = MainScreenViewModel.Factory),
+    mainScreenViewModel: MainScreenViewModel /* = viewModel(factory = MainScreenViewModel.Factory)*/,
     navController: NavController,
 ) {
     val mainScreenState by mainScreenViewModel.uiState.collectAsState()

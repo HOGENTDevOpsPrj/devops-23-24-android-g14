@@ -5,6 +5,7 @@ import com.hogent.svkapp.domain.entities.ImageCollectionError
 import com.hogent.svkapp.domain.entities.LicensePlateError
 import com.hogent.svkapp.domain.entities.RouteNumberCollectionError
 import com.hogent.svkapp.domain.entities.RouteNumberError
+import com.hogent.svkapp.domain.entities.User
 
 /**
  * The state of the main screen.
@@ -16,6 +17,7 @@ import com.hogent.svkapp.domain.entities.RouteNumberError
  * @param licensePlateInputFieldValidationError The validation error of the license plate input field.
  * @param imageCollectionError The validation error of the image collection.
  * @param showPopup Whether or not to show the confirmation popup.
+ * @param user The user that is logged in.
  */
 data class MainScreenState(
     val routeNumberInputFieldValues: List<String> = listOf(""),
@@ -26,4 +28,5 @@ data class MainScreenState(
     val licensePlateInputFieldValidationError: LicensePlateError? = null,
     val imageCollectionError: ImageCollectionError? = null,
     val showPopup: Boolean = false,
+    val user: User = User(),
 )
