@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.hogent.svkapp.presentation.ui.SVKApp
+import com.hogent.svkapp.presentation.ui.navigation.MainNavHost
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
@@ -26,10 +28,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             TemplateApplicationTheme {
-                MainNavHost(
-                    navController = rememberNavController(),
-                    viewModel = viewModel(factory = MainScreenViewModel.Factory)
-                )
+                SVKApp()
             }
         }
     }
