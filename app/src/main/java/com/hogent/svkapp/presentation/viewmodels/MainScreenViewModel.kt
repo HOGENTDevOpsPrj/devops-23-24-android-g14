@@ -67,6 +67,7 @@ class MainScreenViewModel(
         WebAuthProvider.login(auth).withScheme(context.getString(R.string.com_auth0_scheme))
             .start(context, object : Callback<Credentials, AuthenticationException> {
                 override fun onFailure(error: AuthenticationException) {
+
                 }
 
                 override fun onSuccess(result: Credentials) {
@@ -77,13 +78,16 @@ class MainScreenViewModel(
                 }
             })
 
-        postLoginActions()
-    }
+        user.idToken?.let { saveTokenToSharedPreferences(context, it) }
 
-    private fun postLoginActions() {
         viewModelScope.launch {
             userRepository.addUser(user)
         }
+    }
+
+    private fun saveTokenToSharedPreferences(context: Context, token: String) {
+        val sharedPreferences = context.getSharedPreferences("AuthPreferences", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("auth0_token", token).apply()
     }
 
     /**
@@ -195,10 +199,9 @@ class MainScreenViewModel(
      */
     fun addRouteNumber() {
         _uiState.update { state ->
-            state.copy(
-                routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
-                    add("")
-                },
+            state.copy(routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
+                add("")
+            },
                 routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors.toMutableList()
                     .apply {
                         add(emptyList())
@@ -215,10 +218,9 @@ class MainScreenViewModel(
      */
     fun removeRouteNumber(index: Int) {
         _uiState.update { state ->
-            state.copy(
-                routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
-                    removeAt(index)
-                },
+            state.copy(routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
+                removeAt(index)
+            },
                 routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors.toMutableList()
                     .apply {
                         removeAt(index)
