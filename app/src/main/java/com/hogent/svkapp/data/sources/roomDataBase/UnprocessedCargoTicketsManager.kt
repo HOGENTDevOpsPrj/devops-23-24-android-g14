@@ -7,27 +7,28 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.hogent.svkapp.data.repositories.CargoTicketApiRepository
+import com.hogent.svkapp.data.repositories.CargoTicketLocalRepository
 import com.hogent.svkapp.domain.entities.CargoTicket
-import com.hogent.svkapp.network.CargoTicketApiService
-import com.hogent.svkapp.network.CargoTicketConverter.Companion.convertToApiCargoTicket
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
 /**
- * A utility class to check the internet connection and send unprocessed [CargoTicket]s to the
- * roomDataBase.
+ * A manager for [CargoTicket]s that are not yet processed. This manager sends the [CargoTicket]s
+ * to the server when the internet is available.
+ *
+ * @property cargoTicketApiRepository the [CargoTicketApiRepository] that is used to send the [CargoTicket]s to the server.
+ * @property cargoTicketLocalRepository the [CargoTicketLocalRepository] that is used to save the [CargoTicket]s in a local roomDataBase.
+ * @property context the application context.
  */
-class NetworkUtils(
-    private val cargoTicketApiService: CargoTicketApiService,
+class UnprocessedCargoTicketsManager(
+    private val cargoTicketApiRepository: CargoTicketApiRepository,
+    private val cargoTicketLocalRepository: CargoTicketLocalRepository,
     context: Context,
 ) {
-
-    private val db = AppDatabase.getInstance(context)
-    private val dao = db?.cargoTicketDao()
-
-    private val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     private val _isInternetAvailable = MutableLiveData<Boolean>()
 
@@ -38,26 +39,23 @@ class NetworkUtils(
         get() = _isInternetAvailable
 
     init {
-        // Controleer de huidige status van de internetverbinding
         checkInternetConnection()
 
-        // Registreer de NetworkCallback om wijzigingen in de internetverbinding te detecteren
+        // Register a network callback to check the internet connection when the network changes.
         registerNetworkCallback()
     }
-
 
     private fun registerNetworkCallback() {
         val networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
                 super.onAvailable(network)
-                Log.d("com.hogent.svkapp.data.sources.roomDataBase.NetworkUtils", "Internet beschikbaar")
+                Log.d("UnprocessedCargoTicketsManager", "Connection available, sending unprocessed cargo tickets")
                 _isInternetAvailable.postValue(true)
                 sendUnprocessedCargoTickets()
             }
 
             override fun onLost(network: Network) {
                 super.onLost(network)
-                Log.d("com.hogent.svkapp.data.sources.roomDataBase.NetworkUtils", "Internet niet beschikbaar")
                 _isInternetAvailable.postValue(false)
             }
         }
@@ -72,21 +70,14 @@ class NetworkUtils(
         _isInternetAvailable.postValue(isConnected)
     }
 
-    private fun sendUnprocessedCargoTickets() {
-        val ladingen = dao?.getAll()
-        ladingen?.forEach {
+    @OptIn(DelicateCoroutinesApi::class)
+    internal fun sendUnprocessedCargoTickets() {
+        val cargoTickets = cargoTicketLocalRepository.getCargoTickets()
+        cargoTickets.forEach {
             GlobalScope.launch {
-                cargoTicketApiService.postCargoTicket(
-                    convertToApiCargoTicket(
-                        CargoTicket(
-                            routeNumbers = it.routeNumbers, images = it.images,
-                            licensePlate = it.licensePlate
-                        ),
-                        id = "test"
-                    )
-                )
+                cargoTicketApiRepository.addCargoTicket(it)
             }
-            dao?.delete(it)
+            cargoTicketLocalRepository.deleteCargoTicket(it)
         }
     }
 }

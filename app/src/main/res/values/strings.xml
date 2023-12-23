@@ -32,4 +32,7 @@
     <string name="remove_image_confirmation_dialog_confirm">Ja</string>
     <string name="remove_image_confirmation_dialog_dismiss">Neen</string>
     <string name="scan_route_number_button_content_description">Scan routenummer</string>
+    <string name="load_receipt_number_label_text">Laadbonnummer</string>
+    <string name="empty_load_receipt_number_error_message">Geef het laadbonnummer in.</string>
+    <string name="invalid_load_receipt_number_error_message">Geef een geldig laadbonnummer in.</string>
 </resources>

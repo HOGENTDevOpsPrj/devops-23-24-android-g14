@@ -58,16 +58,16 @@ android {
 }
 
 dependencies {
-    implementation("androidx.navigation:navigation-runtime-ktx:2.7.5")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.7.6")
     val coreVersion = "1.12.0"
     val lifecycleVersion = "2.6.2"
-    val activityVersion = "1.8.0"
+    val activityVersion = "1.8.2"
     val composeBomVersion = "2023.10.00"
     val composeUiVersion = "1.5.4"
     val composeMaterial3Version = "1.1.2"
-    val composeNavigationVersion = "2.7.4"
-    val room_version = "2.6.0"
-    val retrofit_version = "2.9.0"
+    val composeNavigationVersion = "2.7.6"
+    val roomVersion = "2.6.1"
+    val retrofitVersion = "2.9.0"
 
 
 
@@ -83,24 +83,27 @@ dependencies {
     implementation("androidx.navigation:navigation-runtime-ktx:$composeNavigationVersion")
     implementation("androidx.navigation:navigation-compose:$composeNavigationVersion")
 
-    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
-    implementation("com.auth0.android:auth0:+")
-    implementation("com.auth0.android:jwtdecode:+")
-    implementation("androidx.room:room-runtime:$room_version")
+    implementation("com.auth0.android:auth0:2.10.2")
+    implementation("com.auth0.android:jwtdecode:2.0.2")
+    implementation("androidx.room:room-runtime:$roomVersion")
     // optional - Kotlin Extensions and Coroutines support for Room
-    implementation("androidx.room:room-ktx:$room_version")
+    implementation("androidx.room:room-ktx:$roomVersion")
     // To use Kotlin Symbol Processing (KSP)
-    ksp("androidx.room:room-compiler:$room_version")
-    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
-    implementation("com.squareup.retrofit2:converter-scalars:$retrofit_version")
+    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-scalars:$retrofitVersion")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
 
 // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
-    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    // Gson
+    implementation("com.google.code.gson:gson:2.10.1")
 
     val testJunitVersion = "1.1.5"
     val espressoVersion = "3.5.1"
@@ -108,26 +111,26 @@ dependencies {
     val testRulesVersion = "1.5.0"
 
     // CameraX
-    val camerax_version = "1.3.0-alpha04"
+    val camerax_version = "1.3.1"
 
     implementation("androidx.camera:camera-camera2:${camerax_version}")
     implementation("androidx.camera:camera-lifecycle:${camerax_version}")
     implementation("androidx.camera:camera-view:${camerax_version}")
-    implementation("com.google.mlkit:barcode-scanning:17.0.3")
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
 
     androidTestImplementation("androidx.test.ext:junit:$testJunitVersion")
     androidTestImplementation("androidx.test.espresso:espresso-core:$espressoVersion")
     androidTestImplementation("androidx.test:runner:$testRunnerVersion")
     androidTestImplementation("androidx.test:rules:$testRulesVersion")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
 
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
 
     val junitVersion = "4.13.2"
-    val mockitoKotlinVersion = "5.1.0"
+    val mockitoKotlinVersion = "5.2.1"
 
     testImplementation("junit:junit:$junitVersion")
     testImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")

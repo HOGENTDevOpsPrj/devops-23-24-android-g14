@@ -5,19 +5,17 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.auth0.android.Auth0
-import com.auth0.android.authentication.AuthenticationException
-import com.auth0.android.provider.WebAuthProvider
-import com.auth0.android.callback.Callback
-import com.auth0.android.result.Credentials
-import com.hogent.svkapp.R
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.auth0.android.Auth0
+import com.auth0.android.authentication.AuthenticationException
+import com.auth0.android.callback.Callback
+import com.auth0.android.provider.WebAuthProvider
+import com.auth0.android.result.Credentials
+import com.hogent.svkapp.R
 import com.hogent.svkapp.SVKApplication
 import com.hogent.svkapp.data.repositories.CargoTicketRepository
 import com.hogent.svkapp.data.repositories.UserRepository
@@ -25,6 +23,7 @@ import com.hogent.svkapp.domain.entities.CargoTicket
 import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.domain.entities.ImageCollectionError
 import com.hogent.svkapp.domain.entities.LicensePlate
+import com.hogent.svkapp.domain.entities.LoadReceiptNumber
 import com.hogent.svkapp.domain.entities.Result
 import com.hogent.svkapp.domain.entities.RouteNumber
 import com.hogent.svkapp.domain.entities.RouteNumberCollectionError
@@ -34,17 +33,20 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import java.util.Locale
 
 /**
  * The [ViewModel] of the main screen.
  *
  * @param cargoTicketRepository the [CargoTicketRepository] that is used to add cargo tickets.
- *
+ * @param userRepository the [UserRepository] that is used to add users.
+ * @property userIsAuthenticated whether the user is authenticated.
+ * @property user the user.
+ * @property uiState the state of the screen as read-only state flow.
  */
 class MainScreenViewModel(
-    private val cargoTicketRepository: CargoTicketRepository,
-    private val userRepository: UserRepository
+    private val cargoTicketRepository: CargoTicketRepository, private val userRepository: UserRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainScreenState())
 
@@ -53,7 +55,7 @@ class MainScreenViewModel(
      */
     val uiState: StateFlow<MainScreenState> = _uiState.asStateFlow()
 
-    private val TAG = "MainScreenViewModel"
+    private val tag = "MainScreenViewModel"
 
     var userIsAuthenticated: Boolean by mutableStateOf(false)
     var user: User by mutableStateOf(User())
@@ -62,9 +64,7 @@ class MainScreenViewModel(
      * Called when login button is clicked.
      */
     fun onLogin(context: Context, auth: Auth0, onSuccessNavigation: () -> Unit) {
-        WebAuthProvider
-            .login(auth)
-            .withScheme(context.getString(R.string.com_auth0_scheme))
+        WebAuthProvider.login(auth).withScheme(context.getString(R.string.com_auth0_scheme))
             .start(context, object : Callback<Credentials, AuthenticationException> {
                 override fun onFailure(error: AuthenticationException) {
                 }
@@ -76,11 +76,13 @@ class MainScreenViewModel(
                     onSuccessNavigation()
                 }
             })
+
+        postLoginActions()
     }
 
-    fun postLoginActions() {
+    private fun postLoginActions() {
         viewModelScope.launch {
-            userRepository.postUser(user)
+            userRepository.addUser(user)
         }
     }
 
@@ -103,8 +105,7 @@ class MainScreenViewModel(
                 val cargoTicketRepository = application.container.cargoTicketRepository
                 val userRepository = application.container.userRepository
                 MainScreenViewModel(
-                    cargoTicketRepository = cargoTicketRepository,
-                    userRepository = userRepository
+                    cargoTicketRepository = cargoTicketRepository, userRepository = userRepository
                 )
             }
         }
@@ -141,14 +142,17 @@ class MainScreenViewModel(
     fun onSend() {
 
         val creationResult = CargoTicket.create(
+            loadReceiptNumber = _uiState.value.loadReceiptNumberInputFieldValue,
             routeNumbers = _uiState.value.routeNumberInputFieldValues,
             licensePlate = _uiState.value.licensePlateInputFieldValue,
-            images = _uiState.value.imageCollection
+            images = _uiState.value.imageCollection,
+            freightLoaderId = user.id,
+            registrationDateTime = LocalDateTime.now()
         )
 
         when (creationResult) {
             is Result.Success -> {
-                viewModelScope.launch { cargoTicketRepository.addCargoTicket(creationResult.value, user.id) }
+                viewModelScope.launch { cargoTicketRepository.addCargoTicket(creationResult.value) }
                 resetForm()
                 toggleDialog()
             }
@@ -156,6 +160,7 @@ class MainScreenViewModel(
             is Result.Failure -> {
                 _uiState.update { state ->
                     state.copy(
+                        loadReceiptNumberInputFieldValidationError = creationResult.error.loadReceiptNumberError,
                         routeNumberCollectionError = creationResult.error.routeNumberCollectionError,
                         routeNumberInputFieldValidationErrors = creationResult.error.routeNumberErrors,
                         licensePlateInputFieldValidationError = creationResult.error.licensePlateError,
@@ -175,15 +180,13 @@ class MainScreenViewModel(
      */
     fun onRouteNumberChange(index: Int, routeNumber: String) {
         _uiState.update { state ->
-            state.copy(
-                routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
-                    set(index, routeNumber)
-                },
+            state.copy(routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
+                set(index, routeNumber)
+            },
                 routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors.toMutableList()
                     .apply {
                         set(index, RouteNumber.validateStringRepresentation(routeNumber))
-                    }
-            )
+                    })
         }
     }
 
@@ -193,10 +196,9 @@ class MainScreenViewModel(
     fun addRouteNumber() {
         _uiState.update { state ->
             state.copy(
-                routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList()
-                    .apply {
-                        add("")
-                    },
+                routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
+                    add("")
+                },
                 routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors.toMutableList()
                     .apply {
                         add(emptyList())
@@ -221,7 +223,7 @@ class MainScreenViewModel(
                     .apply {
                         removeAt(index)
                     },
-                routeNumberCollectionError = if (state.routeNumberInputFieldValues.isEmpty()) RouteNumberCollectionError.Empty else null
+                routeNumberCollectionError = if (state.routeNumberInputFieldValues.isEmpty()) RouteNumberCollectionError.EMPTY else null
             )
         }
     }
@@ -242,17 +244,30 @@ class MainScreenViewModel(
     }
 
     /**
+     * Updates the value of the load receipt number input field. If the value doesn't represent a
+     * valid load receipt number, the corresponding validation error is set.
+     *
+     * @param loadReceiptNumber the new value of the load receipt number input field.
+     */
+    fun onLoadReceiptNumberChange(loadReceiptNumber: String) {
+        _uiState.update { state ->
+            state.copy(
+                loadReceiptNumberInputFieldValue = loadReceiptNumber,
+                loadReceiptNumberInputFieldValidationError = LoadReceiptNumber.validate(loadReceiptNumber)
+            )
+        }
+    }
+
+    /**
      * Navigates to the login screen.
      */
     fun onLogout(context: Context, auth: Auth0, onLogoutNavigation: () -> Unit) {
-        WebAuthProvider
-            .logout(auth)
-            .withScheme(context.getString(R.string.com_auth0_scheme))
+        WebAuthProvider.logout(auth).withScheme(context.getString(R.string.com_auth0_scheme))
             .start(context, object : Callback<Void?, AuthenticationException> {
 
                 override fun onFailure(error: AuthenticationException) {
                     // For some reason, logout failed.
-                    Log.e(TAG, "Error occurred in logout(): $error")
+                    Log.e(tag, "Error occurred in logout(): $error")
                 }
 
                 override fun onSuccess(result: Void?) {
@@ -268,7 +283,7 @@ class MainScreenViewModel(
     private fun validateImageCollection() {
         _uiState.update { state ->
             state.copy(
-                imageCollectionError = if (state.imageCollection.isEmpty()) ImageCollectionError.Empty else null
+                imageCollectionError = if (state.imageCollection.isEmpty()) ImageCollectionError.EMPTY else null
             )
         }
     }

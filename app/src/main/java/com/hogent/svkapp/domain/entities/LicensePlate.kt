@@ -9,12 +9,12 @@ enum class LicensePlateError {
     /**
      * The [LicensePlate] is empty.
      */
-    Empty,
+    EMPTY,
 
     /**
      * The [LicensePlate] is too long.
      */
-    TooLong
+    TOO_LONG
 }
 
 /**
@@ -55,8 +55,8 @@ class LicensePlate private constructor(value: String) {
         fun validate(plate: String): LicensePlateError? {
             val cleanedPlate = clean(plate)
 
-            if (cleanedPlate.isEmpty()) return LicensePlateError.Empty
-            if (cleanedPlate.length >= 40) return LicensePlateError.TooLong
+            if (cleanedPlate.isEmpty()) return LicensePlateError.EMPTY
+            if (cleanedPlate.length >= 40) return LicensePlateError.TOO_LONG
 
             return null
         }
@@ -64,17 +64,5 @@ class LicensePlate private constructor(value: String) {
         private fun clean(plate: String): String {
             return plate.trim().filter { !it.isWhitespace() }.uppercase()
         }
-    }
-}
-
-class LicensePlateConverter {
-    @TypeConverter
-    fun storedStringToLicensePlate(value: String): LicensePlate {
-        return (LicensePlate.create(value) as Result.Success).value
-    }
-
-    @TypeConverter
-    fun licensePlateToStoredString(licensePlate: LicensePlate): String {
-        return licensePlate.value
     }
 }

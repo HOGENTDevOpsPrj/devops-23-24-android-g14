@@ -1,7 +1,5 @@
 package com.hogent.svkapp.domain.entities
 
-import android.util.Log
-
 /**
  * An error that can occur when creating a [RouteNumber].
  */
@@ -9,17 +7,17 @@ enum class RouteNumberError {
     /**
      * The [RouteNumber] is empty.
      */
-    Empty,
+    EMPTY,
 
     /**
      * The [RouteNumber] is not a positive number.
      */
-    NonPositiveNumber,
+    NON_POSITIVE_NUMBER,
 
     /**
      * The [RouteNumber] has an invalid format.
      */
-    InvalidFormat
+    INVALID_FORMAT
 }
 
 /**
@@ -27,9 +25,9 @@ enum class RouteNumberError {
  *
  * @property value the value of the route number.
  */
-class RouteNumber private constructor(value: Int) {
-    private var _value: Int = value
-    val value: Int get() = _value
+class RouteNumber private constructor(value: String) {
+    private var _value: String = value
+    val value: String get() = _value
 
     companion object {
         /**
@@ -44,7 +42,7 @@ class RouteNumber private constructor(value: Int) {
         fun create(routeNumber: String): Result<RouteNumber, List<RouteNumberError?>> {
             val result = validateStringRepresentation(routeNumber)
             return if (result.isEmpty()) {
-                Result.Success(RouteNumber(routeNumber.toInt()))
+                Result.Success(RouteNumber(routeNumber))
             } else {
                 Result.Failure(result)
             }
@@ -60,12 +58,12 @@ class RouteNumber private constructor(value: Int) {
         fun validateStringRepresentation(routeNumber: String): List<RouteNumberError?> {
             val cleanedRouteNumber = clean(routeNumber)
 
-            if (cleanedRouteNumber.isEmpty()) return listOf(RouteNumberError.Empty)
+            if (cleanedRouteNumber.isEmpty()) return listOf(RouteNumberError.EMPTY)
 
-            val intValue = cleanedRouteNumber.toIntOrNull() ?: return listOf(RouteNumberError.InvalidFormat)
+            val intValue = cleanedRouteNumber.toIntOrNull() ?: return listOf(RouteNumberError.INVALID_FORMAT)
 
             if (intValue <= 0) {
-                return listOf(RouteNumberError.NonPositiveNumber)
+                return listOf(RouteNumberError.NON_POSITIVE_NUMBER)
             }
 
             return emptyList()

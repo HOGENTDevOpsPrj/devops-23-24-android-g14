@@ -42,6 +42,25 @@ fun Form(
         modifier = modifier
     ) {
         item {
+            CustomTextField(
+                index = 0,
+                value = mainScreenState.loadReceiptNumberInputFieldValue,
+                label = stringResource(R.string.load_receipt_number_label_text),
+                onValueChange = { newLoadReceiptNumber ->
+                    mainScreenViewModel.onLoadReceiptNumberChange(
+                        newLoadReceiptNumber
+                    )
+                },
+                errors = loadReceiptNumberInputFieldValidationError(mainScreenState.loadReceiptNumberInputFieldValidationError),
+                keyboardType = KeyboardType.Text,
+                modifier = Modifier.fillMaxWidth(),
+                removable = false,
+                onDelete = {},
+                scannable = false,
+                navigateToQrScanner = {},
+            )
+        }
+        item {
             mainScreenState.routeNumberInputFieldValues.mapIndexed { index, routeNumber ->
                 CustomTextField(
                     index = index,
@@ -62,8 +81,6 @@ fun Form(
                     navigateToQrScanner = navigateToQrScanner,
                 )
             }
-        }
-        item {
             if (mainScreenState.routeNumberCollectionError != null) {
                 routeNumberCollectionError(mainScreenState.routeNumberCollectionError)?.getOrNull(0)?.let {
                     Text(
@@ -72,8 +89,6 @@ fun Form(
                     )
                 }
             }
-        }
-        item {
             Button(onClick = { mainScreenViewModel.addRouteNumber() }) {
                 Text(text = stringResource(R.string.add_extra_route_number_button_text))
             }
@@ -110,8 +125,6 @@ fun Form(
                     mainScreenViewModel = mainScreenViewModel,
                 )
             }
-        }
-        item {
             AddImageButton(
                 onClick = { takePictureLauncher.launch(null) }, modifier = Modifier.fillMaxWidth()
             )

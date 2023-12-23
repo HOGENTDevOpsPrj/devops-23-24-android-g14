@@ -14,7 +14,7 @@ enum class ImageCollectionError {
     /**
      * The [ImageCollection] is empty.
      */
-    Empty
+    EMPTY
 }
 
 /**
@@ -30,7 +30,7 @@ class ImageCollection private constructor(value: List<Image>) {
         /**
          * Creates an [ImageCollection].
          *
-         * An [ImageCollectionError.Empty] is returned if the [images] are empty.
+         * An [ImageCollectionError.EMPTY] is returned if the [images] are empty.
          *
          * @param images the [Image]s in the collection.
          * @return a [Result] containing either the [ImageCollection] or a [ImageCollectionError].
@@ -54,38 +54,10 @@ class ImageCollection private constructor(value: List<Image>) {
          */
         fun validate(images: List<Image>): ImageCollectionError? {
             return if (images.isEmpty()) {
-                ImageCollectionError.Empty
+                ImageCollectionError.EMPTY
             } else {
                 null
             }
         }
-    }
-}
-
-class ImageCollectionConverter() {
-    @TypeConverter
-    fun fromImageCollection(imageCollection: ImageCollection): String {
-        return imageCollection.value.joinToString(";") { (id, bitmap) ->
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-            val byteArray = byteArrayOutputStream.toByteArray()
-            val encoded: String = Base64.encodeToString(byteArray, Base64.DEFAULT)
-            "$id,$encoded"
-        }
-    }
-
-    @TypeConverter
-    fun toImageCollection(imageCollectionString: String): ImageCollection {
-        return (ImageCollection.create(
-            imageCollectionString.split(";").map { imageString ->
-                val imageStringParts = imageString.split(",")
-                val decodedString: ByteArray = Base64.decode(imageStringParts[1], Base64.DEFAULT)
-                val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-                Image(
-                    id = imageStringParts[0],
-                    bitmap = decodedByte
-                )
-            }
-        ) as Result.Success).value
     }
 }

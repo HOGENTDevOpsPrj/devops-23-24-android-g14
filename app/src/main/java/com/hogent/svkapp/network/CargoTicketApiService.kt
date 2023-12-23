@@ -9,6 +9,11 @@ import retrofit2.http.POST
  */
 interface CargoTicketApiService {
 
+    /**
+     * Adds a [CargoTicket] to the server.
+     *
+     * @param cargoTicket the [CargoTicket] to add.
+     */
     @POST("cargo-tickets")
     suspend fun postCargoTicket(@Body cargoTicket: ApiCargoTicket)
 }

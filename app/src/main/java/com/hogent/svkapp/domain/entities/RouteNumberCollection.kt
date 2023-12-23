@@ -9,7 +9,7 @@ enum class RouteNumberCollectionError {
     /**
      * The [RouteNumberCollection] is empty.
      */
-    Empty
+    EMPTY
 }
 
 /**
@@ -25,14 +25,14 @@ class RouteNumberCollection private constructor(value: List<RouteNumber>) {
         /**
          * Creates a [RouteNumberCollection].
          *
-         * An [RouteNumberCollectionError.Empty] is returned if the [routeNumbers] are empty.
+         * An [RouteNumberCollectionError.EMPTY] is returned if the [routeNumbers] are empty.
          *
          * @param routeNumbers the [RouteNumber]s in the collection.
          * @return a [Result] containing either the [RouteNumberCollection] or a [RouteNumberCollectionError].
          */
         fun create(routeNumbers: List<RouteNumber>): Result<RouteNumberCollection, RouteNumberCollectionError> {
             return if (routeNumbers.isEmpty()) {
-                Result.Failure(RouteNumberCollectionError.Empty)
+                Result.Failure(RouteNumberCollectionError.EMPTY)
             } else {
                 Result.Success(RouteNumberCollection(routeNumbers))
             }
@@ -49,27 +49,10 @@ class RouteNumberCollection private constructor(value: List<RouteNumber>) {
             val routeNumberResults =
                 routeNumbers.map { RouteNumber.validateStringRepresentation(it) }
             return if (routeNumberResults.isEmpty()) {
-                Result.Failure(RouteNumberCollectionError.Empty)
+                Result.Failure(RouteNumberCollectionError.EMPTY)
             } else {
                 Result.Success(routeNumberResults)
             }
         }
-    }
-}
-
-class RouteNumberCollectionConverter {
-    @TypeConverter
-    fun storedStringToRouteNumberCollection(value: String): RouteNumberCollection {
-        val routeNumbers: List<RouteNumber> = value
-            .split(";")
-            .map {
-                RouteNumber.create(it) as Result.Success
-            }.map { it.value }
-        return (RouteNumberCollection.create(routeNumbers) as Result.Success).value
-    }
-
-    @TypeConverter
-    fun routeNumberCollectionToStoredString(routeNumberCollection: RouteNumberCollection): String {
-        return routeNumberCollection.value.joinToString(";") { it.value.toString() }
     }
 }

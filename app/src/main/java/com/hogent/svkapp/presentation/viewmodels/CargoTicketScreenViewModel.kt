@@ -6,13 +6,19 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.hogent.svkapp.SVKApplication
 import com.hogent.svkapp.data.repositories.CargoTicketRepository
+import com.hogent.svkapp.data.repositories.MainCargoTicketRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
+/**
+ * The [ViewModel] of the [CargoTicketScreen].
+ *
+ * @property cargoTicketRepository the [CargoTicketRepository] that is used to get the [CargoTicket]s.
+ */
 class CargoTicketScreenViewModel(
-    private val cargoTicketRepository: CargoTicketRepository,
+    private val cargoTicketRepository: MainCargoTicketRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CargoTicketScreenState())
@@ -24,7 +30,6 @@ class CargoTicketScreenViewModel(
 
     init {
         getCargoTickets()
-
     }
 
     companion object {
@@ -42,10 +47,13 @@ class CargoTicketScreenViewModel(
         }
     }
 
-    fun getCargoTickets() {
+    /**
+     * Gets the cargo tickets from the [CargoTicketRepository].
+     */
+    private fun getCargoTickets() {
         _uiState.update {
             it.copy(
-                cargoTickets = cargoTicketRepository.getCargoTickets()
+                cargoTickets = cargoTicketRepository.getNonProcessedCargoTickets()
             )
         }
     }

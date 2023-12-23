@@ -6,8 +6,18 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+/**
+ * A cargo ticket. This class is used to send the cargo ticket to the server.
+ *
+ * @property loadReceiptNumber the load receipt number of the cargo.
+ * @property routeNumbers the route numbers of the cargo.
+ * @property licensePlate the license plate of the cargo.
+ * @property imageUrls the image urls of the cargo.
+ * @property freightLoaderId the ID of the freight loader.
+ * @property registrationDateTime the date and time of the registration.
+ */
 @Serializable
-data class ApiCargoTicket (
+data class ApiCargoTicket(
     val loadReceiptNumber: String,
     val routeNumbers: List<String>,
     val licensePlate: String,
@@ -16,24 +26,31 @@ data class ApiCargoTicket (
     val registrationDateTime: String
 )
 
+/**
+ * A converter for [CargoTicket]s. This class is used to convert [CargoTicket]s to [ApiCargoTicket]s.
+ */
 class CargoTicketConverter {
     companion object {
-        fun convertToApiCargoTicket(cargoTicket: CargoTicket, id: String): ApiCargoTicket {
+        /**
+         * Converts a [CargoTicket] to an [ApiCargoTicket].
+         *
+         * @receiver the [CargoTicket] to convert
+         * @return the [ApiCargoTicket]
+         */
+        fun CargoTicket.convertToApiCargoTicket(): ApiCargoTicket {
             return ApiCargoTicket(
-                loadReceiptNumber = "2346",
-                routeNumbers = cargoTicket.routeNumbers.value.map { it.value.toString() },
-                licensePlate = cargoTicket.licensePlate.value,
-                imageUrls = cargoTicket.images.value.map {
-                    val fotoUploader = AzureBlobUploader("https://svkstorageg14.blob.core.windows.net/");
+                loadReceiptNumber = loadReceiptNumber.value,
+                routeNumbers = routeNumbers.value.map { it.value },
+                licensePlate = licensePlate.value,
+                imageUrls = images.value.map {
+                    val imageUploader = AzureBlobUploader("https://svkstorageg14.blob.core.windows.net/")
                     val sasToken =
-                        "?sv=2022-11-02&ss=b&srt=co&sp=rwdlaciytfx&se=2024-01-29T23:12:27Z&st=2023-12-05T15" +
-                                ":12:27Z&spr=https&sig=yGX%2FMbbmyTAu4ACKxf8MK2RB1GJiR1wyPv%2FXyRz0ReE%3D"
-                    fotoUploader.uploadImage(it.id, sasToken, it.bitmap)
+                        "?sv=2022-11-02&ss=b&srt=co&sp=rwdlaciytfx&se=2024-01-29T23:12:27Z&st=2023-12-05T15" + ":12:27Z&spr=https&sig=yGX%2FMbbmyTAu4ACKxf8MK2RB1GJiR1wyPv%2FXyRz0ReE%3D"
+                    imageUploader.uploadImage(it.id, sasToken, it.bitmap)
                 },
-                freightLoaderId = id,
+                freightLoaderId = freightLoaderId.value,
                 registrationDateTime = LocalDateTime.now(ZoneId.systemDefault()).format(
-                    DateTimeFormatter.ofPattern
-                        ("yyyy-MM-dd'T'HH:mm:ss")
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
                 )
             )
         }
