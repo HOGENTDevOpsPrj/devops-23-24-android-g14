@@ -15,7 +15,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.hogent.svkapp.Route
+import com.hogent.svkapp.presentation.ui.navigation.Route
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 import java.util.concurrent.Executors
 

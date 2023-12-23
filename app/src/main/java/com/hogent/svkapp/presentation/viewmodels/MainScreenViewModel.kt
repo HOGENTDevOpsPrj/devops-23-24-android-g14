@@ -52,7 +52,6 @@ class MainScreenViewModel(
     private val TAG = "MainScreenViewModel"
 
     var userIsAuthenticated: Boolean by mutableStateOf(false)
-    var user: User by mutableStateOf(User())
 
     /**
      * Called when login button is clicked.
@@ -68,14 +67,14 @@ class MainScreenViewModel(
 
                 override fun onSuccess(result: Credentials) {
                     val idToken = result.idToken
-                    user = User(idToken)
+                    val user = User(idToken)
+                    _uiState.update { state ->
+                        state.copy(user = user)
+                    }
                     userIsAuthenticated = true
                     onSuccessNavigation()
                 }
-
             })
-
-
     }
 
     /**
@@ -250,10 +249,11 @@ class MainScreenViewModel(
                 override fun onSuccess(result: Void?) {
                     // The user successfully logged out.
                     userIsAuthenticated = false
-                    user = User()
+                    _uiState.update { state ->
+                        state.copy(user = null)
+                    }
                     onLogoutNavigation()
                 }
-
             })
     }
 

@@ -13,7 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.auth0.android.Auth0
 import com.hogent.svkapp.R
-import com.hogent.svkapp.Route
+import com.hogent.svkapp.presentation.ui.navigation.Route
 import com.hogent.svkapp.presentation.ui.SVKLogo
 import com.hogent.svkapp.presentation.ui.theme.spacing
 import com.hogent.svkapp.presentation.viewmodels.LoginViewModel

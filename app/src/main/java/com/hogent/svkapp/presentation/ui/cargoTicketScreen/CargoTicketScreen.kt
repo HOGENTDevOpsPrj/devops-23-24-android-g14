@@ -23,7 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.auth0.android.Auth0
 import com.hogent.svkapp.R
-import com.hogent.svkapp.Route
+import com.hogent.svkapp.presentation.ui.navigation.Route
 import com.hogent.svkapp.domain.entities.CargoTicket
 import com.hogent.svkapp.presentation.ui.mainscreen.MainTopAppBar
 import com.hogent.svkapp.presentation.viewmodels.CargoTicketScreenViewModel
@@ -36,42 +36,14 @@ import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 @Composable
 fun CargoTicketScreen(
     modifier: Modifier = Modifier,
-    mainScreenViewModel: MainScreenViewModel = viewModel(factory = MainScreenViewModel.Factory),
     cargoTicketScreenViewModel: CargoTicketScreenViewModel = viewModel(factory = CargoTicketScreenViewModel.Factory),
-    navController: NavController,
 ) {
     val cargoTicketScreenState by cargoTicketScreenViewModel.uiState.collectAsState()
 
-    val canNavigateBack = navController.previousBackStackEntry?.destination?.route != Route.Login.name
-
-    val context = LocalContext.current
-    val auth = Auth0(
-        context.getString(R.string.com_auth0_client_id),
-        context.getString(R.string.com_auth0_domain)
+    CargoTicketList(
+        modifier = modifier,
+        cargoTickets = cargoTicketScreenState.cargoTickets,
     )
-    val user = mainScreenViewModel.user
-
-    Scaffold(topBar = {
-        MainTopAppBar(
-            modifier = modifier,
-            onLogout = {
-                mainScreenViewModel.onLogout(context, auth = auth, onLogoutNavigation = {
-                    navController
-                        .navigate(Route.Login.name)
-                })
-            },
-            navigateToCargoTickets = { navController.navigate(Route.CargoTickets.name) },
-            user = user,
-            canNavigateBack = canNavigateBack,
-            navigateUp = { navController.navigateUp() },
-        )
-    }) { innerPadding ->
-        CargoTicketList(
-            modifier = modifier
-                .padding(innerPadding),
-            cargoTickets = cargoTicketScreenState.cargoTickets,
-        )
-    }
 }
 
 @Composable
