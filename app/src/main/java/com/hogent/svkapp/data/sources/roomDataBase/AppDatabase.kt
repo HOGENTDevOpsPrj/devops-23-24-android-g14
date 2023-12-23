@@ -9,7 +9,7 @@ import androidx.room.TypeConverters
 /**
  * The Room database that contains the cargo ticket table.
  */
-@Database(entities = [CargoTicketDatabaseEntity::class], version = 1, exportSchema = false)
+@Database(entities = [CargoTicketDatabaseEntity::class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     /**
@@ -28,7 +28,9 @@ abstract class AppDatabase : RoomDatabase() {
                 synchronized(AppDatabase::class) {
                     INSTANCE = Room.databaseBuilder(
                         context.applicationContext, AppDatabase::class.java, "cargoTicket"
-                    ).allowMainThreadQueries().build()
+                    ).allowMainThreadQueries()
+                        .fallbackToDestructiveMigration()
+                        .build()
                 }
             }
             return INSTANCE as AppDatabase
