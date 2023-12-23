@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 class UnprocessedCargoTicketsManager(
     private val cargoTicketApiRepository: CargoTicketApiRepository,
     private val cargoTicketLocalRepository: CargoTicketLocalRepository,
-    context: Context,
+    private val context: Context,
 ) {
     private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 

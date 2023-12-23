@@ -1,7 +1,5 @@
 package com.hogent.svkapp.domain.entities
 
-import androidx.room.TypeConverter
-
 /**
  * An error that can occur when validating a [RouteNumber].
  */

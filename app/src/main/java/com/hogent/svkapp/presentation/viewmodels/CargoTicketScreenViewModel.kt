@@ -13,9 +13,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 /**
- * The [ViewModel] of the [CargoTicketScreen].
+ * The [ViewModel] of the CargoTicketScreen.
  *
- * @property cargoTicketRepository the [CargoTicketRepository] that is used to get the [CargoTicket]s.
+ * @property cargoTicketRepository the [CargoTicketRepository] that is used to get the CargoTickets.
  */
 class CargoTicketScreenViewModel(
     private val cargoTicketRepository: MainCargoTicketRepository,
