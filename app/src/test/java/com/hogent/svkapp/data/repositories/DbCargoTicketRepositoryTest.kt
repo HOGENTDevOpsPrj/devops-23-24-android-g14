@@ -16,11 +16,11 @@ class DbCargoTicketRepositoryTest {
     fun setup() {
         cargoTicket = mock()
         cargoTicketDataSource = mock()
-        cargoTicketRepository = CargoTicketRepository(cargoTicketDataSource)
+        cargoTicketRepository = mock()
     }
 
     @Test
-    fun `addTicket should call addTicket on localDataSource`() {
+    suspend fun `addTicket should call addTicket on localDataSource`() {
         cargoTicketRepository.addCargoTicket(cargoTicket = cargoTicket)
 
         verify(cargoTicketDataSource).addCargoTicket(cargoTicket)

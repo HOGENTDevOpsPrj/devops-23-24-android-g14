@@ -130,5 +130,6 @@ dependencies {
     val mockitoKotlinVersion = "5.1.0"
 
     testImplementation("junit:junit:$junitVersion")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
     testImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
 }

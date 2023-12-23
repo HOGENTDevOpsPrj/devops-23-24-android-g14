@@ -26,21 +26,21 @@ class LocalDbCargoTicketDataSourceTest {
     }
 
     @Test
-    fun `when addTicket is called, ticket should be added`() {
+    suspend fun `when addTicket is called, ticket should be added`() {
         localTicketDataSource.addCargoTicket(cargoTicket = cargoTicket1)
 
         assertTrue(localTicketDataSource.getCargoTickets().contains(cargoTicket1))
     }
 
     @Test
-    fun `when addTicket is called, ticket should be logged`() {
+    suspend fun `when addTicket is called, ticket should be logged`() {
         localTicketDataSource.addCargoTicket(cargoTicket = cargoTicket1)
 
         verify(logger).debug(tag = "Local Database", message = "Added cargo ticket: $cargoTicket1")
     }
 
     @Test
-    fun `when getTickets is called, all tickets should be returned`() {
+    suspend fun `when getTickets is called, all tickets should be returned`() {
         localTicketDataSource.addCargoTicket(cargoTicket = cargoTicket1)
         localTicketDataSource.addCargoTicket(cargoTicket = cargoTicket2)
         localTicketDataSource.addCargoTicket(cargoTicket = cargoTicket3)
