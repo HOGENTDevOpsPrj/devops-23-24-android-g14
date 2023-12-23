@@ -34,7 +34,7 @@ List of technologies and packages used in this project:
 - ...
 - ...
 
-    ## Login Credentials
+## Login Credentials
 ```
 email: testlader@svkapp.com
 password: svkg14@123
