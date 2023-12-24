@@ -1,5 +1,7 @@
 package com.hogent.svkapp.domain.entities
 
+import com.hogent.svkapp.util.CustomResult
+
 /**
  * An error that can occur when a [LoadReceiptNumber] is invalid.
  */
@@ -32,15 +34,15 @@ class LoadReceiptNumber private constructor(value: String) {
          * [LoadReceiptNumber] is invalid if it is empty or is not a positive integer with 10 digits starting with 1004.
          *
          * @param value the value of the [LoadReceiptNumber].
-         * @return a [Result] containing either the [LoadReceiptNumber] or a [LoadReceiptNumberError].
+         * @return a [CustomResult] containing either the [LoadReceiptNumber] or a [LoadReceiptNumberError].
          */
-        fun create(value: String): Result<LoadReceiptNumber, LoadReceiptNumberError> {
+        fun create(value: String): CustomResult<LoadReceiptNumber, LoadReceiptNumberError> {
             val result = validate(value)
 
             return if (result == null) {
-                Result.Success(LoadReceiptNumber(clean(value)))
+                CustomResult.Success(LoadReceiptNumber(clean(value)))
             } else {
-                Result.Failure(result)
+                CustomResult.Failure(result)
             }
         }
 

@@ -16,5 +16,5 @@ interface CargoTicketApiService {
      * @param cargoTicket the [CargoTicket] to add.
      */
     @POST("cargo-tickets")
-    suspend fun postCargoTicket(@Body cargoTicket: ApiCargoTicket)
+    suspend fun postCargoTicket(@Body cargoTicket: ApiCargoTicket): Response<Unit>
 }

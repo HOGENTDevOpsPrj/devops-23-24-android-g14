@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey
 import com.hogent.svkapp.domain.entities.CargoTicket
 import com.hogent.svkapp.domain.entities.CargoTicketError
 import com.hogent.svkapp.domain.entities.Image
+import com.hogent.svkapp.util.CustomResult
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -41,7 +42,7 @@ data class CargoTicketDatabaseEntity(
          * @return a Result with the [CargoTicket] if the conversion was successful, a Result with a [CargoTicketError]
          * otherwise.
          */
-        fun CargoTicketDatabaseEntity.toCargoTicket(): com.hogent.svkapp.domain.entities.Result<CargoTicket, CargoTicketError> {
+        fun CargoTicketDatabaseEntity.toCargoTicket(): CustomResult<CargoTicket, CargoTicketError> {
             return CargoTicket.create(
                 loadReceiptNumber = loadReceiptNumber,
                 routeNumbers = routeNumbers,

@@ -1,5 +1,6 @@
 package com.hogent.svkapp.domain.entities
 
+import com.hogent.svkapp.util.CustomResult
 import java.time.LocalDateTime
 
 /**
@@ -90,7 +91,7 @@ class CargoTicket(
          * @param freightLoaderId the ID of the freight loader.
          * @param registrationDateTime the date and time of the registration.
          *
-         * @return a [Result] containing either a [CargoTicket] or a [CargoTicketError].
+         * @return a [CustomResult] containing either a [CargoTicket] or a [CargoTicketError].
          */
         fun create(
             loadReceiptNumber: String,
@@ -99,22 +100,22 @@ class CargoTicket(
             images: List<Image>,
             freightLoaderId: String,
             registrationDateTime: LocalDateTime
-        ): Result<CargoTicket, CargoTicketError> {
+        ): CustomResult<CargoTicket, CargoTicketError> {
             val result =
                 validateStringRepresentations(loadReceiptNumber, routeNumbers, licensePlate, images, freightLoaderId)
 
             return if (result.hasErrors) {
-                Result.Failure(result)
+                CustomResult.Failure(result)
             } else {
-                val loadReceiptNumberValidated = LoadReceiptNumber.create(loadReceiptNumber) as Result.Success
+                val loadReceiptNumberValidated = LoadReceiptNumber.create(loadReceiptNumber) as CustomResult.Success
                 val routeNumberCollection =
-                    RouteNumberCollection.create(routeNumbers.map { RouteNumber.create(it) as Result.Success }
-                        .map { it.value }) as Result.Success
-                val licensePlateValidated = LicensePlate.create(licensePlate) as Result.Success
-                val imageCollection = ImageCollection.create(images) as Result.Success
-                val freightLoaderIdValidated = Auth0Id.create(freightLoaderId) as Result.Success
+                    RouteNumberCollection.create(routeNumbers.map { RouteNumber.create(it) as CustomResult.Success }
+                        .map { it.value }) as CustomResult.Success
+                val licensePlateValidated = LicensePlate.create(licensePlate) as CustomResult.Success
+                val imageCollection = ImageCollection.create(images) as CustomResult.Success
+                val freightLoaderIdValidated = Auth0Id.create(freightLoaderId) as CustomResult.Success
 
-                Result.Success(
+                CustomResult.Success(
                     CargoTicket(
                         loadReceiptNumberValidated.value,
                         routeNumberCollection.value,
@@ -140,13 +141,13 @@ class CargoTicket(
             val routeNumberResult = RouteNumberCollection.validateStringRepresentations(routeNumbers)
 
             val routeNumberCollectionError = when (routeNumberResult) {
-                is Result.Success -> null
-                is Result.Failure -> routeNumberResult.error
+                is CustomResult.Success -> null
+                is CustomResult.Failure -> routeNumberResult.error
             }
 
             val routeNumberErrors = when (routeNumberResult) {
-                is Result.Success -> routeNumberResult.value
-                is Result.Failure -> emptyList()
+                is CustomResult.Success -> routeNumberResult.value
+                is CustomResult.Failure -> emptyList()
             }
 
             val licensePlateError = LicensePlate.validate(licensePlate)

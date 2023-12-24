@@ -17,17 +17,17 @@ import com.auth0.android.provider.WebAuthProvider
 import com.auth0.android.result.Credentials
 import com.hogent.svkapp.R
 import com.hogent.svkapp.SVKApplication
-import com.hogent.svkapp.data.repositories.CargoTicketRepository
-import com.hogent.svkapp.data.repositories.UserRepository
+import com.hogent.svkapp.data.repositories.MainCargoTicketRepository
+import com.hogent.svkapp.data.repositories.UserApiRepository
 import com.hogent.svkapp.domain.entities.CargoTicket
 import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.domain.entities.ImageCollectionError
 import com.hogent.svkapp.domain.entities.LicensePlate
 import com.hogent.svkapp.domain.entities.LoadReceiptNumber
-import com.hogent.svkapp.domain.entities.Result
 import com.hogent.svkapp.domain.entities.RouteNumber
 import com.hogent.svkapp.domain.entities.RouteNumberCollectionError
 import com.hogent.svkapp.domain.entities.User
+import com.hogent.svkapp.util.CustomResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,14 +39,14 @@ import java.util.Locale
 /**
  * The [ViewModel] of the main screen.
  *
- * @param cargoTicketRepository the [CargoTicketRepository] that is used to add cargo tickets.
- * @param userRepository the [UserRepository] that is used to add users.
+ * @param mainCargoTicketRepository the [MainCargoTicketRepository] that is used to add cargo tickets.
+ * @param userApiRepository the [UserApiRepository] that is used to add users.
  * @property userIsAuthenticated whether the user is authenticated.
  * @property user the user.
  * @property uiState the state of the screen as read-only state flow.
  */
 class MainScreenViewModel(
-    private val cargoTicketRepository: CargoTicketRepository, private val userRepository: UserRepository
+    private val mainCargoTicketRepository: MainCargoTicketRepository, private val userApiRepository: UserApiRepository
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainScreenState())
 
@@ -65,27 +65,30 @@ class MainScreenViewModel(
      */
     fun onLogin(context: Context, auth: Auth0, onSuccessNavigation: () -> Unit) {
         WebAuthProvider.login(auth).withScheme(context.getString(R.string.com_auth0_scheme))
+            .withAudience("https://svk-g14-api.com/")
             .start(context, object : Callback<Credentials, AuthenticationException> {
                 override fun onFailure(error: AuthenticationException) {
 
                 }
 
                 override fun onSuccess(result: Credentials) {
+                    Log.i(tag, "User successfully logged in")
                     val idToken = result.idToken
                     user = User(idToken)
                     userIsAuthenticated = true
+
+                    user.idToken?.let { saveTokenToSharedPreferences(context, it) }
+
+                    viewModelScope.launch {
+                        userApiRepository.addUser(user)
+                    }
+
                     onSuccessNavigation()
                 }
             })
-
-        user.idToken?.let { saveTokenToSharedPreferences(context, it) }
-
-        viewModelScope.launch {
-            userRepository.addUser(user)
-        }
     }
 
-    private fun saveTokenToSharedPreferences(context: Context, token: String) {
+    internal fun saveTokenToSharedPreferences(context: Context, token: String) {
         val sharedPreferences = context.getSharedPreferences("AuthPreferences", Context.MODE_PRIVATE)
         sharedPreferences.edit().putString("auth0_token", token).apply()
     }
@@ -106,10 +109,10 @@ class MainScreenViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as SVKApplication)
-                val cargoTicketRepository = application.container.cargoTicketRepository
-                val userRepository = application.container.userRepository
+                val cargoTicketRepository = application.container.mainCargoTicketRepository
+                val userRepository = application.container.userApiRepository
                 MainScreenViewModel(
-                    cargoTicketRepository = cargoTicketRepository, userRepository = userRepository
+                    mainCargoTicketRepository = cargoTicketRepository, userApiRepository = userRepository
                 )
             }
         }
@@ -155,13 +158,13 @@ class MainScreenViewModel(
         )
 
         when (creationResult) {
-            is Result.Success -> {
-                viewModelScope.launch { cargoTicketRepository.addCargoTicket(creationResult.value) }
+            is CustomResult.Success -> {
+                viewModelScope.launch { mainCargoTicketRepository.addCargoTicket(creationResult.value) }
                 resetForm()
                 toggleDialog()
             }
 
-            is Result.Failure -> {
+            is CustomResult.Failure -> {
                 _uiState.update { state ->
                     state.copy(
                         loadReceiptNumberInputFieldValidationError = creationResult.error.loadReceiptNumberError,

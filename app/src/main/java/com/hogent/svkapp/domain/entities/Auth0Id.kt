@@ -1,5 +1,7 @@
 package com.hogent.svkapp.domain.entities
 
+import com.hogent.svkapp.util.CustomResult
+
 /**
  * An Auth0 ID.
  */
@@ -27,15 +29,15 @@ class Auth0Id private constructor(value: String) {
          * it is empty.
          *
          * @param value the value of the [Auth0Id].
-         * @return a [Result] containing either the [Auth0Id] or an [Auth0IdError].
+         * @return a [CustomResult] containing either the [Auth0Id] or an [Auth0IdError].
          */
-        fun create(value: String): Result<Auth0Id, Auth0IdError> {
+        fun create(value: String): CustomResult<Auth0Id, Auth0IdError> {
             val result = validate(value)
 
             return if (result == null) {
-                Result.Success(Auth0Id(clean(value)))
+                CustomResult.Success(Auth0Id(clean(value)))
             } else {
-                Result.Failure(result)
+                CustomResult.Failure(result)
             }
         }
 

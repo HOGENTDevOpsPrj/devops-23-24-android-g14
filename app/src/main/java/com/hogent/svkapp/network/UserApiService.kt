@@ -1,5 +1,6 @@
 package com.hogent.svkapp.network
 
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -13,5 +14,5 @@ interface UserApiService {
      * @param user the User to add.
      */
     @POST("users")
-    suspend fun postUser(@Body user: ApiUser)
+    suspend fun postUser(@Body user: ApiUser): Response<Unit>
 }

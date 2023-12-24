@@ -1,5 +1,7 @@
 package com.hogent.svkapp.domain.entities
 
+import com.hogent.svkapp.util.CustomResult
+
 /**
  * An error that can occur when creating a [RouteNumber].
  */
@@ -37,14 +39,14 @@ class RouteNumber private constructor(value: String) {
          * if it is empty, not a positive number or has an invalid format.
          *
          * @param routeNumber the value of the route number.
-         * @return a [Result] containing either the [RouteNumber] or a [RouteNumberError].
+         * @return a [CustomResult] containing either the [RouteNumber] or a [RouteNumberError].
          */
-        fun create(routeNumber: String): Result<RouteNumber, List<RouteNumberError?>> {
+        fun create(routeNumber: String): CustomResult<RouteNumber, List<RouteNumberError?>> {
             val result = validateStringRepresentation(routeNumber)
             return if (result.isEmpty()) {
-                Result.Success(RouteNumber(routeNumber))
+                CustomResult.Success(RouteNumber(routeNumber))
             } else {
-                Result.Failure(result)
+                CustomResult.Failure(result)
             }
         }
 

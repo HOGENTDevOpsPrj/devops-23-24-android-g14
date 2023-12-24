@@ -1,5 +1,7 @@
 package com.hogent.svkapp.domain.entities
 
+import com.hogent.svkapp.util.CustomResult
+
 /**
  * An error that can occur when validating a [RouteNumber].
  */
@@ -26,13 +28,13 @@ class RouteNumberCollection private constructor(value: List<RouteNumber>) {
          * An [RouteNumberCollectionError.EMPTY] is returned if the [routeNumbers] are empty.
          *
          * @param routeNumbers the [RouteNumber]s in the collection.
-         * @return a [Result] containing either the [RouteNumberCollection] or a [RouteNumberCollectionError].
+         * @return a [CustomResult] containing either the [RouteNumberCollection] or a [RouteNumberCollectionError].
          */
-        fun create(routeNumbers: List<RouteNumber>): Result<RouteNumberCollection, RouteNumberCollectionError> {
+        fun create(routeNumbers: List<RouteNumber>): CustomResult<RouteNumberCollection, RouteNumberCollectionError> {
             return if (routeNumbers.isEmpty()) {
-                Result.Failure(RouteNumberCollectionError.EMPTY)
+                CustomResult.Failure(RouteNumberCollectionError.EMPTY)
             } else {
-                Result.Success(RouteNumberCollection(routeNumbers))
+                CustomResult.Success(RouteNumberCollection(routeNumbers))
             }
         }
 
@@ -43,13 +45,13 @@ class RouteNumberCollection private constructor(value: List<RouteNumber>) {
          * @return an [RouteNumberCollectionError] if the [RouteNumber]s are invalid, null otherwise.
          */
         fun validateStringRepresentations(routeNumbers: List<String>):
-                Result<List<List<RouteNumberError?>>, RouteNumberCollectionError> {
+                CustomResult<List<List<RouteNumberError?>>, RouteNumberCollectionError> {
             val routeNumberResults =
                 routeNumbers.map { RouteNumber.validateStringRepresentation(it) }
             return if (routeNumberResults.isEmpty()) {
-                Result.Failure(RouteNumberCollectionError.EMPTY)
+                CustomResult.Failure(RouteNumberCollectionError.EMPTY)
             } else {
-                Result.Success(routeNumberResults)
+                CustomResult.Success(routeNumberResults)
             }
         }
     }

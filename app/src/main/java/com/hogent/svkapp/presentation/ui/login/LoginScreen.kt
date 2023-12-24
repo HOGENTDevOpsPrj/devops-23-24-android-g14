@@ -36,6 +36,7 @@ fun LoginScreen(
         context.getString(R.string.com_auth0_client_id),
         context.getString(R.string.com_auth0_domain)
     )
+
     Column(
         modifier = Modifier
             .fillMaxSize()

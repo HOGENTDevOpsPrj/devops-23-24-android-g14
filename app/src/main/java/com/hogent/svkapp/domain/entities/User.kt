@@ -18,7 +18,7 @@ data class User(val idToken: String? = null) {
         if (idToken != null) {
             try {
                 // Attempt to decode the ID token.
-                val jwt = JWT(idToken ?: "")
+                val jwt = JWT(idToken)
 
                 // The ID token is a valid JWT,
                 // so extract information about the user from it.

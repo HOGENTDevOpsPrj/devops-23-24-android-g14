@@ -7,8 +7,8 @@ import android.net.NetworkCapabilities
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.hogent.svkapp.data.repositories.CargoTicketApiRepository
-import com.hogent.svkapp.data.repositories.CargoTicketLocalRepository
+import com.hogent.svkapp.data.repositories.CargoTicketApiRepositoryImpl
+import com.hogent.svkapp.data.repositories.CargoTicketLocalRepositoryImpl
 import com.hogent.svkapp.domain.entities.CargoTicket
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -19,13 +19,13 @@ import kotlinx.coroutines.launch
  * A manager for [CargoTicket]s that are not yet processed. This manager sends the [CargoTicket]s
  * to the server when the internet is available.
  *
- * @property cargoTicketApiRepository the [CargoTicketApiRepository] that is used to send the [CargoTicket]s to the server.
- * @property cargoTicketLocalRepository the [CargoTicketLocalRepository] that is used to save the [CargoTicket]s in a local roomDataBase.
+ * @property cargoTicketApiRepository the [CargoTicketApiRepositoryImpl] that is used to send the [CargoTicket]s to the server.
+ * @property cargoTicketLocalRepository the [CargoTicketLocalRepositoryImpl] that is used to save the [CargoTicket]s in a local roomDataBase.
  * @property context the application context.
  */
 class UnprocessedCargoTicketsManager(
-    private val cargoTicketApiRepository: CargoTicketApiRepository,
-    private val cargoTicketLocalRepository: CargoTicketLocalRepository,
+    private val cargoTicketApiRepository: CargoTicketApiRepositoryImpl,
+    private val cargoTicketLocalRepository: CargoTicketLocalRepositoryImpl,
     private val context: Context,
 ) {
     private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

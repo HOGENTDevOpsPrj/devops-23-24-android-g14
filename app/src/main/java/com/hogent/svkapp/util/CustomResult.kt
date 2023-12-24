@@ -1,4 +1,4 @@
-package com.hogent.svkapp.domain.entities
+package com.hogent.svkapp.util
 
 /**
  * A result.
@@ -6,7 +6,7 @@ package com.hogent.svkapp.domain.entities
  * @param T the type of the value.
  * @param E the type of the error.
  */
-sealed class Result<T, E> {
+sealed class CustomResult<T, E> {
     /**
      * A success.
      *
@@ -14,7 +14,7 @@ sealed class Result<T, E> {
      * @param T the type of the value.
      * @param E the type of the error.
      */
-    data class Success<T, E>(val value: T) : Result<T, E>()
+    data class Success<T, E>(val value: T) : CustomResult<T, E>()
 
     /**
      * A failure.
@@ -23,5 +23,5 @@ sealed class Result<T, E> {
      * @param T the type of the value.
      * @param E the type of the error.
      */
-    data class Failure<T, E>(val error: E) : Result<T, E>()
+    data class Failure<T, E>(val error: E) : CustomResult<T, E>()
 }

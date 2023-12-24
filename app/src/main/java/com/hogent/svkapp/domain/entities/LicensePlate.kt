@@ -1,5 +1,7 @@
 package com.hogent.svkapp.domain.entities
 
+import com.hogent.svkapp.util.CustomResult
+
 /**
  * An error that can occur when validating a [LicensePlate].
  */
@@ -32,15 +34,15 @@ class LicensePlate private constructor(value: String) {
          * too long.
          *
          * @param plate the value of the license plate.
-         * @return a [Result] containing either the [LicensePlate] or a [LicensePlateError].
+         * @return a [CustomResult] containing either the [LicensePlate] or a [LicensePlateError].
          */
-        fun create(plate: String): Result<LicensePlate, LicensePlateError> {
+        fun create(plate: String): CustomResult<LicensePlate, LicensePlateError> {
             val result = validate(plate)
 
             return if (result == null) {
-                Result.Success(LicensePlate(clean(plate)))
+                CustomResult.Success(LicensePlate(clean(plate)))
             } else {
-                Result.Failure(result)
+                CustomResult.Failure(result)
             }
         }
 

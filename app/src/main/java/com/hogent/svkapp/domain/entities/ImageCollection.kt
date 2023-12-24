@@ -1,5 +1,7 @@
 package com.hogent.svkapp.domain.entities
 
+import com.hogent.svkapp.util.CustomResult
+
 
 /**
  * An error that can occur when validating an [ImageCollection].
@@ -27,15 +29,15 @@ class ImageCollection private constructor(value: List<Image>) {
          * An [ImageCollectionError.EMPTY] is returned if the [images] are empty.
          *
          * @param images the [Image]s in the collection.
-         * @return a [Result] containing either the [ImageCollection] or a [ImageCollectionError].
+         * @return a [CustomResult] containing either the [ImageCollection] or a [ImageCollectionError].
          */
-        fun create(images: List<Image>): Result<ImageCollection, ImageCollectionError> {
+        fun create(images: List<Image>): CustomResult<ImageCollection, ImageCollectionError> {
             val result = validate(images)
 
             return if (result != null) {
-                Result.Failure(result)
+                CustomResult.Failure(result)
             } else {
-                Result.Success(ImageCollection(images))
+                CustomResult.Success(ImageCollection(images))
             }
         }
 
