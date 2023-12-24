@@ -120,6 +120,7 @@ dependencies {
     androidTestImplementation("androidx.test:runner:$testRunnerVersion")
     androidTestImplementation("androidx.test:rules:$testRulesVersion")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
+    androidTestImplementation("androidx.navigation:navigation-testing:2.7.5")
     annotationProcessor("androidx.room:room-compiler:$room_version")
 
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")

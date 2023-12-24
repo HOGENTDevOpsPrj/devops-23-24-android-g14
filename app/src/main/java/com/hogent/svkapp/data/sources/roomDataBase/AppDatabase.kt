@@ -9,7 +9,7 @@ import com.hogent.svkapp.domain.entities.ImageCollectionConverter
 import com.hogent.svkapp.domain.entities.LicensePlateConverter
 import com.hogent.svkapp.domain.entities.RouteNumberCollectionConverter
 
-@Database(entities = [DbCargoTicket::class], version = 1, exportSchema = false)
+@Database(entities = [DbCargoTicket::class], version = 3, exportSchema = false)
 @TypeConverters(RouteNumberCollectionConverter::class, LicensePlateConverter::class, ImageCollectionConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun cargoTicketDao(): CargoTicketDAO

@@ -16,7 +16,23 @@ data class DbCargoTicket(
     @ColumnInfo(name = "images") val images: ImageCollection,
 )
 
-fun List<DbCargoTicket>.toDomainCargoTickets(): List<CargoTicket> {
+fun DbCargoTicket.asDomainCargoTicket(): CargoTicket {
+    return CargoTicket(
+        routeNumbers = this.routeNumbers,
+        licensePlate = this.licensePlate,
+        images = this.images,
+    )
+}
+
+fun CargoTicket.asDbCargoTicket(): DbCargoTicket {
+    return DbCargoTicket(
+        routeNumbers = this.routeNumbers,
+        licensePlate = this.licensePlate,
+        images = this.images,
+    )
+}
+
+fun List<DbCargoTicket>.asDomainCargoTickeas(): List<CargoTicket> {
     return this.map {
         CargoTicket(
             routeNumbers = it.routeNumbers,

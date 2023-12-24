@@ -9,7 +9,7 @@ import androidx.room.Query
 @Dao
 interface CargoTicketDAO {
 
-    @Query("SELECT * FROM cargoTicket")
+    @Query("SELECT * FROM cargoTicket ORDER BY licence_plate ASC")
     fun getAll(): List<DbCargoTicket>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

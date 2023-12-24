@@ -22,7 +22,6 @@ class MainActivity : ComponentActivity() {
      *
      * @param savedInstanceState the saved instance state.
      */
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

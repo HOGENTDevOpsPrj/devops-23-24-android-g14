@@ -5,7 +5,7 @@ import com.hogent.svkapp.data.sources.CargoTicketDataSource
 import com.hogent.svkapp.data.sources.roomDataBase.AppDatabase
 import com.hogent.svkapp.data.sources.roomDataBase.DbCargoTicket
 import com.hogent.svkapp.data.sources.roomDataBase.NetworkUtils
-import com.hogent.svkapp.data.sources.roomDataBase.toDomainCargoTickets
+import com.hogent.svkapp.data.sources.roomDataBase.asDomainCargoTickeas
 import com.hogent.svkapp.domain.entities.CargoTicket
 import com.hogent.svkapp.network.CargoTicketApiService
 import com.hogent.svkapp.network.CargoTicketConverter.Companion.convertToApiCargoTicket
@@ -42,7 +42,7 @@ class RoomCargoTicketRepository(
     }
 
     override fun getCargoTickets(): List<CargoTicket> {
-        return dao?.getAll()?.toDomainCargoTickets() ?: emptyList()
+        return dao?.getAll()?.asDomainCargoTickeas() ?: emptyList()
     }
 }
 

@@ -62,7 +62,7 @@ class ImageCollection private constructor(value: List<Image>) {
     }
 }
 
-class ImageCollectionConverter() {
+class ImageCollectionConverter {
     @TypeConverter
     fun fromImageCollection(imageCollection: ImageCollection): String {
         return imageCollection.value.joinToString(";") { (id, bitmap) ->
