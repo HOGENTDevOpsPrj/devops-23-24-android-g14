@@ -202,9 +202,10 @@ class MainScreenViewModel(
      */
     fun addRouteNumber() {
         _uiState.update { state ->
-            state.copy(routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
-                add("")
-            },
+            state.copy(
+                routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
+                    add("")
+                },
                 routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors.toMutableList()
                     .apply {
                         add(emptyList())
@@ -221,9 +222,10 @@ class MainScreenViewModel(
      */
     fun removeRouteNumber(index: Int) {
         _uiState.update { state ->
-            state.copy(routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
-                removeAt(index)
-            },
+            state.copy(
+                routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
+                    removeAt(index)
+                },
                 routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors.toMutableList()
                     .apply {
                         removeAt(index)
