@@ -1,15 +1,17 @@
 package com.hogent.svkapp.presentation.viewmodels
 //
 import android.util.Log
-import com.hogent.svkapp.data.repositories.CargoTicketRepository
+import com.hogent.svkapp.data.repositories.CargoTicketLocalRepository
+import com.hogent.svkapp.data.repositories.MainCargoTicketRepository
+import com.hogent.svkapp.data.repositories.UserApiRepository
 import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.domain.entities.ImageCollection
 import com.hogent.svkapp.domain.entities.ImageCollectionError
 import com.hogent.svkapp.domain.entities.LicensePlate
 import com.hogent.svkapp.domain.entities.LicensePlateError
-import com.hogent.svkapp.domain.entities.Result
 import com.hogent.svkapp.domain.entities.RouteNumberCollection
 import com.hogent.svkapp.domain.entities.RouteNumberCollectionError
+import com.hogent.svkapp.util.CustomResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -36,7 +38,10 @@ import org.mockito.kotlin.whenever
 class MainScreenViewModelTest {
 
     @Mock
-    private lateinit var mockCargoTicketRepository: CargoTicketRepository
+    private lateinit var mockCargoTicketRepository: MainCargoTicketRepository
+
+    @Mock
+    private lateinit var mockUserApiRepository: UserApiRepository
 
     private lateinit var viewModel: MainScreenViewModel
 
@@ -45,11 +50,14 @@ class MainScreenViewModelTest {
 
     @Before
     fun setUp() {
-        mockCargoTicketRepository = mock<CargoTicketRepository> {
+        mockCargoTicketRepository = mock<MainCargoTicketRepository> {
             onBlocking { addCargoTicket(any()) } doReturn Unit
-            on { getCargoTickets() } doReturn emptyList()
+            on { getNonProcessedCargoTickets() } doReturn emptyList()
         }
-        viewModel = MainScreenViewModel(mockCargoTicketRepository)
+        mockUserApiRepository = mock<UserApiRepository> {
+            onBlocking { addUser(any()) } doReturn CustomResult.Success(Unit)
+        }
+        viewModel = MainScreenViewModel(mockCargoTicketRepository, mockUserApiRepository)
     }
 
     @Test
@@ -85,12 +93,12 @@ class MainScreenViewModelTest {
 
         val image: Image = mock()
 
-        whenever(ImageCollection.validate(any())).thenReturn(ImageCollectionError.Empty)
+        whenever(ImageCollection.validate(any())).thenReturn(ImageCollectionError.EMPTY)
 
         viewModel.addImage(image)
         viewModel.removeImage(image)
 
-        assertEquals(ImageCollectionError.Empty, viewModel.uiState.value.imageCollectionError)
+        assertEquals(ImageCollectionError.EMPTY, viewModel.uiState.value.imageCollectionError)
     }
 
     @Test
@@ -206,12 +214,12 @@ class MainScreenViewModelTest {
         viewModel.addImage(image)
 
         whenever(RouteNumberCollection.validateStringRepresentations(any())).thenReturn(
-            Result.Failure(RouteNumberCollectionError.Empty)
+            CustomResult.Failure(RouteNumberCollectionError.EMPTY)
         )
         whenever(LicensePlate.validate(any())).thenReturn(
-            LicensePlateError.Empty
+            LicensePlateError.EMPTY
         )
-        whenever(ImageCollection.validate(any())).thenReturn(ImageCollectionError.Empty)
+        whenever(ImageCollection.validate(any())).thenReturn(ImageCollectionError.EMPTY)
 
         viewModel.onSend()
 
@@ -233,12 +241,12 @@ class MainScreenViewModelTest {
         viewModel.addImage(image)
 
         whenever(RouteNumberCollection.validateStringRepresentations(any())).thenReturn(
-            Result.Failure(RouteNumberCollectionError.Empty)
+            CustomResult.Failure(RouteNumberCollectionError.EMPTY)
         )
         whenever(LicensePlate.validate(any())).thenReturn(
-            LicensePlateError.Empty
+            LicensePlateError.EMPTY
         )
-        whenever(ImageCollection.validate(any())).thenReturn(ImageCollectionError.Empty)
+        whenever(ImageCollection.validate(any())).thenReturn(ImageCollectionError.EMPTY)
 
         viewModel.onSend()
 
@@ -266,12 +274,12 @@ class MainScreenViewModelTest {
         }
 
         whenever(RouteNumberCollection.validateStringRepresentations(any())).thenReturn(
-            Result.Failure(RouteNumberCollectionError.Empty)
+            CustomResult.Failure(RouteNumberCollectionError.EMPTY)
         )
 
         viewModel.onRouteNumberChange(0, "123")
 
-        assertEquals(RouteNumberCollectionError.Empty, viewModel.uiState.value.routeNumberCollectionError)
+        assertEquals(RouteNumberCollectionError.EMPTY, viewModel.uiState.value.routeNumberCollectionError)
     }
 
     @Test
@@ -282,7 +290,7 @@ class MainScreenViewModelTest {
         }
 
         whenever(RouteNumberCollection.validateStringRepresentations(any())).thenReturn(
-            Result.Success(
+            CustomResult.Success(
                 listOf(
                     listOf
                         (null)
@@ -315,12 +323,12 @@ class MainScreenViewModelTest {
         }
 
         whenever(LicensePlate.validate(any())).thenReturn(
-            LicensePlateError.Empty
+            LicensePlateError.EMPTY
         )
 
         viewModel.onLicensePlateChange("ABC-123")
 
-        assertEquals(LicensePlateError.Empty, viewModel.uiState.value.licensePlateInputFieldValidationError)
+        assertEquals(LicensePlateError.EMPTY, viewModel.uiState.value.licensePlateInputFieldValidationError)
     }
 
     @Test
