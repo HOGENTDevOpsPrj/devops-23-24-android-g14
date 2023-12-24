@@ -30,7 +30,7 @@ data class CargoTicketError(
     val hasErrors: Boolean
         get() {
             return routeNumberCollectionError != null || licensePlateError != null || imageCollectionError != null ||
-                    routeNumberErrors.isEmpty()
+                    routeNumberErrors.isNullOrEmpty()
         }
 }
 
