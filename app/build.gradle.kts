@@ -101,7 +101,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     // Gson
     implementation("com.google.code.gson:gson:2.10.1")
@@ -125,8 +125,8 @@ dependencies {
     androidTestImplementation("androidx.test:rules:$testRulesVersion")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
-    androidTestImplementation("androidx.navigation:navigation-testing:2.7.5")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+    androidTestImplementation("androidx.navigation:navigation-testing:2.7.6")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
 
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
@@ -136,6 +136,6 @@ dependencies {
     val mockitoKotlinVersion = "5.2.1"
 
     testImplementation("junit:junit:$junitVersion")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
 }
