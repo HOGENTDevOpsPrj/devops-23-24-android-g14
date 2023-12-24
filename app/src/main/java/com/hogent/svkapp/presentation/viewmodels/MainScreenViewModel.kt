@@ -58,7 +58,6 @@ class MainScreenViewModel(
     private val tag = "MainScreenViewModel"
 
     var userIsAuthenticated: Boolean by mutableStateOf(false)
-    var user: User by mutableStateOf(User())
 
     /**
      * Called when login button is clicked.
@@ -74,7 +73,10 @@ class MainScreenViewModel(
                     }
 
                     override fun onSuccess(result: Credentials) {
-                        user = User(result.idToken, result.accessToken)
+                        val user = User(result.idToken, result.accessToken)
+                        _uiState.update { state ->
+                            state.copy(user = user)
+                        }
                         userIsAuthenticated = true
 
                         user.accessToken?.let { saveTokenToSharedPreferences(context, it) }
@@ -153,7 +155,7 @@ class MainScreenViewModel(
             routeNumbers = _uiState.value.routeNumberInputFieldValues,
             licensePlate = _uiState.value.licensePlateInputFieldValue,
             images = _uiState.value.imageCollection,
-            freightLoaderId = user.id,
+            freightLoaderId = _uiState.value.user?.id ?: "",
             registrationDateTime = LocalDateTime.now()
         )
 
@@ -278,7 +280,9 @@ class MainScreenViewModel(
                 override fun onSuccess(result: Void?) {
                     // The user successfully logged out.
                     userIsAuthenticated = false
-                    user = User()
+                    _uiState.update { state ->
+                        state.copy(user = User())
+                    }
                     onLogoutNavigation()
                 }
             })
