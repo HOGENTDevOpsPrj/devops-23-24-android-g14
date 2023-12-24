@@ -31,8 +31,9 @@ List of team members responsible for operations:
 List of technologies and packages used in this project:
 
 - Database: ...
-- ...
-- ...
+- [Android Jetpack](https://github.com/androidx/androidx)
+- [Retrofit](https://github.com/square/retrofit)
+- [Auth0](https://auth0.com/)
 
 ## Login Credentials
 ```
