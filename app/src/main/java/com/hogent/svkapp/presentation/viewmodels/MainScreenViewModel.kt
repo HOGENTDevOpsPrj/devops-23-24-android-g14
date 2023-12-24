@@ -63,24 +63,27 @@ class MainScreenViewModel(
     /**
      * Called when login button is clicked.
      */
-    fun onLogin(context: Context, auth: Auth0, onSuccessNavigation: () -> Unit) {
-        WebAuthProvider
-            .login(auth)
-            .withScheme(context.getString(R.string.com_auth0_scheme))
-            .withAudience(context.getString(R.string.com_auth0_audience))
-            .start(
+    fun onLogin(context: Context, onSuccessNavigation: () -> Unit) {
+        val auth = Auth0(context)
+
+        WebAuthProvider.login(auth).withScheme(context.getString(R.string.com_auth0_scheme))
+            .withAudience(context.getString(R.string.com_auth0_audience)).start(
                 context,
                 object : Callback<Credentials, AuthenticationException> {
                     override fun onFailure(error: AuthenticationException) {
                     }
 
                     override fun onSuccess(result: Credentials) {
-                        val idToken = result.accessToken
-                        user = User(idToken)
+                        user = User(result.idToken, result.accessToken)
                         Log.d(tag, "User: ${user.id}")
+                        Log.d(tag, "Name: ${user.name}")
+                        Log.d(tag, "Email: ${user.email}")
+                        Log.d(tag, "Email verified: ${user.emailVerified}")
+                        Log.d(tag, "Picture: ${user.picture}")
+                        Log.d(tag, "Updated at: ${user.updatedAt}")
                         userIsAuthenticated = true
 
-                        user.idToken?.let { saveTokenToSharedPreferences(context, it) }
+                        user.accessToken?.let { saveTokenToSharedPreferences(context, it) }
 
                         viewModelScope.launch {
                             userApiRepository.addUser(user)
@@ -205,10 +208,9 @@ class MainScreenViewModel(
      */
     fun addRouteNumber() {
         _uiState.update { state ->
-            state.copy(
-                routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
-                    add("")
-                },
+            state.copy(routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
+                add("")
+            },
                 routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors.toMutableList()
                     .apply {
                         add(emptyList())
@@ -225,10 +227,9 @@ class MainScreenViewModel(
      */
     fun removeRouteNumber(index: Int) {
         _uiState.update { state ->
-            state.copy(
-                routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
-                    removeAt(index)
-                },
+            state.copy(routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
+                removeAt(index)
+            },
                 routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors.toMutableList()
                     .apply {
                         removeAt(index)

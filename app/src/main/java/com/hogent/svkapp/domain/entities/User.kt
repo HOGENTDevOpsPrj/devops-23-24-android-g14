@@ -3,7 +3,19 @@ package com.hogent.svkapp.domain.entities
 import android.util.Log
 import com.auth0.android.jwt.JWT
 
-data class User(val idToken: String? = null) {
+/**
+ * A class that represents a User.
+ *
+ * @property idToken the ID token of the User.
+ * @property accessToken the access token of the User.
+ * @property id the ID of the User.
+ * @property name the name of the User.
+ * @property email the email of the User.
+ * @property emailVerified the email verification status of the User.
+ * @property picture the picture of the User.
+ * @property updatedAt the last time the User was updated.
+ */
+data class User(val idToken: String? = null, val accessToken: String? = null) {
 
     private val TAG = "User"
 

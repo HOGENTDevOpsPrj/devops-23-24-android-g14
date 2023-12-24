@@ -32,10 +32,6 @@ fun LoginScreen(
     navController: NavController
 ) {
     val context = LocalContext.current
-    val auth = Auth0(
-        context.getString(R.string.com_auth0_client_id),
-        context.getString(R.string.com_auth0_domain)
-    )
 
     Column(
         modifier = Modifier
@@ -52,7 +48,7 @@ fun LoginScreen(
 
             LoginButton(
                 onClick = {
-                    viewModel.onLogin(context, auth = auth, onSuccessNavigation = {
+                    viewModel.onLogin(context, onSuccessNavigation = {
                         navController.navigate(Route.Main.name)
                     })
                 },
