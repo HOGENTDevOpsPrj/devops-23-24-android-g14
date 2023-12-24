@@ -42,7 +42,6 @@ import java.util.Locale
  * @param mainCargoTicketRepository the [MainCargoTicketRepository] that is used to add cargo tickets.
  * @param userApiRepository the [UserApiRepository] that is used to add users.
  * @property userIsAuthenticated whether the user is authenticated.
- * @property user the user.
  * @property uiState the state of the screen as read-only state flow.
  */
 class MainScreenViewModel(
