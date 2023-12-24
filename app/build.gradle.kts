@@ -125,6 +125,8 @@ dependencies {
     androidTestImplementation("androidx.test:rules:$testRulesVersion")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:$composeUiVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    androidTestImplementation("androidx.navigation:navigation-testing:2.7.5")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
 
     debugImplementation("androidx.compose.ui:ui-test-manifest:$composeUiVersion")
     debugImplementation("androidx.compose.ui:ui-tooling:$composeUiVersion")
@@ -134,5 +136,6 @@ dependencies {
     val mockitoKotlinVersion = "5.2.1"
 
     testImplementation("junit:junit:$junitVersion")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
     testImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
 }

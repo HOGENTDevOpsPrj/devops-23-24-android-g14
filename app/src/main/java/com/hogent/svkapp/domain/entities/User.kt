@@ -53,4 +53,8 @@ data class User(val idToken: String? = null, val accessToken: String? = null) {
         }
     }
 
+    override fun toString(): String {
+        return "Id: ${id}, Name: ${name}, Email: ${email}, Email Verified: ${emailVerified}, Picture: ${picture}, Updated At: ${updatedAt}"
+    }
+
 }

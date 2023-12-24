@@ -46,7 +46,7 @@ fun MainTopAppBar(
     navigateUp: () -> Unit,
     onLogout: () -> Unit,
     navigateToCargoTickets: () -> Unit,
-    user: User,
+    user: User?,
 ) {
     TopAppBar(
         modifier = modifier.padding(start = 0.dp),
@@ -68,7 +68,7 @@ fun MainTopAppBar(
 
             DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
 
-                DropdownUserInfo(username = user.name)
+                DropdownUserInfo(username = user?.name ?: "")
 
                 DropdownMenuItem(
                     leadingIcon = {

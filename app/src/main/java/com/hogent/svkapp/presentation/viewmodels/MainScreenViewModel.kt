@@ -75,12 +75,6 @@ class MainScreenViewModel(
 
                     override fun onSuccess(result: Credentials) {
                         user = User(result.idToken, result.accessToken)
-                        Log.d(tag, "User: ${user.id}")
-                        Log.d(tag, "Name: ${user.name}")
-                        Log.d(tag, "Email: ${user.email}")
-                        Log.d(tag, "Email verified: ${user.emailVerified}")
-                        Log.d(tag, "Picture: ${user.picture}")
-                        Log.d(tag, "Updated at: ${user.updatedAt}")
                         userIsAuthenticated = true
 
                         user.accessToken?.let { saveTokenToSharedPreferences(context, it) }
@@ -287,7 +281,6 @@ class MainScreenViewModel(
                     user = User()
                     onLogoutNavigation()
                 }
-
             })
     }
 
