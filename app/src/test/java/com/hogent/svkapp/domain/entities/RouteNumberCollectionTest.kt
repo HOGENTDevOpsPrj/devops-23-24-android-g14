@@ -4,6 +4,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
+import com.hogent.svkapp.util.CustomResult
+
 
 class RouteNumberCollectionTest {
 
@@ -21,18 +23,20 @@ class RouteNumberCollectionTest {
 
     @Test
     fun routeNumberCollection_Creation_Success() {
-        assertTrue(RouteNumberCollection.create(listOf(routeNumber)) is Result.Success<RouteNumberCollection, RouteNumberCollectionError>)
+        assertTrue(RouteNumberCollection.create(listOf(routeNumber)) is CustomResult.Success<RouteNumberCollection,
+                RouteNumberCollectionError>)
     }
 
     @Test
     fun routeNumberCollection_Creation_Failure() {
-        assertTrue(RouteNumberCollection.create(emptyList()) is Result.Failure<RouteNumberCollection, RouteNumberCollectionError>)
+        assertTrue(RouteNumberCollection.create(emptyList()) is CustomResult.Failure<RouteNumberCollection,
+                RouteNumberCollectionError>)
     }
 
     @Test
     fun routeNumberCollection_Validation_Success() {
         assertTrue(
-            RouteNumberCollection.validateStringRepresentations(listOf(someRouteNumber)) is Result
+            RouteNumberCollection.validateStringRepresentations(listOf(someRouteNumber)) is CustomResult
             .Success<List<List<RouteNumberError?>>, RouteNumberCollectionError>
         )
     }
@@ -40,7 +44,7 @@ class RouteNumberCollectionTest {
     @Test
     fun routeNumberCollection_Validation_EmptyRouteNumber() {
         assertTrue(
-            RouteNumberCollection.validateStringRepresentations(listOf(emptyRouteNumber)) is Result
+            RouteNumberCollection.validateStringRepresentations(listOf(emptyRouteNumber)) is CustomResult
             .Success<List<List<RouteNumberError?>>, RouteNumberCollectionError>
         )
     }
@@ -48,7 +52,7 @@ class RouteNumberCollectionTest {
     @Test
     fun routeNumberCollection_Validation_EmptyList() {
         assertTrue(
-            RouteNumberCollection.validateStringRepresentations(emptyList()) is Result
+            RouteNumberCollection.validateStringRepresentations(emptyList()) is CustomResult
             .Failure<List<List<RouteNumberError?>>, RouteNumberCollectionError>
         )
     }
@@ -56,7 +60,7 @@ class RouteNumberCollectionTest {
     @Test
     fun routeNumberCollection_Validation_NonPositive() {
         assertTrue(
-            RouteNumberCollection.validateStringRepresentations(listOf(nonPositiveRouteNumber)) is Result
+            RouteNumberCollection.validateStringRepresentations(listOf(nonPositiveRouteNumber)) is CustomResult
             .Success<List<List<RouteNumberError?>>, RouteNumberCollectionError>
         )
     }
@@ -64,7 +68,7 @@ class RouteNumberCollectionTest {
     @Test
     fun routeNumberCollection_Validation_InvalidFormat() {
         assertTrue(
-            RouteNumberCollection.validateStringRepresentations(listOf(invalidFormatRouteNumber)) is Result
+            RouteNumberCollection.validateStringRepresentations(listOf(invalidFormatRouteNumber)) is CustomResult
             .Success<List<List<RouteNumberError?>>, RouteNumberCollectionError>
         )
     }
