@@ -35,4 +35,5 @@
     <string name="load_receipt_number_label_text">Laadbonnummer</string>
     <string name="empty_load_receipt_number_error_message">Geef het laadbonnummer in.</string>
     <string name="invalid_load_receipt_number_error_message">Geef een geldig laadbonnummer in.</string>
+    <string name="base_url">https://10.0.2.2:5001/api/</string>
 </resources>

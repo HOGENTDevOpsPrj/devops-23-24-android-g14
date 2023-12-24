@@ -3,6 +3,7 @@ package com.hogent.svkapp.data
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import com.hogent.svkapp.R
 import com.hogent.svkapp.data.repositories.CargoTicketApiRepositoryImpl
 import com.hogent.svkapp.data.repositories.CargoTicketLocalRepositoryImpl
 import com.hogent.svkapp.data.repositories.MainCargoTicketRepository
@@ -29,8 +30,6 @@ import javax.net.ssl.TrustManager
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 
-private const val BASE_URL = "https://10.0.2.2:5001/api/"
-
 /**
  * The container of the application.
  *
@@ -48,6 +47,8 @@ interface AppContainer {
  * @property context the application context.
  */
 class DefaultAppContainer(private val context: Context) : AppContainer {
+    private val baseUrl = context.getString(R.string.base_url)
+
     private val authInterceptor = Interceptor { chain ->
         val originalRequest = chain.request()
 
@@ -72,20 +73,17 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
     }
 
     private fun getSafeOkHttpClient(): OkHttpClient {
-        val trustAllCerts = arrayOf<TrustManager>(@SuppressLint("CustomX509TrustManager")
-        object : X509TrustManager {
+        val trustAllCerts = arrayOf<TrustManager>(@SuppressLint("CustomX509TrustManager") object : X509TrustManager {
             @SuppressLint("TrustAllX509TrustManager")
             override fun checkClientTrusted(
-                chain: Array<out X509Certificate>?,
-                authType: String?
+                chain: Array<out X509Certificate>?, authType: String?
             ) {
                 // Trust all client certificates
             }
 
             @SuppressLint("TrustAllX509TrustManager")
             override fun checkServerTrusted(
-                chain: Array<out X509Certificate>?,
-                authType: String?
+                chain: Array<out X509Certificate>?, authType: String?
             ) {
                 // Trust all server certificates
             }
@@ -113,23 +111,15 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
 
         val trustManager = trustManagers[0] as X509TrustManager
 
-        return OkHttpClient.Builder()
-            .addInterceptor(authInterceptor)
-            .addInterceptor(createLoggingInterceptor())
-            .sslSocketFactory(sslSocketFactory, trustManager)
-            .hostnameVerifier { _, _ -> true } // Trust all hostnames
-            .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
+        return OkHttpClient.Builder().addInterceptor(authInterceptor).addInterceptor(createLoggingInterceptor())
+            .sslSocketFactory(sslSocketFactory, trustManager).hostnameVerifier { _, _ -> true } // Trust all hostnames
+            .connectTimeout(30, TimeUnit.SECONDS).readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS)
             .build()
     }
 
     private val retrofit: Retrofit by lazy {
-        Retrofit.Builder()
-            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-            .baseUrl(BASE_URL)
-            .client(getSafeOkHttpClient())
-            .build()
+        Retrofit.Builder().addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .baseUrl(baseUrl).client(getSafeOkHttpClient()).build()
     }
 
     private val cargoTicketApiService: CargoTicketApiService by lazy {
