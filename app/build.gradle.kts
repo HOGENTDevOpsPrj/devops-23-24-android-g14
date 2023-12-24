@@ -59,6 +59,7 @@ android {
 
 dependencies {
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.6")
+    implementation("com.google.firebase:firebase-crashlytics-buildtools:2.9.9")
     val coreVersion = "1.12.0"
     val lifecycleVersion = "2.6.2"
     val activityVersion = "1.8.2"

@@ -19,6 +19,9 @@ import com.hogent.svkapp.presentation.ui.navigation.Route
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 import java.util.concurrent.Executors
 
+/**
+ * A preview view that is used to scan a QR code.
+ */
 @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
 @Composable
 fun QrPreviewView(

@@ -6,6 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.hogent.svkapp.domain.entities.Image
 
+/**
+ * A scrollable list of images.
+ */
 @Composable
 fun ScrollableImageList(
     modifier: Modifier = Modifier,

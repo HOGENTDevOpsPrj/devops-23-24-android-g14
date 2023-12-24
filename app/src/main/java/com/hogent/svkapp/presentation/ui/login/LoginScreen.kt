@@ -1,5 +1,6 @@
 package com.hogent.svkapp.presentation.ui.login
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,9 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.auth0.android.Auth0
-import com.hogent.svkapp.R
 import com.hogent.svkapp.presentation.ui.navigation.Route
 import com.hogent.svkapp.presentation.ui.SVKLogo
 import com.hogent.svkapp.presentation.ui.theme.spacing
@@ -20,11 +21,6 @@ import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
 /**
  * The login screen of the app.
- *
- * @param loginViewModel the [LoginViewModel] that contains the state of the screen.
- *
- * @sample LoginScreenPreview
- * @sample LoginScreenPreviewDark
  */
 @Composable
 fun LoginScreen(
@@ -60,12 +56,15 @@ fun LoginScreen(
 }
 
 
-//@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
-//@Composable
-//private fun LoginScreenPreview() {
-//    LoginScreen(loginViewModel = LoginViewModel(navController = rememberNavController()))
-//}
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun LoginScreenPreview() {
+    LoginScreen(
+        viewModel = viewModel(factory = MainScreenViewModel.Factory),
+        navController = NavController(LocalContext.current)
+    )
+}
 
-//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
-//@Composable
-//private fun LoginScreenPreviewDark() = LoginScreenPreview()
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun LoginScreenPreviewDark() = LoginScreenPreview()

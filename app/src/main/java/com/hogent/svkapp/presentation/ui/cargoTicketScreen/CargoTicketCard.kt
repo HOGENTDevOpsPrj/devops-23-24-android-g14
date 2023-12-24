@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.sp
 import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 
+/**
+ * A card that displays the route numbers, license plate and images of a cargo ticket.
+ */
 @Composable
 fun CargoTicketCard(
     modifier: Modifier = Modifier,
@@ -70,6 +73,9 @@ fun CargoTicketCard(
 
 }
 
+/**
+ * A preview of the [CargoTicketCard].
+ */
 @Preview(showBackground = true)
 @Composable
 fun CargoTicketPreview() {
