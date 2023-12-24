@@ -1,61 +1,77 @@
 package com.hogent.svkapp.domain.entities
 
+import com.hogent.svkapp.util.CustomResult
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import com.hogent.svkapp.util.CustomResult
-
 
 class RouteNumberTest {
 
-    private val someRouteNumber: String = "1400123456"
-    private val emptyRouteNumber: String = ""
-    private val nonPositiveRouteNumber: String = "-1400123456"
-    private val invalidFormatRouteNumber: String = "1400-123abc"
-
     @Test
-    fun routeNumber_Creation_Success() {
-        assertTrue(RouteNumber.create(someRouteNumber) is CustomResult.Success<RouteNumber, List<RouteNumberError?>>)
+    fun `create RouteNumber with valid value should succeed`() {
+        val routeNumber = "123"
+        val result = RouteNumber.create(routeNumber)
+
+        assertTrue(result is CustomResult.Success)
+        assertEquals(routeNumber, (result as CustomResult.Success).value.value)
     }
 
     @Test
-    fun routeNumber_Creation_Empty() {
-        assertTrue(RouteNumber.create(emptyRouteNumber) is CustomResult.Failure<RouteNumber, List<RouteNumberError?>>)
+    fun `create RouteNumber with empty value should fail with EMPTY error`() {
+        val routeNumber = ""
+        val result = RouteNumber.create(routeNumber)
+
+        assertTrue(result is CustomResult.Failure)
+        assertTrue((result as CustomResult.Failure).error.contains(RouteNumberError.EMPTY))
     }
 
     @Test
-    fun routeNumber_Creation_NonPositive() {
-        assertTrue(RouteNumber.create(nonPositiveRouteNumber) is CustomResult.Failure<RouteNumber,
-                List<RouteNumberError?>>)
+    fun `create RouteNumber with non-positive value should fail with NON_POSITIVE_NUMBER error`() {
+        val routeNumber = "0"
+        val result = RouteNumber.create(routeNumber)
+
+        assertTrue(result is CustomResult.Failure)
+        assertTrue((result as CustomResult.Failure).error.contains(RouteNumberError.NON_POSITIVE_NUMBER))
     }
 
     @Test
-    fun routeNumber_Creation_InvalidFormat() {
-        assertTrue(RouteNumber.create(invalidFormatRouteNumber) is CustomResult.Failure<RouteNumber,
-                List<RouteNumberError?>>)
+    fun `create RouteNumber with invalid format should fail with INVALID_FORMAT error`() {
+        val routeNumber = "abc"
+        val result = RouteNumber.create(routeNumber)
+
+        assertTrue(result is CustomResult.Failure)
+        assertTrue((result as CustomResult.Failure).error.contains(RouteNumberError.INVALID_FORMAT))
     }
 
     @Test
-    fun routeNumber_Validation_Success() {
-        assertTrue(RouteNumber.validateStringRepresentation(someRouteNumber).isEmpty())
+    fun `validateStringRepresentation with valid value should return empty list`() {
+        val routeNumber = "123"
+        val result = RouteNumber.validateStringRepresentation(routeNumber)
+
+        assertTrue(result.isEmpty())
     }
 
     @Test
-    fun routeNumber_Validation_Empty() {
-        assertTrue(RouteNumber.validateStringRepresentation(emptyRouteNumber).contains(RouteNumberError.EMPTY))
+    fun `validateStringRepresentation with empty value should return list with EMPTY error`() {
+        val routeNumber = ""
+        val result = RouteNumber.validateStringRepresentation(routeNumber)
+
+        assertEquals(listOf(RouteNumberError.EMPTY), result)
     }
 
     @Test
-    fun routeNumber_Validation_NonPositive() {
-        assertTrue(
-            RouteNumber.validateStringRepresentation(nonPositiveRouteNumber)
-                .contains(RouteNumberError.NON_POSITIVE_NUMBER)
-        )
+    fun `validateStringRepresentation with non-positive value should return list with NON_POSITIVE_NUMBER error`() {
+        val routeNumber = "0"
+        val result = RouteNumber.validateStringRepresentation(routeNumber)
+
+        assertEquals(listOf(RouteNumberError.NON_POSITIVE_NUMBER), result)
     }
 
     @Test
-    fun routeNumber_Validation_InvalidFormat() {
-        assertTrue(
-            RouteNumber.validateStringRepresentation(invalidFormatRouteNumber).contains(RouteNumberError.INVALID_FORMAT)
-        )
+    fun `validateStringRepresentation with invalid format should return list with INVALID_FORMAT error`() {
+        val routeNumber = "abc"
+        val result = RouteNumber.validateStringRepresentation(routeNumber)
+
+        assertEquals(listOf(RouteNumberError.INVALID_FORMAT), result)
     }
 }

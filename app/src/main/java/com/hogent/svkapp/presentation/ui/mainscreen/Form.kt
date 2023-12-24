@@ -16,7 +16,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.hogent.svkapp.R
@@ -62,12 +61,10 @@ fun Form(
     }
 
     LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
-        modifier = modifier
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium), modifier = modifier
     ) {
         item {
-            CustomTextField(
-                modifier = Modifier.fillMaxWidth(),
+            CustomTextField(modifier = Modifier.fillMaxWidth(),
                 index = 0,
                 value = mainScreenState.loadReceiptNumberInputFieldValue,
                 label = stringResource(R.string.load_receipt_number_label_text),
@@ -85,19 +82,16 @@ fun Form(
                 onRequestPermission = {
                     currentCameraAction = CameraAction.SCAN_QR
                     permissionLauncher.launch(permission)
-                }
-            )
+                })
         }
         item {
             mainScreenState.routeNumberInputFieldValues.mapIndexed { index, routeNumber ->
-                CustomTextField(
-                    index = index,
+                CustomTextField(index = index,
                     value = routeNumber,
                     label = stringResource(R.string.route_number_text_field_label, index + 1),
                     onValueChange = { newRouteNumber ->
                         mainScreenViewModel.onRouteNumberChange(
-                            index,
-                            newRouteNumber
+                            index, newRouteNumber
                         )
                     },
                     errors = routeNumberErrors(mainScreenState.routeNumberInputFieldValidationErrors[index]),
@@ -110,14 +104,12 @@ fun Form(
                     onRequestPermission = {
                         currentCameraAction = CameraAction.SCAN_QR
                         permissionLauncher.launch(permission)
-                    }
-                )
+                    })
             }
             if (mainScreenState.routeNumberCollectionError != null) {
                 routeNumberCollectionError(mainScreenState.routeNumberCollectionError)?.getOrNull(0)?.let {
                     Text(
-                        text = it,
-                        color = MaterialTheme.colorScheme.error
+                        text = it, color = MaterialTheme.colorScheme.error
                     )
                 }
             }
@@ -126,8 +118,7 @@ fun Form(
             }
         }
         item {
-            CustomTextField(
-                modifier = Modifier.fillMaxWidth(),
+            CustomTextField(modifier = Modifier.fillMaxWidth(),
                 index = 0,
                 value = mainScreenState.licensePlateInputFieldValue,
                 label = stringResource(R.string.license_plate_label_text),
@@ -145,15 +136,13 @@ fun Form(
                 onRequestPermission = {
                     currentCameraAction = CameraAction.SCAN_QR
                     permissionLauncher.launch(permission)
-                }
-            )
+                })
         }
         item {
             if (mainScreenState.imageCollectionError != null) {
                 imageCollectionError(mainScreenState.imageCollectionError)?.getOrNull(0)?.let {
                     Text(
-                        text = it,
-                        color = MaterialTheme.colorScheme.error
+                        text = it, color = MaterialTheme.colorScheme.error
                     )
                 }
             } else {
@@ -170,35 +159,39 @@ fun Form(
         }
     }
     if (showPermissionDialog) {
-        AlertDialog(
-            onDismissRequest = { showPermissionDialog = false },
-            title = { Text("Camera Toestemming Vereist.") },
-            text = { Text("Deze functie vereist toegang tot de camera. Gelieve cameratoestemming te verlenen om door te gaan.") },
+        AlertDialog(onDismissRequest = { showPermissionDialog = false },
+            title = { Text(stringResource(R.string.CameraPermissionRequestDialogTitle)) },
+            text = { Text(stringResource(R.string.CameraPermissionRequestDialogText)) },
             confirmButton = {
-                Button(
-                    onClick = {
-                        showPermissionDialog = false
-                        permissionLauncher.launch(permission)
-                    }
-                ) {
+                Button(onClick = {
+                    showPermissionDialog = false
+                    permissionLauncher.launch(permission)
+                }) {
                     Text(stringResource(R.string.ok))
                 }
             },
             dismissButton = {
-                Button(
-                    onClick = {
-                        showPermissionDialog = false
-                    }
-                ) {
-                    Text("Annuleren")
+                Button(onClick = {
+                    showPermissionDialog = false
+                }) {
+                    Text(stringResource(R.string.Cancel))
                 }
-            }
-        )
+            })
     }
 }
 
+/**
+ * An enum that represents the possible actions that can be performed with the camera.
+ */
 enum class CameraAction {
+    /**
+     * Take a picture.
+     */
     TAKE_PICTURE,
+
+    /**
+     * Scan a QR code.
+     */
     SCAN_QR
 }
 

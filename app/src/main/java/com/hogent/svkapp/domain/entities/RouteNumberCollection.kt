@@ -44,10 +44,8 @@ class RouteNumberCollection private constructor(value: List<RouteNumber>) {
          * @param routeNumbers the [RouteNumber]s to validate.
          * @return an [RouteNumberCollectionError] if the [RouteNumber]s are invalid, null otherwise.
          */
-        fun validateStringRepresentations(routeNumbers: List<String>):
-                CustomResult<List<List<RouteNumberError?>>, RouteNumberCollectionError> {
-            val routeNumberResults =
-                routeNumbers.map { RouteNumber.validateStringRepresentation(it) }
+        fun validateStringRepresentations(routeNumbers: List<String>): CustomResult<List<List<RouteNumberError?>>, RouteNumberCollectionError> {
+            val routeNumberResults = routeNumbers.map { RouteNumber.validateStringRepresentation(it) }
             return if (routeNumberResults.isEmpty()) {
                 CustomResult.Failure(RouteNumberCollectionError.EMPTY)
             } else {

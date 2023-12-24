@@ -27,6 +27,8 @@ val LocalSpacing: ProvidableCompositionLocal<Spacing> = compositionLocalOf { Spa
 
 /**
  * Returns the [Spacing] from the [MaterialTheme].
+ *
+ * @receiver The [MaterialTheme].
  */
 val MaterialTheme.spacing: Spacing
     @Composable @ReadOnlyComposable get() = LocalSpacing.current

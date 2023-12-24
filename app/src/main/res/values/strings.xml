@@ -36,4 +36,11 @@
     <string name="empty_load_receipt_number_error_message">Geef het laadbonnummer in.</string>
     <string name="invalid_load_receipt_number_error_message">Geef een geldig laadbonnummer in.</string>
     <string name="base_url">https://10.0.2.2:5001/api/</string>
+    <string name="CargoTicketCardRouteNumbersLabel">Routenummers</string>
+    <string name="CargoTicketCardLicensePlateLabel">Nummerplaat</string>
+    <string name="ConfirmationMessageAllCargoTicketsSent">Alle laadbonnen zijn verzonden.</string>
+    <string name="ToSendCargoTicketsLabel">Nog te verzenden cargo tickets</string>
+    <string name="CameraPermissionRequestDialogTitle">Camera - toestemming geven.</string>
+    <string name="CameraPermissionRequestDialogText">Deze functie vereist toegang tot de camera. Gelieve cameratoestemming te verlenen om door te gaan.</string>
+    <string name="Cancel">Annuleren</string>
 </resources>

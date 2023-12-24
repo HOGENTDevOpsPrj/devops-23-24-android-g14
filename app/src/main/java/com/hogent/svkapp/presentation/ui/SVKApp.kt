@@ -9,6 +9,11 @@ import androidx.navigation.compose.rememberNavController
 import com.hogent.svkapp.presentation.ui.navigation.MainNavHost
 import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
 
+/**
+ * The main entry point of the app.
+ *
+ * @param navController The [NavHostController] used for navigation.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SVKApp(

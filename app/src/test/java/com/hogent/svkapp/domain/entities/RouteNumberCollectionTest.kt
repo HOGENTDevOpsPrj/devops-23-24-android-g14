@@ -1,75 +1,47 @@
 package com.hogent.svkapp.domain.entities
 
-import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Test
-import org.mockito.kotlin.mock
 import com.hogent.svkapp.util.CustomResult
-
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Test
 
 class RouteNumberCollectionTest {
 
-    private val someRouteNumber: String = "1400123456"
-    private val emptyRouteNumber: String = ""
-    private val nonPositiveRouteNumber: String = "-1400123456"
-    private val invalidFormatRouteNumber: String = "1400-123abc"
-
-    private lateinit var routeNumber: RouteNumber
-
-    @Before
-    fun setUp() {
-        routeNumber = mock()
-    }
-
     @Test
-    fun routeNumberCollection_Creation_Success() {
-        assertTrue(RouteNumberCollection.create(listOf(routeNumber)) is CustomResult.Success<RouteNumberCollection,
-                RouteNumberCollectionError>)
-    }
-
-    @Test
-    fun routeNumberCollection_Creation_Failure() {
-        assertTrue(RouteNumberCollection.create(emptyList()) is CustomResult.Failure<RouteNumberCollection,
-                RouteNumberCollectionError>)
-    }
-
-    @Test
-    fun routeNumberCollection_Validation_Success() {
-        assertTrue(
-            RouteNumberCollection.validateStringRepresentations(listOf(someRouteNumber)) is CustomResult
-            .Success<List<List<RouteNumberError?>>, RouteNumberCollectionError>
+    fun `create RouteNumberCollection with non-empty list should succeed`() {
+        val routeNumbers = listOf(
+            (RouteNumber.create("12345") as CustomResult.Success).value,
+            (RouteNumber.create("67890") as CustomResult.Success).value
         )
+        val result = RouteNumberCollection.create(routeNumbers)
+
+        assertTrue(result is CustomResult.Success)
+        assertEquals(routeNumbers, (result as CustomResult.Success).value.value)
     }
 
     @Test
-    fun routeNumberCollection_Validation_EmptyRouteNumber() {
-        assertTrue(
-            RouteNumberCollection.validateStringRepresentations(listOf(emptyRouteNumber)) is CustomResult
-            .Success<List<List<RouteNumberError?>>, RouteNumberCollectionError>
-        )
+    fun `create RouteNumberCollection with empty list should fail`() {
+        val routeNumbers = emptyList<RouteNumber>()
+        val result = RouteNumberCollection.create(routeNumbers)
+
+        assertTrue(result is CustomResult.Failure)
+        assertEquals(RouteNumberCollectionError.EMPTY, (result as CustomResult.Failure).error)
     }
 
     @Test
-    fun routeNumberCollection_Validation_EmptyList() {
-        assertTrue(
-            RouteNumberCollection.validateStringRepresentations(emptyList()) is CustomResult
-            .Failure<List<List<RouteNumberError?>>, RouteNumberCollectionError>
-        )
+    fun `validateStringRepresentations with non-empty list should return success`() {
+        val routeNumberStrings = listOf("12345", "67890")
+        val result = RouteNumberCollection.validateStringRepresentations(routeNumberStrings)
+
+        assertTrue(result is CustomResult.Success)
     }
 
     @Test
-    fun routeNumberCollection_Validation_NonPositive() {
-        assertTrue(
-            RouteNumberCollection.validateStringRepresentations(listOf(nonPositiveRouteNumber)) is CustomResult
-            .Success<List<List<RouteNumberError?>>, RouteNumberCollectionError>
-        )
-    }
+    fun `validateStringRepresentations with empty list should return failure`() {
+        val routeNumberStrings = emptyList<String>()
+        val result = RouteNumberCollection.validateStringRepresentations(routeNumberStrings)
 
-    @Test
-    fun routeNumberCollection_Validation_InvalidFormat() {
-        assertTrue(
-            RouteNumberCollection.validateStringRepresentations(listOf(invalidFormatRouteNumber)) is CustomResult
-            .Success<List<List<RouteNumberError?>>, RouteNumberCollectionError>
-        )
+        assertTrue(result is CustomResult.Failure)
+        assertEquals(RouteNumberCollectionError.EMPTY, (result as CustomResult.Failure).error)
     }
 }

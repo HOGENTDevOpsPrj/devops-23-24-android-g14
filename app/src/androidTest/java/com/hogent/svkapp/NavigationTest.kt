@@ -2,9 +2,9 @@ package com.hogent.svkapp
 
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.ComposeContentTestRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import com.hogent.svkapp.presentation.ui.SVKApp
@@ -15,8 +15,8 @@ import org.junit.Test
 class NavigationTest {
 
     @get:Rule
-    val composableTestRule = createComposeRule()
-    lateinit var navController: TestNavHostController
+    val composableTestRule: ComposeContentTestRule = createComposeRule()
+    private lateinit var navController: TestNavHostController
 
     @Before
     fun setupNavHost() {

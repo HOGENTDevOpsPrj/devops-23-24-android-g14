@@ -3,6 +3,8 @@ package com.hogent.svkapp.domain.entities
 import android.util.Log
 import com.auth0.android.jwt.JWT
 
+private const val TAG = "User"
+
 /**
  * A class that represents a User.
  *
@@ -16,15 +18,12 @@ import com.auth0.android.jwt.JWT
  * @property updatedAt the last time the User was updated.
  */
 data class User(val idToken: String? = null, val accessToken: String? = null) {
-
-    private val TAG = "User"
-
     var id: String = ""
     var name: String = ""
-    var email: String = ""
-    var emailVerified: String = ""
-    var picture: String = ""
-    var updatedAt: String = ""
+    private var email: String = ""
+    private var emailVerified: String = ""
+    private var picture: String = ""
+    private var updatedAt: String = ""
 
     init {
         if (idToken != null) {
