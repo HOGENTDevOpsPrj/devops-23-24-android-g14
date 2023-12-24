@@ -1,5 +1,6 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
+import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -12,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.core.content.ContextCompat
 import com.hogent.svkapp.R
 import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.presentation.ui.mainscreen.images.AddImageButton
@@ -34,6 +37,19 @@ fun Form(
     navigateToQrScanner: (Int) -> Unit,
 ) {
     val mainScreenState by mainScreenViewModel.uiState.collectAsState()
+
+    val context = LocalContext.current
+
+    val permission = android.Manifest.permission.CAMERA
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            // Open camera
+        } else {
+            // Show dialog
+        }
+    }
 
     val takePictureLauncher = getTakePictureLauncher { mainScreenViewModel.addImage(it) }
 
@@ -126,7 +142,18 @@ fun Form(
                 )
             }
             AddImageButton(
-                onClick = { takePictureLauncher.launch(null) }, modifier = Modifier.fillMaxWidth()
+                onClick = {
+                    if (ContextCompat.checkSelfPermission(
+                            context, permission
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        // Permission already granted, launch camera directly
+                        takePictureLauncher.launch(null)
+                    } else {
+                        // Request permission
+                        launcher.launch(permission)
+                    }
+                }, modifier = Modifier.fillMaxWidth()
             )
         }
     }
