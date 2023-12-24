@@ -1,22 +1,24 @@
 package com.hogent.svkapp.presentation.ui.mainscreen
 
-import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.core.content.ContextCompat
 import com.hogent.svkapp.R
 import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.presentation.ui.mainscreen.images.AddImageButton
@@ -30,6 +32,7 @@ import com.hogent.svkapp.presentation.viewmodels.MainScreenViewModel
  * @param modifier The modifier to be applied to the form.
  *
  */
+
 @Composable
 fun Form(
     modifier: Modifier = Modifier,
@@ -38,20 +41,25 @@ fun Form(
 ) {
     val mainScreenState by mainScreenViewModel.uiState.collectAsState()
 
-    val context = LocalContext.current
+    var currentCameraAction by remember { mutableStateOf<CameraAction?>(null) }
+
+    var showPermissionDialog by remember { mutableStateOf(false) }
+    val takePictureLauncher = getTakePictureLauncher { mainScreenViewModel.addImage(it) }
 
     val permission = android.Manifest.permission.CAMERA
-    val launcher = rememberLauncherForActivityResult(
+    val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            // Open camera
+            when (currentCameraAction) {
+                CameraAction.TAKE_PICTURE -> takePictureLauncher.launch(null)
+                CameraAction.SCAN_QR -> {}
+                null -> {}
+            }
         } else {
-            // Show dialog
+            showPermissionDialog = true
         }
     }
-
-    val takePictureLauncher = getTakePictureLauncher { mainScreenViewModel.addImage(it) }
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.medium),
@@ -59,6 +67,7 @@ fun Form(
     ) {
         item {
             CustomTextField(
+                modifier = Modifier.fillMaxWidth(),
                 index = 0,
                 value = mainScreenState.loadReceiptNumberInputFieldValue,
                 label = stringResource(R.string.load_receipt_number_label_text),
@@ -67,13 +76,16 @@ fun Form(
                         newLoadReceiptNumber
                     )
                 },
-                errors = loadReceiptNumberInputFieldValidationError(mainScreenState.loadReceiptNumberInputFieldValidationError),
-                keyboardType = KeyboardType.Text,
-                modifier = Modifier.fillMaxWidth(),
-                removable = false,
                 onDelete = {},
-                scannable = false,
+                errors = loadReceiptNumberInputFieldValidationError(mainScreenState.loadReceiptNumberInputFieldValidationError),
                 navigateToQrScanner = {},
+                keyboardType = KeyboardType.Text,
+                removable = false,
+                scannable = false,
+                onRequestPermission = {
+                    currentCameraAction = CameraAction.SCAN_QR
+                    permissionLauncher.launch(permission)
+                }
             )
         }
         item {
@@ -95,6 +107,10 @@ fun Form(
                     removable = index != 0,
                     scannable = true,
                     navigateToQrScanner = navigateToQrScanner,
+                    onRequestPermission = {
+                        currentCameraAction = CameraAction.SCAN_QR
+                        permissionLauncher.launch(permission)
+                    }
                 )
             }
             if (mainScreenState.routeNumberCollectionError != null) {
@@ -111,6 +127,7 @@ fun Form(
         }
         item {
             CustomTextField(
+                modifier = Modifier.fillMaxWidth(),
                 index = 0,
                 value = mainScreenState.licensePlateInputFieldValue,
                 label = stringResource(R.string.license_plate_label_text),
@@ -119,13 +136,16 @@ fun Form(
                         newLicencePlate
                     )
                 },
-                errors = licencePlateInputFieldValidationError(mainScreenState.licensePlateInputFieldValidationError),
-                keyboardType = KeyboardType.Text,
-                modifier = Modifier.fillMaxWidth(),
-                removable = false,
                 onDelete = {},
-                scannable = false,
+                errors = licencePlateInputFieldValidationError(mainScreenState.licensePlateInputFieldValidationError),
                 navigateToQrScanner = {},
+                keyboardType = KeyboardType.Text,
+                removable = false,
+                scannable = false,
+                onRequestPermission = {
+                    currentCameraAction = CameraAction.SCAN_QR
+                    permissionLauncher.launch(permission)
+                }
             )
         }
         item {
@@ -143,20 +163,43 @@ fun Form(
             }
             AddImageButton(
                 onClick = {
-                    if (ContextCompat.checkSelfPermission(
-                            context, permission
-                        ) == PackageManager.PERMISSION_GRANTED
-                    ) {
-                        // Permission already granted, launch camera directly
-                        takePictureLauncher.launch(null)
-                    } else {
-                        // Request permission
-                        launcher.launch(permission)
-                    }
+                    currentCameraAction = CameraAction.TAKE_PICTURE
+                    permissionLauncher.launch(permission)
                 }, modifier = Modifier.fillMaxWidth()
             )
         }
     }
+    if (showPermissionDialog) {
+        AlertDialog(
+            onDismissRequest = { showPermissionDialog = false },
+            title = { Text("Camera Toestemming Vereist.") },
+            text = { Text("Deze functie vereist toegang tot de camera. Gelieve cameratoestemming te verlenen om door te gaan.") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showPermissionDialog = false
+                        permissionLauncher.launch(permission)
+                    }
+                ) {
+                    Text(stringResource(R.string.ok))
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        showPermissionDialog = false
+                    }
+                ) {
+                    Text("Annuleren")
+                }
+            }
+        )
+    }
+}
+
+enum class CameraAction {
+    TAKE_PICTURE,
+    SCAN_QR
 }
 
 @Composable

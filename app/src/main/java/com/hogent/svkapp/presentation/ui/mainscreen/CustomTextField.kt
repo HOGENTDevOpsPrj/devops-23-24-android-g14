@@ -49,6 +49,7 @@ fun CustomTextField(
     keyboardType: KeyboardType,
     removable: Boolean = true,
     scannable: Boolean = false,
+    onRequestPermission: () -> Unit,
 ) {
     TextField(
         value = value,
@@ -81,7 +82,10 @@ fun CustomTextField(
                 }
                 if (scannable) {
                     QrScanButton(
-                        navigateToQrScanner = { navigateToQrScanner(index) },
+                        navigateToQrScanner = {
+                            onRequestPermission()
+                            navigateToQrScanner(index)
+                        },
                     )
                 }
                 if (removable) {
@@ -116,11 +120,12 @@ private fun TextFieldPreviewBase(
             value = value,
             label = label,
             onValueChange = {},
-            errors = errors,
-            keyboardType = keyboardType,
             onDelete = {},
-            scannable = true,
+            errors = errors,
             navigateToQrScanner = {},
+            keyboardType = keyboardType,
+            scannable = true,
+            onRequestPermission = { },
         )
     }
 }
