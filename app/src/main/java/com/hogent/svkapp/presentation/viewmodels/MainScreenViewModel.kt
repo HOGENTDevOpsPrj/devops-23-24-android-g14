@@ -42,7 +42,6 @@ import java.util.Locale
  * @param mainCargoTicketRepository the [MainCargoTicketRepository] that is used to add cargo tickets.
  * @param userApiRepository the [UserApiRepository] that is used to add users.
  * @property userIsAuthenticated whether the user is authenticated.
- * @property user the user.
  * @property uiState the state of the screen as read-only state flow.
  */
 class MainScreenViewModel(
@@ -58,7 +57,6 @@ class MainScreenViewModel(
     private val tag = "MainScreenViewModel"
 
     var userIsAuthenticated: Boolean by mutableStateOf(false)
-    var user: User by mutableStateOf(User())
 
     /**
      * Called when login button is clicked.
@@ -74,7 +72,10 @@ class MainScreenViewModel(
                     }
 
                     override fun onSuccess(result: Credentials) {
-                        user = User(result.idToken, result.accessToken)
+                        val user = User(result.idToken, result.accessToken)
+                        _uiState.update { state ->
+                            state.copy(user = user)
+                        }
                         userIsAuthenticated = true
 
                         user.accessToken?.let { saveTokenToSharedPreferences(context, it) }
@@ -153,7 +154,7 @@ class MainScreenViewModel(
             routeNumbers = _uiState.value.routeNumberInputFieldValues,
             licensePlate = _uiState.value.licensePlateInputFieldValue,
             images = _uiState.value.imageCollection,
-            freightLoaderId = user.id,
+            freightLoaderId = _uiState.value.user?.id ?: "",
             registrationDateTime = LocalDateTime.now()
         )
 
@@ -202,9 +203,10 @@ class MainScreenViewModel(
      */
     fun addRouteNumber() {
         _uiState.update { state ->
-            state.copy(routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
-                add("")
-            },
+            state.copy(
+                routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
+                    add("")
+                },
                 routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors.toMutableList()
                     .apply {
                         add(emptyList())
@@ -221,9 +223,10 @@ class MainScreenViewModel(
      */
     fun removeRouteNumber(index: Int) {
         _uiState.update { state ->
-            state.copy(routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
-                removeAt(index)
-            },
+            state.copy(
+                routeNumberInputFieldValues = state.routeNumberInputFieldValues.toMutableList().apply {
+                    removeAt(index)
+                },
                 routeNumberInputFieldValidationErrors = state.routeNumberInputFieldValidationErrors.toMutableList()
                     .apply {
                         removeAt(index)
@@ -278,7 +281,9 @@ class MainScreenViewModel(
                 override fun onSuccess(result: Void?) {
                     // The user successfully logged out.
                     userIsAuthenticated = false
-                    user = User()
+                    _uiState.update { state ->
+                        state.copy(user = User())
+                    }
                     onLogoutNavigation()
                 }
             })

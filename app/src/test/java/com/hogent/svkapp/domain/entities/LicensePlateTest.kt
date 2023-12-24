@@ -3,6 +3,8 @@ package com.hogent.svkapp.domain.entities
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import com.hogent.svkapp.util.CustomResult
+
 
 class LicensePlateTest {
     private val somePlate = "1-ABC-123"
@@ -11,17 +13,17 @@ class LicensePlateTest {
 
     @Test
     fun licensePlate_Creation_Success() {
-        assertTrue(LicensePlate.create(somePlate) is Result.Success<LicensePlate, LicensePlateError>)
+        assertTrue(LicensePlate.create(somePlate) is CustomResult.Success<LicensePlate, LicensePlateError>)
     }
 
     @Test
     fun licensePlate_Creation_Empty() {
-        assertTrue(LicensePlate.create(emptyPlate) is Result.Failure<LicensePlate, LicensePlateError>)
+        assertTrue(LicensePlate.create(emptyPlate) is CustomResult.Failure<LicensePlate, LicensePlateError>)
     }
 
     @Test
     fun licensePlate_Creation_TooLong() {
-        assertTrue(LicensePlate.create(tooLongPlate) is Result.Failure<LicensePlate, LicensePlateError>)
+        assertTrue(LicensePlate.create(tooLongPlate) is CustomResult.Failure<LicensePlate, LicensePlateError>)
     }
 
     @Test
@@ -31,11 +33,11 @@ class LicensePlateTest {
 
     @Test
     fun licensePlate_Validation_Empty() {
-        assertTrue(LicensePlate.validate(emptyPlate) == LicensePlateError.Empty)
+        assertTrue(LicensePlate.validate(emptyPlate) == LicensePlateError.EMPTY)
     }
 
     @Test
     fun licensePlate_Validation_TooLong() {
-        assertTrue(LicensePlate.validate(tooLongPlate) == LicensePlateError.TooLong)
+        assertTrue(LicensePlate.validate(tooLongPlate) == LicensePlateError.TOO_LONG)
     }
 }

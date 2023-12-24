@@ -19,12 +19,12 @@ data class User(val idToken: String? = null, val accessToken: String? = null) {
 
     private val TAG = "User"
 
-    var id = ""
-    var name = ""
-    var email = ""
-    var emailVerified = ""
-    var picture = ""
-    var updatedAt = ""
+    var id: String = ""
+    var name: String = ""
+    var email: String = ""
+    var emailVerified: String = ""
+    var picture: String = ""
+    var updatedAt: String = ""
 
     init {
         if (idToken != null) {
@@ -43,7 +43,7 @@ data class User(val idToken: String? = null, val accessToken: String? = null) {
             } catch (error: com.auth0.android.jwt.DecodeException) {
                 // The ID token is NOT a valid JWT, so log the error
                 // and leave the user properties as empty strings.
-                Log.e(TAG, "Error occurred trying to decode JWT: ${error.toString()} ")
+                Log.e(TAG, "Error occurred trying to decode JWT: $error ")
             }
         } else {
             // The User object was instantiated with a null value,
@@ -53,8 +53,11 @@ data class User(val idToken: String? = null, val accessToken: String? = null) {
         }
     }
 
+    /**
+     * Returns a string representation of the User.
+     */
     override fun toString(): String {
-        return "Id: ${id}, Name: ${name}, Email: ${email}, Email Verified: ${emailVerified}, Picture: ${picture}, Updated At: ${updatedAt}"
+        return "Id: ${id}, Name: ${name}, Email: ${email}, Email Verified: ${emailVerified}, Picture: ${picture}, Updated At: $updatedAt"
     }
 
 }

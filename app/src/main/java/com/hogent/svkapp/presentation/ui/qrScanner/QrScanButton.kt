@@ -12,6 +12,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hogent.svkapp.R
 
+/**
+ * A button that is used to navigate to the qr scanner.
+ */
 @Composable
 fun QrScanButton(
     modifier: Modifier = Modifier,
@@ -32,6 +35,9 @@ fun QrScanButton(
     }
 }
 
+/**
+ * A preview of the [QrScanButton].
+ */
 @Preview(showBackground = true)
 @Composable
 fun QrScanButtonPreview() {

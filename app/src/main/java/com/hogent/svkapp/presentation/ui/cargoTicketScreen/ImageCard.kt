@@ -16,6 +16,9 @@ import com.hogent.svkapp.domain.entities.Image
 import com.hogent.svkapp.presentation.ui.theme.TemplateApplicationTheme
 import com.hogent.svkapp.presentation.ui.theme.spacing
 
+/**
+ * A card that displays an image.
+ */
 @Composable
 fun ImageCard(
     modifier: Modifier = Modifier,
@@ -30,6 +33,9 @@ fun ImageCard(
     )
 }
 
+/**
+ * Preview of the [ImageCard].
+ */
 @Preview(showBackground = true)
 @Composable
 fun ImageCardPreview() {

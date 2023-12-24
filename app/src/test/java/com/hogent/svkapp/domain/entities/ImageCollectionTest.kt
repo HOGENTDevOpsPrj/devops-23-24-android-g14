@@ -6,6 +6,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
+import com.hogent.svkapp.util.CustomResult
 
 class ImageCollectionTest {
 
@@ -18,12 +19,12 @@ class ImageCollectionTest {
 
     @Test
     fun imageCollection_Creation_Success() {
-        assertTrue(ImageCollection.create(listOf(image)) is Result.Success<ImageCollection, ImageCollectionError>)
+        assertTrue(ImageCollection.create(listOf(image)) is CustomResult.Success<ImageCollection, ImageCollectionError>)
     }
 
     @Test
     fun imageCollection_Creation_Failure() {
-        assertTrue(ImageCollection.create(emptyList()) is Result.Failure<ImageCollection, ImageCollectionError>)
+        assertTrue(ImageCollection.create(emptyList()) is CustomResult.Failure<ImageCollection, ImageCollectionError>)
     }
 
     @Test
@@ -33,6 +34,6 @@ class ImageCollectionTest {
 
     @Test
     fun imageCollection_Validation_Failure() {
-        assertEquals(ImageCollectionError.Empty, ImageCollection.validate(emptyList()))
+        assertEquals(ImageCollectionError.EMPTY, ImageCollection.validate(emptyList()))
     }
 }
